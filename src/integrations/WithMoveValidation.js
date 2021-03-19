@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess() not being a constructor
-
 import Chessboard from "chessboardjsx";
+const io = require('socket.io') 
+const socket = io()
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
@@ -18,7 +19,12 @@ class HumanVsHuman extends Component {
     // currently clicked square
     square: "",
     // array of past game moves
-    history: []
+    history: [],
+    //modifan baru
+    roomId: 0,
+    play: true,
+    color: 'white',
+
   };
 
   componentDidMount() {
@@ -121,8 +127,10 @@ class HumanVsHuman extends Component {
 
     // illegal move
     if (move === null) return;
-
+    
     // sepertinya disini action move nya
+    socket.emit('message', 'onsquareclick')
+
     this.setState({
       fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
