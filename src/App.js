@@ -1,6 +1,8 @@
 import './App.css';
 import { Route, Switch } from 'react-router-dom'
 import Login from './pages/Login';
+import ChessPVP from './pages/ChessPVP';
+import ChessVSBot from './pages/ChessVSBot';
 
 function App() {
   return (
@@ -17,6 +19,12 @@ function App() {
         <Switch>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/pvp">
+            <ChessPVP />
+          </Route>
+          <Route path="/bot">
+            <ChessPVP />
           </Route>
         </Switch>
       </div>
