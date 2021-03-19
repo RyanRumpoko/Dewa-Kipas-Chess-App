@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import ChessPVP from './pages/ChessPVP';
 import ChessVSBot from './pages/ChessVSBot';
 import { Redirect, Route, Switch } from "react-router-dom";
+import Login from "./pages/Login";
 import Regis from "./pages/Regis";
 import Home from "./pages/Home";
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/login">
             <Login />
           </Route>
+
           <Route path="/pvp">
             <ChessPVP />
           </Route>
