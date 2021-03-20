@@ -21,8 +21,8 @@ export default function Login() {
         console.log(data);
         history.push("/login");
       }
-    } catch (err) {
-      console.log(err);
+    } catch ({ response }) {
+      console.log(response);
     }
   }
   return (

@@ -19,8 +19,8 @@ export default function Login() {
           data: { email, password },
         });
         console.log(data);
-        localStorage.access_token = data.access_token;
-        history.push("/");
+        await localStorage.setItem("access_token", data.access_token);
+        await history.push("/home", data);
       }
     } catch ({ response }) {
       console.log(response.data, "<<<<<<<<<<");
