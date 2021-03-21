@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import WithMoveValidation from "../integrations/WithMoveValidation";
 
-class Demo extends Component {
+class PVPGame extends Component {
   render() {
     return (
       <div>
@@ -14,7 +14,7 @@ class Demo extends Component {
   }
 }
 
-export default Demo;
+export default PVPGame;
 
 const boardsContainer = {
   display: "flex",
