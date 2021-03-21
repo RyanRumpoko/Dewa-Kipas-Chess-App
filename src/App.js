@@ -45,7 +45,7 @@ function App() {
         <ChessPVP />
       </Route>
       <Route path="/bot">
-        <ChessPVP />
+        <ChessVSBot />
       </Route>
     </Switch>
   );

@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess() not being a constructor
 import Chessboard from "chessboardjsx";
-const io = require("socket.io");
-const socket = io();
+import { io } from "socket.io-client";
+const ENDPOINT = "http://localhost:4000";
+
+const socket = io(ENDPOINT);
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
@@ -24,11 +26,28 @@ class HumanVsHuman extends Component {
     roomId: 0,
     play: true,
     color: "white",
+    dataFetch: [],
   };
 
   componentDidMount() {
     this.game = new Chess();
+    this.gethistory();
   }
+
+  gethistory = async () => {
+    const tesGet = await fetch("http://localhost:4000/histories/1", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      // body: JSON.stringify(data)
+    });
+    this.setState({
+      dataFetch: tesGet,
+    });
+  };
 
   // keep clicked square style and remove hint squares
   removeHighlightSquare = () => {
@@ -45,9 +64,10 @@ class HumanVsHuman extends Component {
           ...a,
           ...{
             [c]: {
-              background:
-                // "radial-gradient(circle, #fffc00 36%, transparent 40%)",
-                "#fffc00",
+              backgroundColor: "rgba(255, 255, 0, 0.4)",
+              // background:
+              //   // "radial-gradient(circle, #fffc00 36%, transparent 40%)",
+              //   "#fffc00",
               // borderRadius: "50%"
             },
           },
@@ -139,7 +159,7 @@ class HumanVsHuman extends Component {
 
   onSquareRightClick = (square) =>
     this.setState({
-      squareStyles: { [square]: { backgroundColor: "deepPink" } },
+      squareStyles: { [square]: { backgroundColor: "red" } },
     });
 
   render() {
@@ -161,40 +181,43 @@ class HumanVsHuman extends Component {
 
 export default function WithMoveValidation() {
   return (
-    <HumanVsHuman>
-      {({
-        position,
-        onDrop,
-        onMouseOverSquare,
-        onMouseOutSquare,
-        squareStyles,
-        dropSquareStyle,
-        onDragOverSquare,
-        onSquareClick,
-        onSquareRightClick,
-      }) => (
-        // {
-        //   // this.game.current
-        // }
-        <Chessboard
-          id="humanVsHuman"
-          width={540}
-          position={position}
-          onDrop={onDrop}
-          onMouseOverSquare={onMouseOverSquare}
-          onMouseOutSquare={onMouseOutSquare}
-          boardStyle={{
-            borderRadius: "5px",
-            boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
-          }}
-          squareStyles={squareStyles}
-          dropSquareStyle={dropSquareStyle}
-          onDragOverSquare={onDragOverSquare}
-          onSquareClick={onSquareClick}
-          onSquareRightClick={onSquareRightClick}
-        />
-      )}
-    </HumanVsHuman>
+    <div>
+      <p>{JSON.stringify(dataFetch)}</p>
+      <HumanVsHuman>
+        {({
+          position,
+          onDrop,
+          onMouseOverSquare,
+          onMouseOutSquare,
+          squareStyles,
+          dropSquareStyle,
+          onDragOverSquare,
+          onSquareClick,
+          onSquareRightClick,
+        }) => (
+          // {
+          //   // this.game.current
+          // }
+          <Chessboard
+            id="humanVsHuman"
+            width={320}
+            position={position}
+            onDrop={onDrop}
+            onMouseOverSquare={onMouseOverSquare}
+            onMouseOutSquare={onMouseOutSquare}
+            boardStyle={{
+              borderRadius: "5px",
+              boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
+            }}
+            squareStyles={squareStyles}
+            dropSquareStyle={dropSquareStyle}
+            onDragOverSquare={onDragOverSquare}
+            onSquareClick={onSquareClick}
+            onSquareRightClick={onSquareRightClick}
+          />
+        )}
+      </HumanVsHuman>
+    </div>
   );
 }
 
