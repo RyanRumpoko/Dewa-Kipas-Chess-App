@@ -6,6 +6,8 @@ import Regis from "./pages/Regis";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 
+import WebRtc from "./pages/TestingWebRtc";
+
 function App() {
   return (
     <Switch>
@@ -44,6 +46,12 @@ function App() {
         path="/register"
         render={() =>
           localStorage.access_token ? <Redirect to="/home" /> : <Regis />
+        }
+      />
+      <Route
+        path="/testing"
+        render={() =>
+          localStorage.access_token ? <WebRtc /> : <Redirect to="/home" />
         }
       />
     </Switch>
