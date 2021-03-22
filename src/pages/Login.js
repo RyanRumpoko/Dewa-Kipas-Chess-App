@@ -1,6 +1,8 @@
 import axios from "../api/axios";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { GoogleLogin } from "react-google-login";
+
 export default function Login() {
   const history = useHistory();
   const [validate, setValidate] = useState(false);
@@ -24,6 +26,20 @@ export default function Login() {
       }
     } catch ({ response }) {
       console.log(response.data, "<<<<<<<<<<");
+    }
+  }
+  async function responseGoogle(res) {
+    try {
+      const { data } = await axios({
+        method: "post",
+        url: "users/googlelogin",
+        data: res.profileObj,
+      });
+      await localStorage.setItem("access_token", data.access_token);
+      await history.push("/home", data);
+      console.log(data);
+    } catch ({ response }) {
+      console.log(response.data);
     }
   }
   return (
@@ -84,6 +100,14 @@ export default function Login() {
             <p>
               Don't have an account? <Link to="/register">Register here</Link>
             </p>
+            <GoogleLogin
+              clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
+            ,
           </div>
         </form>
       </div>

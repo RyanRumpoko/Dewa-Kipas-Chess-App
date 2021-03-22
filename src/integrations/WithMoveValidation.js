@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess() not being a constructor
 import Chessboard from "chessboardjsx";
 import { io } from "socket.io-client";
-const ENDPOINT = "http://localhost:4000";
+const ENDPOINT = "http://localhost:4000/";
 
 const socket = io(ENDPOINT);
 
@@ -182,7 +182,7 @@ class HumanVsHuman extends Component {
 export default function WithMoveValidation() {
   return (
     <div>
-      <p>{JSON.stringify(dataFetch)}</p>
+      {/* <p>{JSON.stringify(dataFetch)}</p> */}
       <HumanVsHuman>
         {({
           position,
@@ -200,7 +200,7 @@ export default function WithMoveValidation() {
           // }
           <Chessboard
             id="humanVsHuman"
-            width={320}
+            width={540}
             position={position}
             onDrop={onDrop}
             onMouseOverSquare={onMouseOverSquare}

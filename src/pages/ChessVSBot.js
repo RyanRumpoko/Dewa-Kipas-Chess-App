@@ -12,7 +12,7 @@ class Demo extends Component {
             <Chessboard
               id="stockfish"
               position={position}
-              width={320}
+              width={540}
               onDrop={onDrop}
               boardStyle={boardStyle}
               orientation="black"
@@ -29,9 +29,9 @@ export default Demo;
 const boardsContainer = {
   display: "flex",
   justifyContent: "space-around",
-  alignItems: "center"
+  alignItems: "center",
 };
 const boardStyle = {
   borderRadius: "5px",
-  boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
+  boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
 };

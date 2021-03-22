@@ -2,12 +2,9 @@ import { useHistory, useLocation } from "react-router-dom";
 import ChessPVP from "./ChessPVP";
 import ChessVSBot from "./ChessVSBot";
 export default function Dashboard() {
-  function useQuery() {
-    return new URLSearchParams(useLocation().search);
-  }
-  const query = useQuery();
+  const { pathname } = useLocation();
+  const loc = pathname.split("/")[2];
   const history = useHistory();
-  // console.log(query.get("foe"));
   function back() {
     history.goBack();
   }
@@ -29,7 +26,7 @@ export default function Dashboard() {
                   alignItems: "center",
                 }}
               >
-                <ChessPVP />
+                {loc === "player" ? <ChessPVP /> : <ChessVSBot />}
               </div>
               <div className="col-4 bg-danger">
                 <div className="row">

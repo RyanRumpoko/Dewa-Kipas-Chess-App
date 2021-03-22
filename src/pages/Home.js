@@ -75,9 +75,9 @@ export default function Home() {
             </div>
             <div className="col-8">
               <div className="row">
-                <p>
+                <span>
                   Name<h3>{state ? state.username : ""}</h3>
-                </p>
+                </span>
               </div>
             </div>
           </div>
