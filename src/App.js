@@ -41,12 +41,6 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/:loc/:roomid"
-        render={() =>
-          localStorage.access_token ? <Dashboard /> : <Redirect to="/login" />
-        }
-      />
-      <Route
         path="/register"
         render={() =>
           localStorage.access_token ? <Redirect to="/home" /> : <Regis />
