@@ -215,15 +215,15 @@ class HumanVsHuman extends Component {
     }
   };
 
-  postHistory = async (data) => {
+  postHistory = async (input) => {
     try {
-      const response = await axios({
+      const { data } = await axios({
         method: "post",
         url: "/histories/",
-        data: data,
-        headers: { access_token: localStorage.getItem("access_token") },
+        data: input,
+        headers: { access_token: localStorage.access_token },
       });
-      console.log(response);
+      console.log({ data });
     } catch ({ response }) {
       console.log(response.data);
     }
