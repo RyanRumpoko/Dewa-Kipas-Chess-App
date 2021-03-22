@@ -18,7 +18,7 @@ export default function Nav() {
   }
   return (
     <div
-      className="col"
+      className="col-12"
       style={{ display: "flex", justifyContent: "flex-end" }}
     >
       <button

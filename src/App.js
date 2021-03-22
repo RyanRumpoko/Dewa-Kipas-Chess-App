@@ -1,7 +1,7 @@
-import './App.css';
-import Login from './pages/Login';
-import ChessPVP from './pages/ChessPVP';
-import ChessVSBot from './pages/ChessVSBot';
+import "./App.css";
+import Login from "./pages/Login";
+import ChessPVP from "./pages/ChessPVP";
+import ChessVSBot from "./pages/ChessVSBot";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Regis from "./pages/Regis";
 import Home from "./pages/Home";
