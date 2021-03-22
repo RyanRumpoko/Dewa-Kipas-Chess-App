@@ -50,7 +50,7 @@ export default function Home() {
       ) : (
         <div></div>
       )}
-      <div className="row">
+      <div className="row" style={{ height: "100vh" }}>
         <div className="col-6 bg-warning">
           <h1 className="text-center">Want to play now?</h1>
           <div className="row">
@@ -91,7 +91,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="col-6 bg-danger" style={{ height: "90vh" }}>
+        <div className="col-6 bg-danger">
           <div className="row">
             <div
               className="col-2"
@@ -113,11 +113,72 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="row" style={{ height: "50%" }}>
+          <div className="row" style={{ height: "50vh" }}>
             <h1 className="text-center">Leaderboard</h1>
           </div>
-          <div className="row" style={{ height: "50%" }}>
-            <h1 className="text-center">History</h1>
+          <div className="row" style={{ height: "50vh" }}>
+            <div className="col">
+              <h1 className="text-center">History</h1>
+              <div
+                data-bs-spy="scroll"
+                data-bs-target="#navbar-example2"
+                data-bs-offset="0"
+                tabindex="0"
+                style={{
+                  overflowY: "scroll",
+                  minHeight: "100x",
+                  maxHeight: "420px",
+                }}
+                className="row"
+              >
+                <div className="card mb-3">
+                  <h5 className="card-header">Player One</h5>
+                  <div className="card-body">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Asperiores totam molestiae id? Similique nemo a alias
+                      quasi corporis rem pariatur. Fugit ratione corrupti,
+                      facere nesciunt praesentium vel asperiores. Vero, velit.
+                    </p>
+                  </div>
+                </div>
+                <div className="card mb-3">
+                  <h5 className="card-header">Player One</h5>
+                  <div className="card-body">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Asperiores totam molestiae id? Similique nemo a alias
+                      quasi corporis rem pariatur. Fugit ratione corrupti,
+                      facere nesciunt praesentium vel asperiores. Vero, velit.
+                    </p>
+                  </div>
+                </div>
+                <div className="card mb-3">
+                  <h5 className="card-header">Player One</h5>
+                  <div className="card-body">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Asperiores totam molestiae id? Similique nemo a alias
+                      quasi corporis rem pariatur. Fugit ratione corrupti,
+                      facere nesciunt praesentium vel asperiores. Vero, velit.
+                    </p>
+                  </div>
+                </div>
+                <div className="card mb-3">
+                  <h5 className="card-header">Player One</h5>
+                  <div className="card-body">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Asperiores totam molestiae id? Similique nemo a alias
+                      quasi corporis rem pariatur. Fugit ratione corrupti,
+                      facere nesciunt praesentium vel asperiores. Vero, velit.
+                    </p>
+                  </div>
+                </div>
+
+                {/*  */}
+              </div>
+            </div>
           </div>
         </div>
       </div>
