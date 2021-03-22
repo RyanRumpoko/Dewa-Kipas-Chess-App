@@ -14,7 +14,7 @@ export default function Login() {
     try {
       e.preventDefault();
       setValidate(true);
-      if (email || password) {
+      if (email && password) {
         const { data } = await axios({
           method: "post",
           url: "users/login",
@@ -22,7 +22,7 @@ export default function Login() {
         });
         console.log(data);
         await localStorage.setItem("access_token", data.access_token);
-        await history.push("/home", data);
+        history.push("/home", data);
       }
     } catch ({ response }) {
       console.log(response.data, "<<<<<<<<<<");
