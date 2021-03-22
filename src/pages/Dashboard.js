@@ -7,6 +7,7 @@ export default function Dashboard() {
   const { state } = useLocation()
   console.log(roomid, 'ini room id')
   const history = useHistory();
+
   function back() {
     history.goBack();
   }
