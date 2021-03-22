@@ -9,7 +9,6 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { useHistory, withRouter } from "react-router-dom";
 
 import { useParams } from "react-router-dom"
-// import { createSocket } from "node:dgram";
 
 const ENDPOINT = "http://localhost:4000/";
 const socket = io(ENDPOINT);
@@ -95,6 +94,12 @@ class HumanVsHuman extends Component {
         squareStyles: data.squareStyles,
       })
     })
+
+    socket.on('youlose', () => {
+      this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
+      console.log('kamu loser')
+      this.setState({ openGameOverModal: true })
+    })
   }
 
   // keep clicked square style and remove hint squares
@@ -169,7 +174,16 @@ class HumanVsHuman extends Component {
           status: 3
         })
         console.log('draw')
+
         // harusnya disini update user score
+        this.postHistory({
+          playerOne: this.state.userData.id,
+          playerTwo: this.state.enemy.id,
+          status: 3
+        })
+        this.setState({ playerWinStatus: `Stalemate, You get draw versus ${this.state.enemy.username}!!` })
+        this.setState({ openGameOverModal: true })
+
       } else {
         console.log(this.game.game_over(), 'ini isi gameover ')
         const isGameOver = this.game.game_over()
@@ -177,7 +191,7 @@ class HumanVsHuman extends Component {
           const losercolor = this.game.fen().split(' ')[1]
           if ((losercolor === 'b' && this.state.color === 'black') || (losercolor === 'w' && this.state.color === 'white')) {
             // berarti client ini yang lose
-            this.setState({ playerWinStatus: 'You Lose, maybe next time...' })
+            this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
             console.log('kamu loser')
             this.setState({ openGameOverModal: true })
           } else {
@@ -190,10 +204,12 @@ class HumanVsHuman extends Component {
             })
             // harusnya disini update user score
             console.log('kamu winner')
-            this.setState({ playerWinStatus: 'Congrats, You Win!!' })
+            this.setState({ playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!` })
             this.setState({ openGameOverModal: true })
           }
           console.log(losercolor, 'move siapa ketika kita cek gameover')
+          socket.emit('gameOver', { roomid: this.state.roomid })
+
         }
       }
       const losercolor = this.game.fen().split(' ')[1]
@@ -208,9 +224,9 @@ class HumanVsHuman extends Component {
     try {
       const response = await axios({
         method: "post",
-        url: "/histories/",
+        url: `${ENDPOINT}histories/`,
         data: data,
-        headers: {access_token: localStorage.getItem('access_token')}
+        headers: {'access_token': localStorage.getItem('access_token')}
       })
       console.log(response);
     } catch ({ response }) {
@@ -308,12 +324,13 @@ class HumanVsHuman extends Component {
 
 export default function WithMoveValidation(props) {
   const param = useParams()
+  const history = useHistory()
   const {userData} = props
   console.log(param, 'ini param');
   return (
     <div>
       {/* <p>{JSON.stringify(dataFetch)}</p> */}
-      <HumanVsHuman roomid={param.roomid} userData={userData}>
+      <HumanVsHuman roomid={param.roomid} userData={userData} history={history}>
         {({
           position,
           onDrop,
@@ -359,12 +376,12 @@ export default function WithMoveValidation(props) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
-            <DialogContent>
+            <DialogTitle id="alert-dialog-title">{`${playerWinStatus}`}</DialogTitle>
+            {/* <DialogContent>
               <DialogContentText id="alert-dialog-description">
                 {playerWinStatus}
               </DialogContentText>
-            </DialogContent>
+            </DialogContent> */}
             <DialogActions>
               <Button onClick={handleCloseGameOver} color="primary" autoFocus>
                 Back to Lobby
