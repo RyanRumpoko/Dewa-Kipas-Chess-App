@@ -28,11 +28,10 @@ function App() {
         }
       />
       <Route
-        exact
-        path="/dashboard/bot/"
-        render={() => {
-          localStorage.access_token ? <Dashboard /> : <Redirect to="/login" />;
-        }}
+        path="/dashboard/bot"
+        render={() =>
+          localStorage.access_token ? <Dashboard /> : <Redirect to="/login" />
+        }
       />
       <Route
         path="/dashboard/:loc/:roomid"
