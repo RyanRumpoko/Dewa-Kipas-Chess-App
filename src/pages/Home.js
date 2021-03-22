@@ -1,24 +1,63 @@
 import { useHistory, useLocation } from "react-router-dom";
+import {useState, useEffect} from 'react'
 import Nav from "../components/Nav";
-export default function Home() {
-  const { state } = useLocation();
-  // console.log(state, "<<<<<");
-  const history = useHistory();
 
+export default function Home() {
+
+  const { state } = useLocation();
+  console.log(state, "<<<<<");
+  const history = useHistory();
+  const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false)
+  const [inputRoomId, setInputRoomId] = useState('')
   function vsPlayer() {
-    history.push("/dashboard/player");
+    setOpenModalCreateRoom(true)
+    console.log(openModalCreateRoom, 'sudah tertoggle')
+    // history.push("/dashboard/player");
+  }
+  function createRoom () {
+    history.push("/dashboard/player/new", state)
+  }
+  function joinRoom () {
+    history.push(`/dashboard/player/${inputRoomId}`, state)
+  }
+  function onChangeInputRoomId (e) {
+    console.log(e.target.value)
+    setInputRoomId(e.target.value)
   }
   function vsBot() {
     history.push("/dashboard/bot");
   }
+  useEffect (() => {
+
+  }, [openModalCreateRoom])
+
   return (
     <div className="container-fluid bg-info">
       <div className="row">
         <Nav />
       </div>
+      
+      {
+        openModalCreateRoom ?
+          <div className='row'>
+            <button className="btn"
+            type="button"
+            onClick={createRoom}>
+              createRoom
+            </button>
+            <>
+              <label>input room id</label>
+              <input type="text" onChange={(e) => onChangeInputRoomId(e)}/>
+              <button className="btn" type="button" onClick={joinRoom}>
+                  joinRoom
+              </button>
+            </>
+          </div>
+        : <div></div>
+      }
       <div className="row">
         <div className="col-6 bg-warning">
-          <div className="row">
+          <div className="row"></div>
             <h1 className="text-center">Want to play now?</h1>
           </div>
           <div className="row">
@@ -89,6 +128,5 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
