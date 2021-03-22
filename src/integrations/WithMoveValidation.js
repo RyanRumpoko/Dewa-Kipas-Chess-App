@@ -4,7 +4,7 @@ import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recie
 import Chessboard from "chessboardjsx";
 import { io } from "socket.io-client";
 // import { useParams } from "react-router";
-import { withRouter, useParams } from "react-router-dom"
+import { withRouter, useParams } from "react-router-dom";
 // import { createSocket } from "node:dgram";
 
 const ENDPOINT = "http://localhost:4000/";
@@ -12,84 +12,84 @@ const socket = io(ENDPOINT);
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
-    fen: "start",
-    // square styles for active drop square
-    dropSquareStyle: {},
-    // custom square styles
-    squareStyles: {},
-    // square with the currently clicked piece
-    pieceSquare: "",
-    // currently clicked square
-    square: "",
-    // array of past game moves
-    history: [],
-    //modifan baru
-    play: true,
-    color: "white",
-    dataFetch: [],
-    roomid: this.props.roomid,
-    userData: this.props.userData,
-    enemy: {}
-    // isi userData
-    // {
-    //   id: user.id,
-    //   username: user.username,
-    //   email: user.email,
-    //   pictureUrl: user.pictureUrl,
-    //   eloRating: user.eloRating,
-    // }
-  };
+      fen: "start",
+      // square styles for active drop square
+      dropSquareStyle: {},
+      // custom square styles
+      squareStyles: {},
+      // square with the currently clicked piece
+      pieceSquare: "",
+      // currently clicked square
+      square: "",
+      // array of past game moves
+      history: [],
+      //modifan baru
+      play: true,
+      color: "white",
+      dataFetch: [],
+      roomid: this.props.roomid,
+      userData: this.props.userData,
+      enemy: {},
+      // isi userData
+      // {
+      //   id: user.id,
+      //   username: user.username,
+      //   email: user.email,
+      //   pictureUrl: user.pictureUrl,
+      //   eloRating: user.eloRating,
+      // }
+    };
   }
-  
-
 
   componentDidMount() {
-    console.log(this.props, '<<<<<<<<<< ini yg di class');
-    console.log(this.props.roomid, '<<<<<<<<<< ini yang di class');
-    console.log(this.props.userData, 'ini props userdata di class component')
-    console.log(this.state.userData, 'ini state userdata di class component')
-    if (this.state.roomid === 'new') {
-      let uuid = 'dewakipas2'
-      this.setState({ roomid: uuid })
-      socket.emit('create-room', { roomid: uuid, playerData: this.state.userData })
+    console.log(this.props, "<<<<<<<<<< ini yg di class");
+    console.log(this.props.roomid, "<<<<<<<<<< ini yang di class");
+    console.log(this.props.userData, "ini props userdata di class component");
+    console.log(this.state.userData, "ini state userdata di class component");
+    if (this.state.roomid === "new") {
+      let uuid = "dewakipas2";
+      this.setState({ roomid: uuid });
+      socket.emit("create-room", {
+        roomid: uuid,
+        playerData: this.state.userData,
+      });
     } else {
-      this.setState({ color: 'black' })
-      socket.emit('join-room', { roomid: this.state.roomid, playerData: this.state.userData })
+      this.setState({ color: "black" });
+      socket.emit("join-room", {
+        roomid: this.state.roomid,
+        playerData: this.state.userData,
+      });
     }
     this.game = new Chess();
     // this.gethistory();
 
-    socket.on('fullroom', (dataRoom) => {
-      console.log('fullroom', dataRoom)
-      console.log(this.state.color)
-      if (this.state.color === 'white') {
-        this.setState({enemy: dataRoom.selectedRoom.playerTwo})
-        console.log(this.state.enemy, 'ini enemyku di white')
-
+    socket.on("fullroom", (dataRoom) => {
+      console.log("fullroom", dataRoom);
+      console.log(this.state.color);
+      if (this.state.color === "white") {
+        this.setState({ enemy: dataRoom.selectedRoom.playerTwo });
+        console.log(this.state.enemy, "ini enemyku di white");
       } else {
-        this.setState({enemy: dataRoom.selectedRoom.playerOne})
-        console.log(this.state.enemy, 'ini enemyku di black')
-
+        this.setState({ enemy: dataRoom.selectedRoom.playerOne });
+        console.log(this.state.enemy, "ini enemyku di black");
       }
-    })
+    });
 
-    socket.on('enemymove', (data) => {
+    socket.on("enemymove", (data) => {
       let move = this.game.move({
         from: data.sourceSquare,
         to: data.targetSquare,
         promotion: "q", // always promote to a queen for example simplicity
-      })
+      });
       this.setState({
         fen: data.fen,
         history: data.history,
         squareStyles: data.squareStyles,
-      })
-
-    })
-
+      });
+    });
   }
 
   // gethistory = async () => {
@@ -146,30 +146,30 @@ class HumanVsHuman extends Component {
       to: targetSquare,
       promotion: "q", // always promote to a queen for example simplicity
     });
-    console.log(this.game.move())
-    console.log(sourceSquare, targetSquare, 'ini isi ondrop')
-    console.log(this.game, 'ini isi this gameeeeee')
-    console.log(this.game.fen())
-    const nowTurn = this.game.fen().split(' ')[1]
-    console.log(nowTurn, 'ini harusnya yang ga boleh gerak')
+    console.log(this.game.move());
+    console.log(sourceSquare, targetSquare, "ini isi ondrop");
+    console.log(this.game, "ini isi this gameeeeee");
+    console.log(this.game.fen());
+    const nowTurn = this.game.fen().split(" ")[1];
+    console.log(nowTurn, "ini harusnya yang ga boleh gerak");
     // if ((this.state.color === 'black' && nowTurn=== 'b') || (this.state.color === 'white' && nowTurn === 'w')) {
-      // illegal move
-      if (move === null) return;
-      
-      this.setState(({ history, pieceSquare }) => ({
-        fen: this.game.fen(),
-        history: this.game.history({ verbose: true }),
-        squareStyles: squareStyling({ pieceSquare, history }),
-      }));
+    // illegal move
+    if (move === null) return;
 
-      socket.emit('move', {
-        sourceSquare,
-        targetSquare,
-        roomid: this.state.roomid,
-        fen: this.state.fen, 
-        history: this.state.history, 
-        squareStyles: this.state.pieceSquare
-      })
+    this.setState(({ history, pieceSquare }) => ({
+      fen: this.game.fen(),
+      history: this.game.history({ verbose: true }),
+      squareStyles: squareStyling({ pieceSquare, history }),
+    }));
+
+    socket.emit("move", {
+      sourceSquare,
+      targetSquare,
+      roomid: this.state.roomid,
+      fen: this.state.fen,
+      history: this.state.history,
+      squareStyles: this.state.pieceSquare,
+    });
     // } else {
     //   console.log('its not your turn')
     //   this.game.undo()
@@ -225,7 +225,6 @@ class HumanVsHuman extends Component {
     // sepertinya disini action move nya
     socket.emit("message", "onsquareclick");
 
-
     this.setState({
       fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
@@ -251,15 +250,15 @@ class HumanVsHuman extends Component {
       onDragOverSquare: this.onDragOverSquare,
       onSquareClick: this.onSquareClick,
       onSquareRightClick: this.onSquareRightClick,
-      color: this.state.color
+      color: this.state.color,
     });
   }
 }
 
 export default function WithMoveValidation(props) {
-  const param = useParams()
-  const {userData} = props
-  console.log(param, 'ini param');
+  const param = useParams();
+  const { userData } = props;
+  console.log(param, "ini param");
   return (
     <div>
       {/* <p>{JSON.stringify(dataFetch)}</p> */}
@@ -274,7 +273,7 @@ export default function WithMoveValidation(props) {
           onDragOverSquare,
           onSquareClick,
           onSquareRightClick,
-          color
+          color,
         }) => (
           // {
           //   // this.game.current

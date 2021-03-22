@@ -1,11 +1,11 @@
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import ChessVSBot from "./ChessVSBot";
-import WithMoveValidation from '../integrations/WithMoveValidation'
+import WithMoveValidation from "../integrations/WithMoveValidation";
 
 export default function Dashboard() {
-  let { loc, roomid } = useParams()
-  const { state } = useLocation()
-  console.log(roomid, 'ini room id')
+  let { loc, roomid } = useParams();
+  const { state } = useLocation();
+  console.log(roomid, "ini room id");
   const history = useHistory();
   function back() {
     history.goBack();
@@ -28,11 +28,13 @@ export default function Dashboard() {
                   alignItems: "center",
                 }}
               >
-                {loc === "player" 
-                ? <div style={boardsContainer}>
-                    <WithMoveValidation roomid={roomid} userData={state}/>
-                  </div> 
-                : <ChessVSBot />}
+                {loc === "player" ? (
+                  <div style={boardsContainer}>
+                    <WithMoveValidation roomid={roomid} userData={state} />
+                  </div>
+                ) : (
+                  <ChessVSBot />
+                )}
               </div>
               <div className="col-4 bg-danger">
                 <div className="row">
