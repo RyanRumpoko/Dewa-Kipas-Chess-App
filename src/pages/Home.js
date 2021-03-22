@@ -28,7 +28,6 @@ export default function Home() {
     history.push("/dashboard/bot");
   }
   useEffect (() => {
-
   }, [openModalCreateRoom])
 
   return (

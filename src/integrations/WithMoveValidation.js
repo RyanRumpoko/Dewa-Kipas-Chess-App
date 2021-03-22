@@ -4,6 +4,9 @@ import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recie
 import Chessboard from "chessboardjsx";
 import { io } from "socket.io-client";
 import axios from "../api/axios";
+import { v4 as uuidv4 } from 'uuid'
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle  } from '@material-ui/core';
+import { useHistory, withRouter } from "react-router-dom";
 
 import { useParams } from "react-router-dom"
 // import { createSocket } from "node:dgram";
@@ -35,6 +38,8 @@ class HumanVsHuman extends Component {
     userData: this.props.userData,
     enemy: {},
     gameOver: false,
+    openGameOverModal: false,
+    playerWinStatus: ''
     // isi userData
     // {
     //   id: user.id,
@@ -49,12 +54,13 @@ class HumanVsHuman extends Component {
 
 
   componentDidMount() {
+    
     console.log(this.props, '<<<<<<<<<< ini yg di class');
     console.log(this.props.roomid, '<<<<<<<<<< ini yang di class');
     console.log(this.props.userData, 'ini props userdata di class component')
     console.log(this.state.userData, 'ini state userdata di class component')
     if (this.state.roomid === 'new') {
-      let uuid = 'dewakipas3'
+      let uuid = uuidv4()
       this.setState({ roomid: uuid })
       socket.emit('create-room', { roomid: uuid, playerData: this.state.userData })
     } else {
@@ -62,7 +68,6 @@ class HumanVsHuman extends Component {
       socket.emit('join-room', { roomid: this.state.roomid, playerData: this.state.userData })
     }
     this.game = new Chess();
-    // this.gethistory();
 
     socket.on('fullroom', (dataRoom) => {
       console.log('fullroom', dataRoom)
@@ -89,25 +94,8 @@ class HumanVsHuman extends Component {
         history: data.history,
         squareStyles: data.squareStyles,
       })
-
     })
-
   }
-
-  // gethistory = async () => {
-  //   const tesGet = await fetch("http://localhost:4000/histories/1", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-
-  //       // 'Content-Type': 'application/x-www-form-urlencoded',
-  //     },
-  //     // body: JSON.stringify(data)
-  //   });
-  //   this.setState({
-  //     dataFetch: tesGet,
-  //   });
-  // };
 
   // keep clicked square style and remove hint squares
   removeHighlightSquare = () => {
@@ -174,13 +162,14 @@ class HumanVsHuman extends Component {
       })
       const isStaleMate = this.game.in_stalemate()
       if (isStaleMate) {
-        // emit draw end gamee
+        // emit draw end game
         this.postHistory({
           playerOne: this.state.userData.id,
           playerTwo: this.state.enemy.id,
           status: 3
         })
         console.log('draw')
+        // harusnya disini update user score
       } else {
         console.log(this.game.game_over(), 'ini isi gameover ')
         const isGameOver = this.game.game_over()
@@ -188,6 +177,9 @@ class HumanVsHuman extends Component {
           const losercolor = this.game.fen().split(' ')[1]
           if ((losercolor === 'b' && this.state.color === 'black') || (losercolor === 'w' && this.state.color === 'white')) {
             // berarti client ini yang lose
+            this.setState({ playerWinStatus: 'You Lose, maybe next time...' })
+            console.log('kamu loser')
+            this.setState({ openGameOverModal: true })
           } else {
             // berarti client ini yang win
             this.setState({status: 1})
@@ -196,7 +188,10 @@ class HumanVsHuman extends Component {
               playerTwo: this.state.enemy.id,
               status: 1
             })
+            // harusnya disini update user score
             console.log('kamu winner')
+            this.setState({ playerWinStatus: 'Congrats, You Win!!' })
+            this.setState({ openGameOverModal: true })
           }
           console.log(losercolor, 'move siapa ketika kita cek gameover')
         }
@@ -205,7 +200,7 @@ class HumanVsHuman extends Component {
       console.log(losercolor, 'move siapa ketika kita cek gameover')
     } else {
       console.log('its not your turn')
-      return
+      return;
     }
   };
 
@@ -221,6 +216,11 @@ class HumanVsHuman extends Component {
     } catch ({ response }) {
       console.log(response.data);
     }
+  }
+
+  handleCloseGameOver = () => {
+    this.setState({ openGameOverModal: false })
+    this.props.history.push('/home')
   }
 
   onMouseOverSquare = (square) => {
@@ -297,7 +297,11 @@ class HumanVsHuman extends Component {
       onDragOverSquare: this.onDragOverSquare,
       onSquareClick: this.onSquareClick,
       onSquareRightClick: this.onSquareRightClick,
-      color: this.state.color
+      color: this.state.color,
+      roomid: this.state.roomid,
+      openGameOverModal: this.state.openGameOverModal,
+      handleCloseGameOver: this.handleCloseGameOver,
+      playerWinStatus: this.state.playerWinStatus
     });
   }
 }
@@ -320,11 +324,17 @@ export default function WithMoveValidation(props) {
           onDragOverSquare,
           onSquareClick,
           onSquareRightClick,
-          color
+          color,
+          roomid,
+          openGameOverModal,
+          handleCloseGameOver,
+          playerWinStatus
         }) => (
           // {
           //   // this.game.current
           // }
+          <>
+          <div>room ID: {roomid}</div>
           <Chessboard
             id="humanVsHuman"
             width={540}
@@ -343,6 +353,26 @@ export default function WithMoveValidation(props) {
             onSquareClick={onSquareClick}
             onSquareRightClick={onSquareRightClick}
           />
+          <Dialog
+            open={openGameOverModal}
+            onClose={handleCloseGameOver}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                {playerWinStatus}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseGameOver} color="primary" autoFocus>
+                Back to Lobby
+              </Button>
+            </DialogActions>
+          </Dialog>
+          </>
+          
         )}
       </HumanVsHuman>
     </div>

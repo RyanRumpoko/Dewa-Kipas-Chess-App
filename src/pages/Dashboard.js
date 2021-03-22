@@ -7,6 +7,7 @@ export default function Dashboard() {
   const { state } = useLocation()
   console.log(roomid, 'ini room id')
   const history = useHistory();
+  
   function back() {
     history.goBack();
   }
@@ -30,7 +31,7 @@ export default function Dashboard() {
               >
                 {loc === "player" 
                 ? <div style={boardsContainer}>
-                    <WithMoveValidation roomid={roomid} userData={state}/>
+                    <WithMoveValidation roomid={roomid} userData={state} history= {history}/>
                   </div> 
                 : <ChessVSBot />}
               </div>
