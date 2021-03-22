@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess() not being a constructor
 import Chessboard from "chessboardjsx";
 import { io } from "socket.io-client";
-// import { useParams } from "react-router";
-import { withRouter, useParams } from "react-router-dom";
+import axios from "../api/axios";
+
+import { useParams } from "react-router-dom";
 // import { createSocket } from "node:dgram";
 
 const ENDPOINT = "http://localhost:4000/";
@@ -33,6 +34,7 @@ class HumanVsHuman extends Component {
       roomid: this.props.roomid,
       userData: this.props.userData,
       enemy: {},
+      gameOver: false,
       // isi userData
       // {
       //   id: user.id,
@@ -50,7 +52,7 @@ class HumanVsHuman extends Component {
     console.log(this.props.userData, "ini props userdata di class component");
     console.log(this.state.userData, "ini state userdata di class component");
     if (this.state.roomid === "new") {
-      let uuid = "dewakipas2";
+      let uuid = "dewakipas3";
       this.setState({ roomid: uuid });
       socket.emit("create-room", {
         roomid: uuid,
@@ -141,40 +143,90 @@ class HumanVsHuman extends Component {
 
   onDrop = ({ sourceSquare, targetSquare }) => {
     // see if the move is legal
-    let move = this.game.move({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: "q", // always promote to a queen for example simplicity
-    });
-    console.log(this.game.move());
-    console.log(sourceSquare, targetSquare, "ini isi ondrop");
-    console.log(this.game, "ini isi this gameeeeee");
-    console.log(this.game.fen());
     const nowTurn = this.game.fen().split(" ")[1];
-    console.log(nowTurn, "ini harusnya yang ga boleh gerak");
-    // if ((this.state.color === 'black' && nowTurn=== 'b') || (this.state.color === 'white' && nowTurn === 'w')) {
-    // illegal move
-    if (move === null) return;
+    console.log(nowTurn, "<< seharunya ini yang boleh gerak");
+    if (
+      (this.state.color === "black" && nowTurn === "b") ||
+      (this.state.color === "white" && nowTurn === "w")
+    ) {
+      // illegal move
+      let move = this.game.move({
+        from: sourceSquare,
+        to: targetSquare,
+        promotion: "q", // always promote to a queen for example simplicity
+      });
+      console.log(this.game.move());
+      console.log(sourceSquare, targetSquare, "ini isi ondrop");
+      console.log(this.game, "ini isi this gameeeeee");
+      console.log(this.game.fen());
+      if (move === null) return;
 
-    this.setState(({ history, pieceSquare }) => ({
-      fen: this.game.fen(),
-      history: this.game.history({ verbose: true }),
-      squareStyles: squareStyling({ pieceSquare, history }),
-    }));
+      this.setState(({ history, pieceSquare }) => ({
+        fen: this.game.fen(),
+        history: this.game.history({ verbose: true }),
+        squareStyles: squareStyling({ pieceSquare, history }),
+      }));
 
-    socket.emit("move", {
-      sourceSquare,
-      targetSquare,
-      roomid: this.state.roomid,
-      fen: this.state.fen,
-      history: this.state.history,
-      squareStyles: this.state.pieceSquare,
-    });
-    // } else {
-    //   console.log('its not your turn')
-    //   this.game.undo()
-    //   return
-    // }
+      socket.emit("move", {
+        sourceSquare,
+        targetSquare,
+        roomid: this.state.roomid,
+        fen: this.state.fen,
+        history: this.state.history,
+        squareStyles: this.state.pieceSquare,
+      });
+      const isStaleMate = this.game.in_stalemate();
+      if (isStaleMate) {
+        // emit draw end gamee
+        this.postHistory({
+          playerOne: this.state.userData.id,
+          playerTwo: this.state.enemy.id,
+          status: 3,
+        });
+        console.log("draw");
+      } else {
+        console.log(this.game.game_over(), "ini isi gameover ");
+        const isGameOver = this.game.game_over();
+        if (isGameOver) {
+          const losercolor = this.game.fen().split(" ")[1];
+          if (
+            (losercolor === "b" && this.state.color === "black") ||
+            (losercolor === "w" && this.state.color === "white")
+          ) {
+            // berarti client ini yang lose
+          } else {
+            // berarti client ini yang win
+            this.setState({ status: 1 });
+            this.postHistory({
+              playerOne: this.state.userData.id,
+              playerTwo: this.state.enemy.id,
+              status: 1,
+            });
+            console.log("kamu winner");
+          }
+          console.log(losercolor, "move siapa ketika kita cek gameover");
+        }
+      }
+      const losercolor = this.game.fen().split(" ")[1];
+      console.log(losercolor, "move siapa ketika kita cek gameover");
+    } else {
+      console.log("its not your turn");
+      return;
+    }
+  };
+
+  postHistory = async (data) => {
+    try {
+      const response = await axios({
+        method: "post",
+        url: "/histories/",
+        data: data,
+        headers: { access_token: localStorage.getItem("access_token") },
+      });
+      console.log(response);
+    } catch ({ response }) {
+      console.log(response.data);
+    }
   };
 
   onMouseOverSquare = (square) => {
