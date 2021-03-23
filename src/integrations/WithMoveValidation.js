@@ -57,10 +57,10 @@ class HumanVsHuman extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props, "<<<<<<<<<< ini yg di class");
-    console.log(this.props.roomid, "<<<<<<<<<< ini yang di class");
-    console.log(this.props.userData, "ini props userdata di class component");
-    console.log(this.state.userData, "ini state userdata di class component");
+    // console.log(this.props, "<<<<<<<<<< ini yg di class");
+    // console.log(this.props.roomid, "<<<<<<<<<< ini yang di class");
+    // console.log(this.props.userData, "ini props userdata di class component");
+    // console.log(this.state.userData, "ini state userdata di class component");
     if (this.state.roomid === "new") {
       let uuid = uuidv4();
       this.setState({ roomid: uuid });
@@ -68,6 +68,10 @@ class HumanVsHuman extends Component {
         roomid: uuid,
         playerData: this.state.userData,
       });
+      console.log(
+        this.state.roomid,
+        "<<<<<<<<<<<<<<<<<<<< DI COMPONENT DID MOUNT"
+      );
     } else {
       this.setState({ color: "black" });
       socket.emit("join-room", {
@@ -78,8 +82,8 @@ class HumanVsHuman extends Component {
     this.game = new Chess();
 
     socket.on("fullroom", (dataRoom) => {
-      console.log("fullroom", dataRoom);
-      console.log(this.state.color);
+      // console.log("fullroom", dataRoom);
+      // console.log(this.state.color);
       if (this.state.color === "white") {
         this.setState({ enemy: dataRoom.selectedRoom.playerTwo });
         console.log(this.state.enemy, "ini enemyku di white");
@@ -103,6 +107,7 @@ class HumanVsHuman extends Component {
     });
 
     socket.on("youlose", () => {
+
       this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
       console.log('kamu loser')
       this.setState({ openGameOverModal: true })
@@ -159,10 +164,10 @@ class HumanVsHuman extends Component {
         to: targetSquare,
         promotion: "q", // always promote to a queen for example simplicity
       });
-      console.log(this.game.move());
-      console.log(sourceSquare, targetSquare, "ini isi ondrop");
-      console.log(this.game, "ini isi this gameeeeee");
-      console.log(this.game.fen());
+      // console.log(this.game.move());
+      // console.log(sourceSquare, targetSquare, "ini isi ondrop");
+      // console.log(this.game, "ini isi this gameeeeee");
+      // console.log(this.game.fen());
       if (move === null) return;
 
       this.setState(({ history, pieceSquare }) => ({
@@ -376,7 +381,9 @@ export default function WithMoveValidation(props) {
   const param = useParams();
   const history = useHistory();
   const { userData } = props;
-  console.log(param, "ini param");
+  // function getRoom() {
+  //   props.getRoomId(roomid)
+  // }
   return (
     <div>
       <HumanVsHuman roomid={param.roomid} userData={userData} history={history}>

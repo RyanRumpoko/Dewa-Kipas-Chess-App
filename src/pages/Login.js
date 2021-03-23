@@ -102,8 +102,8 @@ export default function Login() {
             <GoogleLogin
               clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
               buttonText="Login"
-              onSuccess={responseGoogle}
-              onFailure={responseGoogle}
+              onSuccess={() => responseGoogle}
+              onFailure={() => responseGoogle}
               cookiePolicy={"single_host_origin"}
             />
             ,
