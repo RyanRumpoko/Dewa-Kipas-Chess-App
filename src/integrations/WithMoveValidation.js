@@ -3,20 +3,17 @@ import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess() not being a constructor
 import Chessboard from "chessboardjsx";
 import axios from "../api/axios";
+import MatchmakingQueueDialogs from '../components/loaderMatchmaking'
 import { socket, ENDPOINT } from "../connections/socketio.js";
 import { v4 as uuidv4 } from "uuid";
 import {
   Button,
   Dialog,
   DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
-import { useHistory, withRouter } from "react-router-dom";
-
+import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
-// const EloRating = require('elo-rating')
 import Testing from "../pages/TestingWebRtc";
 import { Timer } from "react-countdown-clock-timer";
 
@@ -56,12 +53,13 @@ class HumanVsHuman extends Component {
       // }
       pauseTimerKita: true,
       pauseTimerEnemy: true,
+      openMatchmakingLoader: false,
     };
   }
 
   componentDidMount() {
     // console.log(this.props, "<<<<<<<<<< ini yg di class");
-    // console.log(this.props.roomid, "<<<<<<<<<< ini yang di class");
+    console.log(this.props.roomid, "<<<<<<<<<< ini yang di class");
     // console.log(this.props.userData, "ini props userdata di class component");
     // console.log(this.state.userData, "ini state userdata di class component");
     if (this.state.roomid === "new") {
@@ -75,7 +73,9 @@ class HumanVsHuman extends Component {
         this.state.roomid,
         "<<<<<<<<<<<<<<<<<<<< DI COMPONENT DID MOUNT"
       );
-    } else {
+    } else if (this.state.roomid === "matchmaking") {
+      this.setState({openMatchmakingLoader: true})
+    }else {
       this.setState({ color: "black" });
       socket.emit("join-room", {
         roomid: this.state.roomid,
@@ -83,6 +83,21 @@ class HumanVsHuman extends Component {
       });
     }
     this.game = new Chess();
+
+    socket.on("matchStart", (dataRoom) => {
+      console.log("matchstart dapet")
+      this.setState({openMatchmakingLoader: false})
+      if (this.state.userData.id === dataRoom.playerOne.id){
+        this.setState({ color: "white", roomid: dataRoom.roomid });
+        this.setState({ enemy: dataRoom.playerTwo });
+        this.handleTimerEnemy();
+      } else {
+        this.setState({ color: "black", roomid: dataRoom.roomid });
+        this.setState({ enemy: dataRoom.playerOne });
+        this.handleTimerKita();
+      }
+    })
+    
 
     socket.on("fullroom", (dataRoom) => {
       // console.log("fullroom", dataRoom);
@@ -437,6 +452,7 @@ class HumanVsHuman extends Component {
       pauseTimerKita: this.state.pauseTimerKita,
       pauseTimerEnemy: this.state.pauseTimerEnemy,
       timeIsOut: this.timeIsOut,
+      openMatchmakingLoader: this.state.openMatchmakingLoader
     });
   }
 }
@@ -445,9 +461,6 @@ export default function WithMoveValidation(props) {
   const param = useParams();
   const history = useHistory();
   const { userData } = props;
-  // function getRoom() {
-  //   props.getRoomId(roomid)
-  // }
 
   return (
     <div>
@@ -472,11 +485,13 @@ export default function WithMoveValidation(props) {
           pauseTimerKita,
           pauseTimerEnemy,
           timeIsOut,
+          openMatchmakingLoader
         }) => (
-          // {
-          //   // this.game.current
-          // }
           <>
+            <MatchmakingQueueDialogs
+              openMatchmakingLoader={openMatchmakingLoader}
+              userData={userData}
+            />
             <div>room ID: {roomid}</div>
             <Chessboard
               id="humanVsHuman"
