@@ -2,92 +2,100 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess() not being a constructor
 import Chessboard from "chessboardjsx";
-import { io } from "socket.io-client";
 import axios from "../api/axios";
-import { v4 as uuidv4 } from 'uuid'
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle  } from '@material-ui/core';
+import { socket, ENDPOINT } from "../connections/socketio.js";
+import { v4 as uuidv4 } from "uuid";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@material-ui/core";
 import { useHistory, withRouter } from "react-router-dom";
 
 import { useParams } from "react-router-dom"
-const EloRating = require('elo-rating')
-const ENDPOINT = "http://localhost:4000/";
-const socket = io(ENDPOINT);
+// const EloRating = require('elo-rating')
+
+
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
-    fen: "start",
-    // square styles for active drop square
-    dropSquareStyle: {},
-    // custom square styles
-    squareStyles: {},
-    // square with the currently clicked piece
-    pieceSquare: "",
-    // currently clicked square
-    square: "",
-    // array of past game moves
-    history: [],
-    //modifan baru
-    play: true,
-    color: "white",
-    dataFetch: [],
-    roomid: this.props.roomid,
-    userData: this.props.userData,
-    enemy: {},
-    gameOver: false,
-    openGameOverModal: false,
-    playerWinStatus: ''
-    // isi userData
-    // {
-    //   id: user.id,
-    //   username: user.username,
-    //   email: user.email,
-    //   pictureUrl: user.pictureUrl,
-    //   eloRating: user.eloRating,
-    // }
-  };
+      fen: "start",
+      // square styles for active drop square
+      dropSquareStyle: {},
+      // custom square styles
+      squareStyles: {},
+      // square with the currently clicked piece
+      pieceSquare: "",
+      // currently clicked square
+      square: "",
+      // array of past game moves
+      history: [],
+      //modifan baru
+      play: true,
+      color: "white",
+      dataFetch: [],
+      roomid: this.props.roomid,
+      userData: this.props.userData,
+      enemy: {},
+      gameOver: false,
+      openGameOverModal: false,
+      playerWinStatus: "",
+      // isi userData
+      // {
+      //   id: user.id,
+      //   username: user.username,
+      //   email: user.email,
+      //   pictureUrl: user.pictureUrl,
+      //   eloRating: user.eloRating,
+      // }
+    };
   }
-  
-
 
   componentDidMount() {
-    
-    console.log(this.props, '<<<<<<<<<< ini yg di class');
-    console.log(this.props.roomid, '<<<<<<<<<< ini yang di class');
-    console.log(this.props.userData, 'ini props userdata di class component')
-    console.log(this.state.userData, 'ini state userdata di class component')
-    if (this.state.roomid === 'new') {
-      let uuid = uuidv4()
-      this.setState({ roomid: uuid })
-      socket.emit('create-room', { roomid: uuid, playerData: this.state.userData })
+    console.log(this.props, "<<<<<<<<<< ini yg di class");
+    console.log(this.props.roomid, "<<<<<<<<<< ini yang di class");
+    console.log(this.props.userData, "ini props userdata di class component");
+    console.log(this.state.userData, "ini state userdata di class component");
+    if (this.state.roomid === "new") {
+      let uuid = uuidv4();
+      this.setState({ roomid: uuid });
+      socket.emit("create-room", {
+        roomid: uuid,
+        playerData: this.state.userData,
+      });
     } else {
-      this.setState({ color: 'black' })
-      socket.emit('join-room', { roomid: this.state.roomid, playerData: this.state.userData })
+      this.setState({ color: "black" });
+      socket.emit("join-room", {
+        roomid: this.state.roomid,
+        playerData: this.state.userData,
+      });
     }
     this.game = new Chess();
 
-    socket.on('fullroom', (dataRoom) => {
-      console.log('fullroom', dataRoom)
-      console.log(this.state.color)
-      if (this.state.color === 'white') {
-        this.setState({enemy: dataRoom.selectedRoom.playerTwo})
-        console.log(this.state.enemy, 'ini enemyku di white')
-
+    socket.on("fullroom", (dataRoom) => {
+      console.log("fullroom", dataRoom);
+      console.log(this.state.color);
+      if (this.state.color === "white") {
+        this.setState({ enemy: dataRoom.selectedRoom.playerTwo });
+        console.log(this.state.enemy, "ini enemyku di white");
       } else {
-        this.setState({enemy: dataRoom.selectedRoom.playerOne})
-        console.log(this.state.enemy, 'ini enemyku di black')
-
+        this.setState({ enemy: dataRoom.selectedRoom.playerOne });
+        console.log(this.state.enemy, "ini enemyku di black");
       }
-    })
+    });
 
-    socket.on('enemymove', (data) => {
+    socket.on("enemymove", (data) => {
       let move = this.game.move({
         from: data.sourceSquare,
         to: data.targetSquare,
         promotion: "q", // always promote to a queen for example simplicity
-      })
+      });
       this.setState({
         fen: data.fen,
         history: data.history,
@@ -97,7 +105,8 @@ class HumanVsHuman extends Component {
 
     socket.on('youlose', () => {
       console.log('dapat socket you lose')
-      let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
+      let newScore = this.state.userData.eloRating - 10
+      // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
       this.updateScore({id: this.state.userData.id, eloRating: newScore})
       this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
       console.log('kamu loser')
@@ -139,90 +148,100 @@ class HumanVsHuman extends Component {
 
   onDrop = ({ sourceSquare, targetSquare }) => {
     // see if the move is legal
-    const nowTurn = this.game.fen().split(' ')[1]
-    console.log(nowTurn, '<< seharunya ini yang boleh gerak')
-    if ((this.state.color === 'black' && nowTurn=== 'b') || (this.state.color === 'white' && nowTurn === 'w')) {
+    const nowTurn = this.game.fen().split(" ")[1];
+    console.log(nowTurn, "<< seharunya ini yang boleh gerak");
+    if (
+      (this.state.color === "black" && nowTurn === "b") ||
+      (this.state.color === "white" && nowTurn === "w")
+    ) {
       // illegal move
-    let move = this.game.move({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: "q", // always promote to a queen for example simplicity
-    });
-    console.log(this.game.move())
-    console.log(sourceSquare, targetSquare, 'ini isi ondrop')
-    console.log(this.game, 'ini isi this gameeeeee')
-    console.log(this.game.fen())
+      let move = this.game.move({
+        from: sourceSquare,
+        to: targetSquare,
+        promotion: "q", // always promote to a queen for example simplicity
+      });
+      console.log(this.game.move());
+      console.log(sourceSquare, targetSquare, "ini isi ondrop");
+      console.log(this.game, "ini isi this gameeeeee");
+      console.log(this.game.fen());
       if (move === null) return;
-      
+
       this.setState(({ history, pieceSquare }) => ({
         fen: this.game.fen(),
         history: this.game.history({ verbose: true }),
         squareStyles: squareStyling({ pieceSquare, history }),
       }));
 
-      socket.emit('move', {
+      socket.emit("move", {
         sourceSquare,
         targetSquare,
         roomid: this.state.roomid,
-        fen: this.state.fen, 
-        history: this.state.history, 
-        squareStyles: this.state.pieceSquare
-      })
-      const isStaleMate = this.game.in_stalemate()
+        fen: this.state.fen,
+        history: this.state.history,
+        squareStyles: this.state.pieceSquare,
+      });
+      const isStaleMate = this.game.in_stalemate();
       if (isStaleMate) {
         // emit draw end game
         this.postHistory({
           playerOne: this.state.userData.id,
           playerTwo: this.state.enemy.id,
-          status: 3
-        })
-        console.log('draw')
+          status: 3,
+        });
+        console.log("draw");
 
         // harusnya disini update user score
         this.postHistory({
           playerOne: this.state.userData.id,
           playerTwo: this.state.enemy.id,
-          status: 3
-        })
-        this.setState({ playerWinStatus: `Stalemate, You get draw versus ${this.state.enemy.username}!!` })
-        this.setState({ openGameOverModal: true })
-
+          status: 3,
+        });
+        this.setState({
+          playerWinStatus: `Stalemate, You get draw versus ${this.state.enemy.username}!!`,
+        });
+        this.setState({ openGameOverModal: true });
       } else {
-        console.log(this.game.game_over(), 'ini isi gameover ')
-        const isGameOver = this.game.game_over()
+        console.log(this.game.game_over(), "ini isi gameover ");
+        const isGameOver = this.game.game_over();
         if (isGameOver) {
-          const losercolor = this.game.fen().split(' ')[1]
-          if ((losercolor === 'b' && this.state.color === 'black') || (losercolor === 'w' && this.state.color === 'white')) {
+          const losercolor = this.game.fen().split(" ")[1];
+          if (
+            (losercolor === "b" && this.state.color === "black") ||
+            (losercolor === "w" && this.state.color === "white")
+          ) {
             // berarti client ini yang lose
-            let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
+            // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
+            let newScore = this.state.userData.eloRating - 10
             this.updateScore({id: this.state.userData.id, eloRating: newScore})
+            socket.emit('gameOver', { roomid: this.state.roomid })
             this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
             console.log('kamu loser')
 
             this.setState({ openGameOverModal: true })
           } else {
             // berarti client ini yang win
-            this.setState({status: 1})
+            this.setState({ status: 1 });
             this.postHistory({
               playerOne: this.state.userData.id,
               playerTwo: this.state.enemy.id,
-              status: 1
-            })
+              status: 1,
+            });
             // harusnya disini update user score
-            let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, true)
+            // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, true)
+            let newScore = this.state.userData.eloRating + 10
             this.updateScore({id: this.state.userData.id, eloRating: newScore})
             console.log('kamu winner')
+            socket.emit('gameOver', { roomid: this.state.roomid })
             this.setState({ playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!` })
             this.setState({ openGameOverModal: true })
           }
-          socket.emit('gameOver', { roomid: this.state.roomid })
 
         }
       }
-      const losercolor = this.game.fen().split(' ')[1]
-      console.log(losercolor, 'move siapa ketika kita cek gameover')
+      const losercolor = this.game.fen().split(" ")[1];
+      console.log(losercolor, "move siapa ketika kita cek gameover");
     } else {
-      console.log('its not your turn')
+      console.log("its not your turn");
       return;
     }
   };
@@ -241,24 +260,24 @@ class HumanVsHuman extends Component {
     }
   }
 
-  postHistory = async (data) => {
+  postHistory = async (input) => {
     try {
       const response = await axios({
         method: "post",
         url: `${ENDPOINT}histories/`,
-        data: data,
-        headers: {'access_token': localStorage.getItem('access_token')}
-      })
+        data: input,
+        headers: { access_token: localStorage.getItem("access_token") },
+      });
       console.log(response);
     } catch ({ response }) {
       console.log(response.data);
     }
-  }
+  };
 
   handleCloseGameOver = () => {
-    this.setState({ openGameOverModal: false })
-    this.props.history.push('/home')
-  }
+    this.setState({ openGameOverModal: false });
+    this.props.history.push("/home");
+  };
 
   onMouseOverSquare = (square) => {
     // get list of possible moves for this square
@@ -308,7 +327,6 @@ class HumanVsHuman extends Component {
     // sepertinya disini action move nya
     socket.emit("message", "onsquareclick");
 
-
     this.setState({
       fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
@@ -338,16 +356,16 @@ class HumanVsHuman extends Component {
       roomid: this.state.roomid,
       openGameOverModal: this.state.openGameOverModal,
       handleCloseGameOver: this.handleCloseGameOver,
-      playerWinStatus: this.state.playerWinStatus
+      playerWinStatus: this.state.playerWinStatus,
     });
   }
 }
 
 export default function WithMoveValidation(props) {
-  const param = useParams()
-  const history = useHistory()
-  const {userData} = props
-  console.log(param, 'ini param');
+  const param = useParams();
+  const history = useHistory();
+  const { userData } = props;
+  console.log(param, "ini param");
   return (
     <div>
       {/* <p>{JSON.stringify(dataFetch)}</p> */}
@@ -366,51 +384,50 @@ export default function WithMoveValidation(props) {
           roomid,
           openGameOverModal,
           handleCloseGameOver,
-          playerWinStatus
+          playerWinStatus,
         }) => (
           // {
           //   // this.game.current
           // }
           <>
-          <div>room ID: {roomid}</div>
-          <Chessboard
-            id="humanVsHuman"
-            width={540}
-            position={position}
-            onDrop={onDrop}
-            orientation={color}
-            onMouseOverSquare={onMouseOverSquare}
-            onMouseOutSquare={onMouseOutSquare}
-            boardStyle={{
-              borderRadius: "5px",
-              boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
-            }}
-            squareStyles={squareStyles}
-            dropSquareStyle={dropSquareStyle}
-            onDragOverSquare={onDragOverSquare}
-            onSquareClick={onSquareClick}
-            onSquareRightClick={onSquareRightClick}
-          />
-          <Dialog
-            open={openGameOverModal}
-            onClose={handleCloseGameOver}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">{`${playerWinStatus}`}</DialogTitle>
-            {/* <DialogContent>
+            <div>room ID: {roomid}</div>
+            <Chessboard
+              id="humanVsHuman"
+              width={540}
+              position={position}
+              onDrop={onDrop}
+              orientation={color}
+              onMouseOverSquare={onMouseOverSquare}
+              onMouseOutSquare={onMouseOutSquare}
+              boardStyle={{
+                borderRadius: "5px",
+                boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
+              }}
+              squareStyles={squareStyles}
+              dropSquareStyle={dropSquareStyle}
+              onDragOverSquare={onDragOverSquare}
+              onSquareClick={onSquareClick}
+              onSquareRightClick={onSquareRightClick}
+            />
+            <Dialog
+              open={openGameOverModal}
+              onClose={handleCloseGameOver}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{`${playerWinStatus}`}</DialogTitle>
+              {/* <DialogContent>
               <DialogContentText id="alert-dialog-description">
                 {playerWinStatus}
               </DialogContentText>
             </DialogContent> */}
-            <DialogActions>
-              <Button onClick={handleCloseGameOver} color="primary" autoFocus>
-                Back to Lobby
-              </Button>
-            </DialogActions>
-          </Dialog>
+              <DialogActions>
+                <Button onClick={handleCloseGameOver} color="primary" autoFocus>
+                  Back to Lobby
+                </Button>
+              </DialogActions>
+            </Dialog>
           </>
-          
         )}
       </HumanVsHuman>
     </div>
