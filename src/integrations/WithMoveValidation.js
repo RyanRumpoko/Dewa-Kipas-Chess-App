@@ -103,14 +103,14 @@ class HumanVsHuman extends Component {
       })
     })
 
-    socket.on('youlose', () => {
+    socket.on("youlose", () => {
+      this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
+      console.log('kamu loser')
+      this.setState({ openGameOverModal: true })
       console.log('dapat socket you lose')
       let newScore = this.state.userData.eloRating - 10
       // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
       this.updateScore({id: this.state.userData.id, eloRating: newScore})
-      this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
-      console.log('kamu loser')
-      this.setState({ openGameOverModal: true })
     })
   }
 
@@ -256,7 +256,7 @@ class HumanVsHuman extends Component {
       })
       console.log(response);
     } catch ({ response }) {
-      console.log(response.data);
+      console.log(response);
     }
   }
 
