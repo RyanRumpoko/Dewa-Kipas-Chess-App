@@ -4,11 +4,11 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Regis from "./pages/Regis";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
-
-import TestingTimer from "./pages/TestingTimer";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
   return (
+    <div>
     <Switch>
       <Route exact path="/">
         {localStorage.access_token ? (
@@ -47,13 +47,8 @@ function App() {
           localStorage.access_token ? <Redirect to="/home" /> : <Regis />
         }
       />
-      <Route
-        path="/testing"
-        render={() =>
-          localStorage.access_token ? <TestingTimer /> : <Redirect to="/home" />
-        }
-      />
     </Switch>
+    </div>
   );
 }
 

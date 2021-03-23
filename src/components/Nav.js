@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import Button from 'react-bootstrap/Button'
 
 export default function Nav() {
   const [color, setColor] = useState("btn btn-outline-dark");
@@ -19,19 +20,19 @@ export default function Nav() {
   return (
     <div
       className="col-12"
-      style={{ display: "flex", justifyContent: "flex-end" }}
+      style={{ display: "flex", justifyContent: "flex-end", backgroundColor: "#161512" }}
     >
-      <button
+      <Button
+        variant="secondary"
         className={color}
-        onMouseOver={() => changeColor("over")}
-        onMouseLeave={() => changeColor("leave")}
+        style={{backgroundColor: "#161512"}}
+        // onMouseOver={() => changeColor("over")}
+        // onMouseLeave={() => changeColor("leave")}
         onClick={() => logout()}
       >
-        <i className="fas fa-sign-out-alt" style={{ color: "black" }}>
-          {" "}
-          Log Out
-        </i>
-      </button>
+        <i className="fas fa-sign-out-alt" style={{ color: "black" }} />
+        <span>&nbsp;Log Out</span>
+      </Button>
     </div>
   );
 }

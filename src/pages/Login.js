@@ -43,10 +43,10 @@ export default function Login() {
     }
   }
   return (
-    <div className="row">
-      <div className="col-4"></div>
+    <div className="row justify-content-center color-light" style={{color: "#999999"}}>
+      {/* <div className="col-4"></div> */}
 
-      <div className="col-4">
+      <div className="col-sm-12 col-md-6 col-xl-4 mt-5" style={{}}>
         <h1>Login</h1>
         <form
           className={
@@ -111,7 +111,6 @@ export default function Login() {
         </form>
       </div>
 
-      <div className="col-4"></div>
     </div>
   );
 }

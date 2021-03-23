@@ -130,6 +130,11 @@ class HumanVsHuman extends Component {
         id: this.state.userData.id,
         eloRating: newScore,
       });
+      this.postHistory({
+        playerOne: this.state.userData.id,
+        playerTwo: this.state.enemy.id,
+        status: 1,
+      })
       console.log("kamu winner");
       this.setState({
         playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!`,
@@ -346,7 +351,7 @@ class HumanVsHuman extends Component {
 
   handleCloseGameOver = () => {
     this.setState({ openGameOverModal: false });
-    this.props.history.push("/home");
+    this.props.history.push("/home", {...this.state.userData});
   };
 
   onMouseOverSquare = (square) => {
