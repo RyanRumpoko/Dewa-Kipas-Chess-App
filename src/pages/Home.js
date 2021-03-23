@@ -26,12 +26,7 @@ export default function Home() {
   function vsBot() {
     history.push("/dashboard/bot", state);
   }
-<<<<<<< HEAD
   useEffect(() => {}, [openModalCreateRoom]);
-=======
-  useEffect (() => {
-  }, [openModalCreateRoom])
->>>>>>> afee3b67b7ae7a4f1c64d84a5858d49adde123af
 
   return (
     <div className="container-fluid bg-info">
