@@ -150,6 +150,10 @@ class HumanVsHuman extends Component {
     }));
   };
 
+  createEloRating = (currentRating, enemyRating, status) => {
+    return (enemyRating+(400*status))/10
+  }
+
   onDrop = ({ sourceSquare, targetSquare }) => {
     // see if the move is legal
     const nowTurn = this.game.fen().split(" ")[1];
