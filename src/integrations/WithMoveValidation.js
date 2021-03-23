@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess() not being a constructor
 import Chessboard from "chessboardjsx";
-import { io } from "socket.io-client";
 import axios from "../api/axios";
+import { socket, ENDPOINT } from "../connections/socketio.js";
 import { v4 as uuidv4 } from "uuid";
 import {
   Button,
@@ -15,10 +15,10 @@ import {
 } from "@material-ui/core";
 import { useHistory, withRouter } from "react-router-dom";
 
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"
+// const EloRating = require('elo-rating')
 
-const ENDPOINT = "http://localhost:4000/";
-const socket = io(ENDPOINT);
+
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
@@ -100,16 +100,18 @@ class HumanVsHuman extends Component {
         fen: data.fen,
         history: data.history,
         squareStyles: data.squareStyles,
-      });
-    });
+      })
+    })
 
-    socket.on("youlose", () => {
-      this.setState({
-        playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
-      });
-      console.log("kamu loser");
-      this.setState({ openGameOverModal: true });
-    });
+    socket.on('youlose', () => {
+      console.log('dapat socket you lose')
+      let newScore = this.state.userData.eloRating - 10
+      // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
+      this.updateScore({id: this.state.userData.id, eloRating: newScore})
+      this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
+      console.log('kamu loser')
+      this.setState({ openGameOverModal: true })
+    })
   }
 
   // keep clicked square style and remove hint squares
@@ -208,11 +210,14 @@ class HumanVsHuman extends Component {
             (losercolor === "w" && this.state.color === "white")
           ) {
             // berarti client ini yang lose
-            this.setState({
-              playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
-            });
-            console.log("kamu loser");
-            this.setState({ openGameOverModal: true });
+            // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
+            let newScore = this.state.userData.eloRating - 10
+            this.updateScore({id: this.state.userData.id, eloRating: newScore})
+            socket.emit('gameOver', { roomid: this.state.roomid })
+            this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
+            console.log('kamu loser')
+
+            this.setState({ openGameOverModal: true })
           } else {
             // berarti client ini yang win
             this.setState({ status: 1 });
@@ -222,14 +227,15 @@ class HumanVsHuman extends Component {
               status: 1,
             });
             // harusnya disini update user score
-            console.log("kamu winner");
-            this.setState({
-              playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!`,
-            });
-            this.setState({ openGameOverModal: true });
+            // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, true)
+            let newScore = this.state.userData.eloRating + 10
+            this.updateScore({id: this.state.userData.id, eloRating: newScore})
+            console.log('kamu winner')
+            socket.emit('gameOver', { roomid: this.state.roomid })
+            this.setState({ playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!` })
+            this.setState({ openGameOverModal: true })
           }
-          console.log(losercolor, "move siapa ketika kita cek gameover");
-          socket.emit("gameOver", { roomid: this.state.roomid });
+
         }
       }
       const losercolor = this.game.fen().split(" ")[1];
@@ -240,12 +246,26 @@ class HumanVsHuman extends Component {
     }
   };
 
+  updateScore = async (data) => { // data is obj with id and eloRating key
+    try {
+      const response = await axios({
+        method: "put",
+        url: `${ENDPOINT}users/updatescore`,
+        data: data,
+        headers: {'access_token': localStorage.getItem('access_token')}
+      })
+      console.log(response);
+    } catch ({ response }) {
+      console.log(response.data);
+    }
+  }
+
   postHistory = async (input) => {
     try {
-      const { data } = await axios({
+      const response = await axios({
         method: "post",
         url: `${ENDPOINT}histories/`,
-        data: data,
+        data: input,
         headers: { access_token: localStorage.getItem("access_token") },
       });
       console.log(response);
