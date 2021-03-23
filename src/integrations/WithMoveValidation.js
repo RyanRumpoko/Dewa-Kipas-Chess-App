@@ -18,6 +18,7 @@ import { useHistory, withRouter } from "react-router-dom";
 import { useParams } from "react-router-dom";
 // const EloRating = require('elo-rating')
 import Testing from "../pages/TestingWebRtc";
+import { Timer } from "react-countdown-clock-timer";
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
@@ -53,6 +54,8 @@ class HumanVsHuman extends Component {
       //   pictureUrl: user.pictureUrl,
       //   eloRating: user.eloRating,
       // }
+      pauseTimerKita: true,
+      pauseTimerEnemy: true,
     };
   }
 
@@ -86,9 +89,11 @@ class HumanVsHuman extends Component {
       // console.log(this.state.color);
       if (this.state.color === "white") {
         this.setState({ enemy: dataRoom.selectedRoom.playerTwo });
+        this.handleTimerEnemy();
         console.log(this.state.enemy, "ini enemyku di white");
       } else {
         this.setState({ enemy: dataRoom.selectedRoom.playerOne });
+        this.handleTimerKita();
         console.log(this.state.enemy, "ini enemyku di black");
       }
     });
@@ -104,18 +109,33 @@ class HumanVsHuman extends Component {
         history: data.history,
         squareStyles: data.squareStyles,
       });
+      this.changeTurnTimer();
     });
 
     socket.on("youlose", () => {
-
-      this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
-      console.log('kamu loser')
-      this.setState({ openGameOverModal: true })
-      console.log('dapat socket you lose')
-      let newScore = this.state.userData.eloRating - 10
+      this.setState({
+        playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
+      });
+      console.log("kamu loser");
+      this.setState({ openGameOverModal: true });
+      console.log("dapat socket you lose");
+      let newScore = this.state.userData.eloRating - 10;
       // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
-      this.updateScore({id: this.state.userData.id, eloRating: newScore})
-    })
+      this.updateScore({ id: this.state.userData.id, eloRating: newScore });
+    });
+
+    socket.on("youwin", () => {
+      let newScore = this.state.userData.eloRating + 10;
+      this.updateScore({
+        id: this.state.userData.id,
+        eloRating: newScore,
+      });
+      console.log("kamu winner");
+      this.setState({
+        playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!`,
+      });
+      this.setState({ openGameOverModal: true });
+    });
   }
 
   // keep clicked square style and remove hint squares
@@ -175,6 +195,8 @@ class HumanVsHuman extends Component {
         history: this.game.history({ verbose: true }),
         squareStyles: squareStyling({ pieceSquare, history }),
       }));
+
+      this.changeTurnTimer();
 
       socket.emit("move", {
         sourceSquare,
@@ -257,6 +279,36 @@ class HumanVsHuman extends Component {
       console.log("its not your turn");
       return;
     }
+  };
+
+  handleTimerKita = () => {
+    this.setState({ pauseTimerKita: true, pauseTimerEnemy: false });
+  };
+
+  handleTimerEnemy = () => {
+    this.setState({ pauseTimerKita: false, pauseTimerEnemy: true });
+  };
+
+  changeTurnTimer = () => {
+    this.setState({
+      pauseTimerKita: !this.state.pauseTimerKita,
+      pauseTimerEnemy: !this.state.pauseTimerEnemy,
+    });
+  };
+
+  timeIsOut = () => {
+    let newScore = this.state.userData.eloRating - 10;
+    this.updateScore({
+      id: this.state.userData.id,
+      eloRating: newScore,
+    });
+    socket.emit("enemyTimeout", { roomid: this.state.roomid });
+    this.setState({
+      playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
+    });
+    console.log("kamu loser");
+
+    this.setState({ openGameOverModal: true });
   };
 
   updateScore = async (data) => {
@@ -373,6 +425,9 @@ class HumanVsHuman extends Component {
       playerWinStatus: this.state.playerWinStatus,
       userData: this.state.userData,
       enemy: this.state.enemy,
+      pauseTimerKita: this.state.pauseTimerKita,
+      pauseTimerEnemy: this.state.pauseTimerEnemy,
+      timeIsOut: this.timeIsOut,
     });
   }
 }
@@ -384,6 +439,7 @@ export default function WithMoveValidation(props) {
   // function getRoom() {
   //   props.getRoomId(roomid)
   // }
+
   return (
     <div>
       <HumanVsHuman roomid={param.roomid} userData={userData} history={history}>
@@ -404,6 +460,9 @@ export default function WithMoveValidation(props) {
           playerWinStatus,
           userData,
           enemy,
+          pauseTimerKita,
+          pauseTimerEnemy,
+          timeIsOut,
         }) => (
           // {
           //   // this.game.current
@@ -428,7 +487,25 @@ export default function WithMoveValidation(props) {
               onSquareClick={onSquareClick}
               onSquareRightClick={onSquareRightClick}
             />
-            <Testing roomid={roomid} userData={userData} enemy={enemy} color={color} />
+            <Testing
+              roomid={roomid}
+              userData={userData}
+              enemy={enemy}
+              color={color}
+            />
+            <div className="timer-container">
+              <Timer
+                durationInSeconds={20}
+                formatted={true}
+                isPaused={pauseTimerKita}
+                onFinish={timeIsOut}
+              />
+              <Timer
+                durationInSeconds={20}
+                formatted={true}
+                isPaused={pauseTimerEnemy}
+              />
+            </div>
 
             <Dialog
               open={openGameOverModal}

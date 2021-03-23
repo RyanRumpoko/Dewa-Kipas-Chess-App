@@ -23,7 +23,7 @@ export default function Home() {
     history.push(`/dashboard/player/${inputRoomId}`, state);
   }
   function onChangeInputRoomId(e) {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setInputRoomId(e.target.value);
   }
   function vsBot() {
@@ -51,7 +51,6 @@ export default function Home() {
       <div className="row">
         <Nav />
       </div>
-
       {openModalCreateRoom ? (
         <div className="row">
           <button className="btn" type="button" onClick={createRoom}>
@@ -109,7 +108,6 @@ export default function Home() {
           </div>
           <div className="row">{JSON.stringify(histories, null, 2)}</div>
         </div>
-
         <div className="col-6 bg-danger">
           <div className="row">
             <div
@@ -117,7 +115,7 @@ export default function Home() {
               style={{ display: "flex", justifyContent: "center" }}
             >
               <img
-                src="https://library.kissclipart.com/20190209/jww/kissclipart-catur-kuda-clipart-chess-battlefy-inc-game-9c1a9d225f763183.png"
+                src={state.pictureUrl}
                 className="img-thumbnail"
                 height="100"
                 width="100"
