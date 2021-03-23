@@ -238,7 +238,7 @@ class Stockfish extends Component {
         engineStatus.engineReady = false;
         engineStatus.search = null;
         prepareMove();
-        announced_game_over = false;
+        announced_game_over = true;
       },
       prepareMove: function () {
         prepareMove();

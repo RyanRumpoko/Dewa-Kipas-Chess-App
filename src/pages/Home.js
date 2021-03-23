@@ -1,64 +1,63 @@
 import { useHistory, useLocation } from "react-router-dom";
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from "react";
 import Nav from "../components/Nav";
 
 export default function Home() {
-
   const { state } = useLocation();
   console.log(state, "<<<<<");
   const history = useHistory();
-  const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false)
-  const [inputRoomId, setInputRoomId] = useState('')
+  const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false);
+  const [inputRoomId, setInputRoomId] = useState("");
   function vsPlayer() {
-    setOpenModalCreateRoom(true)
-    console.log(openModalCreateRoom, 'sudah tertoggle')
+    setOpenModalCreateRoom(true);
+    console.log(openModalCreateRoom, "sudah tertoggle");
     // history.push("/dashboard/player");
   }
-  function createRoom () {
-    history.push("/dashboard/player/new", state)
+  function createRoom() {
+    history.push("/dashboard/player/new", state);
   }
-  function joinRoom () {
-    history.push(`/dashboard/player/${inputRoomId}`, state)
+  function joinRoom() {
+    history.push(`/dashboard/player/${inputRoomId}`, state);
   }
-  function onChangeInputRoomId (e) {
-    console.log(e.target.value)
-    setInputRoomId(e.target.value)
+  function onChangeInputRoomId(e) {
+    console.log(e.target.value);
+    setInputRoomId(e.target.value);
   }
   function vsBot() {
-    history.push("/dashboard/bot");
+    history.push("/dashboard/bot", state);
   }
+<<<<<<< HEAD
+  useEffect(() => {}, [openModalCreateRoom]);
+=======
   useEffect (() => {
   }, [openModalCreateRoom])
+>>>>>>> afee3b67b7ae7a4f1c64d84a5858d49adde123af
 
   return (
     <div className="container-fluid bg-info">
       <div className="row">
         <Nav />
       </div>
-      
-      {
-        openModalCreateRoom ?
-          <div className='row'>
-            <button className="btn"
-            type="button"
-            onClick={createRoom}>
-              createRoom
+
+      {openModalCreateRoom ? (
+        <div className="row">
+          <button className="btn" type="button" onClick={createRoom}>
+            createRoom
+          </button>
+          <>
+            <label>input room id</label>
+            <input type="text" onChange={(e) => onChangeInputRoomId(e)} />
+            <button className="btn" type="button" onClick={joinRoom}>
+              joinRoom
             </button>
-            <>
-              <label>input room id</label>
-              <input type="text" onChange={(e) => onChangeInputRoomId(e)}/>
-              <button className="btn" type="button" onClick={joinRoom}>
-                  joinRoom
-              </button>
-            </>
-          </div>
-        : <div></div>
-      }
-      <div className="row">
+          </>
+        </div>
+      ) : (
+        <div></div>
+      )}
+      <div className="row" style={{ height: "100vh" }}>
         <div className="col-6 bg-warning">
-          <div className="row"></div>
-            <h1 className="text-center">Want to play now?</h1>
-          </div>
+          <h1 className="text-center">Want to play now?</h1>
           <div className="row">
             <div
               className="dropdown"
@@ -97,7 +96,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="col-6 bg-danger" style={{ height: "90vh" }}>
+        <div className="col-6 bg-danger">
           <div className="row">
             <div
               className="col-2"
@@ -119,13 +118,75 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="row" style={{ height: "50%" }}>
+          <div className="row" style={{ height: "50vh" }}>
             <h1 className="text-center">Leaderboard</h1>
           </div>
-          <div className="row" style={{ height: "50%" }}>
-            <h1 className="text-center">History</h1>
+          <div className="row" style={{ height: "50vh" }}>
+            <div className="col">
+              <h1 className="text-center">History</h1>
+              <div
+                data-bs-spy="scroll"
+                data-bs-target="#navbar-example2"
+                data-bs-offset="0"
+                tabindex="0"
+                style={{
+                  overflowY: "scroll",
+                  minHeight: "100x",
+                  maxHeight: "420px",
+                }}
+                className="row"
+              >
+                <div className="card mb-3">
+                  <h5 className="card-header">Player One</h5>
+                  <div className="card-body">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Asperiores totam molestiae id? Similique nemo a alias
+                      quasi corporis rem pariatur. Fugit ratione corrupti,
+                      facere nesciunt praesentium vel asperiores. Vero, velit.
+                    </p>
+                  </div>
+                </div>
+                <div className="card mb-3">
+                  <h5 className="card-header">Player One</h5>
+                  <div className="card-body">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Asperiores totam molestiae id? Similique nemo a alias
+                      quasi corporis rem pariatur. Fugit ratione corrupti,
+                      facere nesciunt praesentium vel asperiores. Vero, velit.
+                    </p>
+                  </div>
+                </div>
+                <div className="card mb-3">
+                  <h5 className="card-header">Player One</h5>
+                  <div className="card-body">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Asperiores totam molestiae id? Similique nemo a alias
+                      quasi corporis rem pariatur. Fugit ratione corrupti,
+                      facere nesciunt praesentium vel asperiores. Vero, velit.
+                    </p>
+                  </div>
+                </div>
+                <div className="card mb-3">
+                  <h5 className="card-header">Player One</h5>
+                  <div className="card-body">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Asperiores totam molestiae id? Similique nemo a alias
+                      quasi corporis rem pariatur. Fugit ratione corrupti,
+                      facere nesciunt praesentium vel asperiores. Vero, velit.
+                    </p>
+                  </div>
+                </div>
+
+                {/*  */}
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
   );
 }

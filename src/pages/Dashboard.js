@@ -1,11 +1,12 @@
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import ChessVSBot from "./ChessVSBot";
-import WithMoveValidation from '../integrations/WithMoveValidation'
+import WithMoveValidation from "../integrations/WithMoveValidation";
 
 export default function Dashboard() {
-  let { loc, roomid } = useParams()
-  const { state } = useLocation()
-  console.log(roomid, 'ini room id')
+  let { loc, roomid } = useParams();
+  const { state } = useLocation();
+
+  console.log(roomid, "ini room id");
   const history = useHistory();
 
   function back() {
@@ -29,11 +30,13 @@ export default function Dashboard() {
                   alignItems: "center",
                 }}
               >
-                {loc === "player" 
-                ? <div style={boardsContainer}>
-                    <WithMoveValidation roomid={roomid} userData={state}/>
-                  </div> 
-                : <ChessVSBot />}
+                {loc === "player" ? (
+                  <div style={boardsContainer}>
+                    <WithMoveValidation roomid={roomid} userData={state} />
+                  </div>
+                ) : (
+                  <ChessVSBot userData={state} />
+                )}
               </div>
               <div className="col-4 bg-danger">
                 <div className="row">
@@ -45,21 +48,61 @@ export default function Dashboard() {
                 ></div>
                 <div className="row">
                   <div className="col-10">
-                    <div
-                      class="input-group input-group-lg"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <input
-                        type="text"
-                        class="form-control"
-                        aria-label="Sizing example input"
-                        aria-describedby="inputGroup-sizing-lg"
-                        placeholder="Type ypur message here..."
-                      />
+                    <div className="btn-group dropup">
+                      <button
+                        type="button"
+                        className="btn btn-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i className="fas fa-paper-plane"> Send</i>
+                      </button>
+                      <div className="dropdown-menu">
+                        <div className="row" style={{ width: "320px" }}>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Emot</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Emot</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Emot</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Emot</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                          <div className="col-4">
+                            <button className="dropdown-item ">Blabla</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="col-2">
