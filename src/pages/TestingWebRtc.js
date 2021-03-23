@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import io from "socket.io-client";
+import { socket } from "../connections/socketio";
 import Peer from "simple-peer";
 import styled from "styled-components";
 
@@ -21,7 +21,8 @@ const Video = styled.video`
   height: 50%;
 `;
 
-function WebRtc() {
+function WebRtc(props) {
+  // console.log(props);
   const [yourID, setYourID] = useState("");
   const [users, setUsers] = useState({});
   const [stream, setStream] = useState();
@@ -32,11 +33,12 @@ function WebRtc() {
 
   const userVideo = useRef();
   const partnerVideo = useRef();
-  const socket = useRef();
+  const socketVid = useRef();
 
   useEffect(() => {
+    // console.log(props, "ini props");
     console.log("Masuk Use Effect");
-    socket.current = io.connect("http://localhost:4000/");
+    socketVid.current = socket;
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then((stream) => {
@@ -46,15 +48,17 @@ function WebRtc() {
         }
       });
 
-    socket.current.on("yourID", (id) => {
+    socketVid.current.on("yourID", (id) => {
       console.log("Masuk Socket ID");
       setYourID(id);
     });
-    socket.current.on("allUsers", (users) => {
+
+    socketVid.current.on("allUsers", (users) => {
       setUsers(users);
     });
 
-    socket.current.on("hey", (data) => {
+    socketVid.current.on("hey", (data) => {
+      console.log(data, "Masuk hey");
       setReceivingCall(true);
       setCaller(data.from);
       setCallerSignal(data.signal);
@@ -69,10 +73,11 @@ function WebRtc() {
     });
 
     peer.on("signal", (data) => {
-      socket.current.emit("callUser", {
+      console.log(data, "ini Data");
+      socketVid.current.emit("callUser", {
         userToCall: id,
         signalData: data,
-        from: yourID,
+        from: props.userData.id,
       });
     });
 
@@ -82,7 +87,7 @@ function WebRtc() {
       }
     });
 
-    socket.current.on("callAccepted", (signal) => {
+    socketVid.current.on("callAccepted", (signal) => {
       setCallAccepted(true);
       peer.signal(signal);
     });
@@ -96,7 +101,7 @@ function WebRtc() {
       stream: stream,
     });
     peer.on("signal", (data) => {
-      socket.current.emit("acceptCall", { signal: data, to: caller });
+      socketVid.current.emit("acceptCall", { signal: data, to: caller });
     });
 
     peer.on("stream", (stream) => {
@@ -132,13 +137,10 @@ function WebRtc() {
         {PartnerVideo}
       </Row>
       <Row>
-        {Object.keys(users).map((key) => {
-          console.log(key, "ini key");
-          if (key === yourID) {
-            return null;
-          }
-          return <button onClick={() => callPeer(key)}>Call {key}</button>;
-        })}
+        <button onClick={() => callPeer(props.enemy.id)}>
+          Call {props.enemy.username}
+        </button>
+        ;
       </Row>
       <Row>{incomingCall}</Row>
     </Container>
