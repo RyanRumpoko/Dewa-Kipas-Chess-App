@@ -4,33 +4,68 @@ export default function CardHistory(props) {
   // console.log(history);
   return (
     <div className="card mb-3" id="1">
-      <h5 className="card-header">Player One</h5>
       <div className="card-body">
         <div className="row">
           <div className="col-4">
-            <div class="row">
+            <div className="row">
+              {history.status === 1 ? "Winner" : "Lose"}
+            </div>
+            <div
+              className="row"
+              style={{ justifyContent: "center", alignItems: "center" }}
+            >
               <img
                 src={history.PlayerOne.pictureUrl}
                 alt={history.PlayerOne.username}
-                width="10"
+                style={{ width: "6rem", height: "6rem" }}
               />
             </div>
-            <div class="row">Name:</div>
-            <div class="row">{history.PlayerOne.username}</div>
+            <div className="row">
+              <div className="col-6">Name:</div>
+              <div className="col-6">EloRating:</div>
+            </div>
+            <div className="row">
+              <div className="col-6">{history.PlayerOne.username}</div>
+              <div className="col-6">{history.PlayerOne.eloRating}</div>
+            </div>
+          </div>
+          <div
+            className="col-4"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <p style={{ fontSize: "3rem" }}>
+              <i className="fab fa-vimeo-v" size="5"></i>
+              <i className="fab fa-stripe-s"></i>
+            </p>
           </div>
           <div className="col-4">
-            <div class="row">V.S</div>
-          </div>
-          <div className="col-4">
-            <div class="row">testing</div>
+            <div className="row">
+              {history.status === 2 ? "Winner" : "Lose"}
+            </div>
+            <div
+              className="row"
+              style={{ justifyContent: "center", alignItems: "center" }}
+            >
+              <img
+                src={history.PlayerTwo.pictureUrl}
+                alt={history.PlayerTwo.username}
+                style={{ width: "6rem", height: "6rem" }}
+              />
+            </div>
+            <div className="row">
+              <div className="col-6">Name:</div>
+              <div className="col-6">EloRating:</div>
+            </div>
+            <div className="row">
+              <div className="col-6">{history.PlayerTwo.username}</div>
+              <div className="col-6">{history.PlayerTwo.eloRating}</div>
+            </div>
           </div>
         </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores
-          totam molestiae id? Similique nemo a alias quasi corporis rem
-          pariatur. Fugit ratione corrupti, facere nesciunt praesentium vel
-          asperiores. Vero, velit.
-        </p>
       </div>
     </div>
   );

@@ -1,12 +1,12 @@
 import { useHistory, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Nav from "../components/Nav";
 import axios from "../api/axios";
 import CardHistory from "../components/CardHistory";
 
 export default function Home() {
   const { state } = useLocation();
-  // console.log(state, "<<<<<");
+  console.log(state, "<<<<<");
   const history = useHistory();
   const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false);
   const [inputRoomId, setInputRoomId] = useState("");
@@ -23,35 +23,38 @@ export default function Home() {
     history.push(`/dashboard/player/${inputRoomId}`, state);
   }
   function onChangeInputRoomId(e) {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setInputRoomId(e.target.value);
   }
   function vsBot() {
     history.push("/dashboard/bot", state);
   }
+
   useEffect(() => {
+    const ac = new AbortController();
     async function getHistoryUser() {
       try {
         const { data } = await axios({
           method: "get",
-          url: `/histories/${state.id}`,
+          url: `/histories/${state ? state.id : 1}`,
           headers: {
             access_token: localStorage.access_token,
           },
         });
+
         setHistories(data);
       } catch ({ response }) {
         console.log(response.data);
       }
     }
     getHistoryUser();
-  }, [openModalCreateRoom, state.id]);
+    return () => ac.abort();
+  }, [openModalCreateRoom, state]);
   return (
     <div className="container-fluid bg-info">
       <div className="row">
         <Nav />
       </div>
-
       {openModalCreateRoom ? (
         <div className="row">
           <button className="btn" type="button" onClick={createRoom}>
@@ -109,7 +112,6 @@ export default function Home() {
           </div>
           <div className="row">{JSON.stringify(histories, null, 2)}</div>
         </div>
-
         <div className="col-6 bg-danger">
           <div className="row">
             <div
@@ -117,7 +119,7 @@ export default function Home() {
               style={{ display: "flex", justifyContent: "center" }}
             >
               <img
-                src="https://library.kissclipart.com/20190209/jww/kissclipart-catur-kuda-clipart-chess-battlefy-inc-game-9c1a9d225f763183.png"
+                src={state.pictureUrl}
                 className="img-thumbnail"
                 height="100"
                 width="100"
@@ -149,8 +151,8 @@ export default function Home() {
                 className="row"
               >
                 {histories
-                  ? histories.map((history) => (
-                      <CardHistory history={history} key={history} />
+                  ? histories.map((history, i) => (
+                      <CardHistory history={history} key={`data ke${i + 1}`} />
                     ))
                   : null}
                 {/* <div className="card mb-3" id="2">
