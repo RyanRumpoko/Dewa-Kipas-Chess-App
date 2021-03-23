@@ -20,45 +20,13 @@ function TestingTimer() {
         durationInSeconds={600}
         formatted={true}
         isPaused={changeTimerWhite ? true : false}
-        // showPauseButton={true}
         showResetButton={true}
-        // onStart={() => {
-        //   console.log("Triggered when the timer starts");
-        // }}
-        // onPause={(remainingDuration) => {
-        //   console.log("Triggered when the timer is paused", remainingDuration);
-        // }}
-        // onFinish={() => {
-        //   console.log("Triggered when the timer finishes");
-        // }}
-        // onReset={(remainingDuration) => {
-        //   console.log("Triggered when the timer is reset", remainingDuration);
-        // }}
-        // onResume={(remainingDuration) => {
-        //   console.log("Triggered when the timer is resumed", remainingDuration);
-        // }}
       />
       <Timer
         durationInSeconds={600}
         formatted={true}
         isPaused={changeTimerBlack ? true : false}
-        // showPauseButton={true}
         showResetButton={true}
-        // onStart={() => {
-        //   console.log("Triggered when the timer starts");
-        // }}
-        // onPause={(remainingDuration) => {
-        //   console.log("Triggered when the timer is paused", remainingDuration);
-        // }}
-        // onFinish={() => {
-        //   console.log("Triggered when the timer finishes");
-        // }}
-        // onReset={(remainingDuration) => {
-        //   console.log("Triggered when the timer is reset", remainingDuration);
-        // }}
-        // onResume={(remainingDuration) => {
-        //   console.log("Triggered when the timer is resumed", remainingDuration);
-        // }}
       />
       <button className="btn btn-danger" onClick={handleTimerWhite}>
         Click White

@@ -1,20 +1,23 @@
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Nav from "../components/Nav";
+import axios from "../api/axios";
+import CardHistory from "../components/CardHistory";
 
 export default function Home() {
   const { state } = useLocation();
-  console.log(state, "<<<<<");
+  // console.log(state, "<<<<<");
   const history = useHistory();
   const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false);
   const [inputRoomId, setInputRoomId] = useState("");
+  const [histories, setHistories] = useState([]);
   function vsPlayer() {
     setOpenModalCreateRoom(true);
     console.log(openModalCreateRoom, "sudah tertoggle");
     // history.push("/dashboard/player");
   }
   function createRoom() {
-    history.push("/dashboard/player/new", state);
+    history.push(`/dashboard/player/new`, state);
   }
   function joinRoom() {
     history.push(`/dashboard/player/${inputRoomId}`, state);
@@ -26,8 +29,23 @@ export default function Home() {
   function vsBot() {
     history.push("/dashboard/bot", state);
   }
-  useEffect(() => {}, [openModalCreateRoom]);
-
+  useEffect(() => {
+    async function getHistoryUser() {
+      try {
+        const { data } = await axios({
+          method: "get",
+          url: `/histories/${state.id}`,
+          headers: {
+            access_token: localStorage.access_token,
+          },
+        });
+        setHistories(data);
+      } catch ({ response }) {
+        console.log(response.data);
+      }
+    }
+    getHistoryUser();
+  }, [openModalCreateRoom, state.id]);
   return (
     <div className="container-fluid bg-info">
       <div className="row">
@@ -88,6 +106,7 @@ export default function Home() {
               </ul>
             </div>
           </div>
+          <div className="row">{JSON.stringify(histories, null, 2)}</div>
         </div>
         <div className="col-6 bg-danger">
           <div className="row">
@@ -118,18 +137,21 @@ export default function Home() {
             <div className="col">
               <h1 className="text-center">History</h1>
               <div
-                data-bs-spy="scroll"
-                data-bs-target="#navbar-example2"
-                data-bs-offset="0"
                 tabIndex="0"
                 style={{
                   overflowY: "scroll",
                   minHeight: "100x",
-                  maxHeight: "420px",
+                  maxHeight: "220px",
+                  border: "5px solid black",
                 }}
                 className="row"
               >
-                <div className="card mb-3">
+                {histories
+                  ? histories.map((history) => (
+                      <CardHistory history={history} key={history} />
+                    ))
+                  : null}
+                {/* <div className="card mb-3" id="2">
                   <h5 className="card-header">Player One</h5>
                   <div className="card-body">
                     <p>
@@ -140,7 +162,7 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-                <div className="card mb-3">
+                <div className="card mb-3" id="3">
                   <h5 className="card-header">Player One</h5>
                   <div className="card-body">
                     <p>
@@ -151,7 +173,7 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-                <div className="card mb-3">
+                <div className="card mb-3" id="4">
                   <h5 className="card-header">Player One</h5>
                   <div className="card-body">
                     <p>
@@ -161,18 +183,9 @@ export default function Home() {
                       facere nesciunt praesentium vel asperiores. Vero, velit.
                     </p>
                   </div>
-                </div>
-                <div className="card mb-3">
-                  <h5 className="card-header">Player One</h5>
-                  <div className="card-body">
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Asperiores totam molestiae id? Similique nemo a alias
-                      quasi corporis rem pariatur. Fugit ratione corrupti,
-                      facere nesciunt praesentium vel asperiores. Vero, velit.
-                    </p>
-                  </div>
-                </div>
+                </div> */}
+
+                {/*  */}
               </div>
             </div>
           </div>
