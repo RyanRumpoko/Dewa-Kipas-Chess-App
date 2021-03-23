@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import io from "socket.io-client";
+import { socket } from "../connections/socketio";
 import Peer from "simple-peer";
 import styled from "styled-components";
 
@@ -21,7 +21,8 @@ const Video = styled.video`
   height: 50%;
 `;
 
-function WebRtc() {
+function WebRtc(props) {
+  // console.log(props);
   const [yourID, setYourID] = useState("");
   const [users, setUsers] = useState({});
   const [stream, setStream] = useState();
@@ -29,39 +30,54 @@ function WebRtc() {
   const [caller, setCaller] = useState("");
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
+  const [isCalled, setisCalled] = useState(false);
 
   const userVideo = useRef();
   const partnerVideo = useRef();
-  const socket = useRef();
+  const socketVid = useRef();
 
   useEffect(() => {
     console.log("Masuk Use Effect");
-    socket.current = io.connect("http://localhost:4000/");
+    socketVid.current = socket;
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then((stream) => {
-        setStream(stream);
+        setStream(stream)
         if (userVideo.current) {
           userVideo.current.srcObject = stream;
         }
-      });
+      // return
+      // })
+      // .then(() => {
+      //   console.log(props.color, 'ini color di useEffect awal')
+      //   if (props.color === 'black') {
+      //     console.log(stream, 'ini stream sebelum nelpon')
+      //     callPeer(props.enemy.id)
+      // }
+      })
 
-    socket.current.on("yourID", (id) => {
+    socketVid.current.on("yourID", (id) => {
       console.log("Masuk Socket ID");
       setYourID(id);
     });
-    socket.current.on("allUsers", (users) => {
+
+    socketVid.current.on("allUsers", (users) => {
       setUsers(users);
     });
 
-    socket.current.on("hey", (data) => {
+    socketVid.current.on("hey", (data) => {
+      console.log(data, "Masuk hey");
+      setisCalled(true)
       setReceivingCall(true);
       setCaller(data.from);
       setCallerSignal(data.signal);
+      // console.log(stream, 'ini isi stream ketika hey dan sebelum accept call')
     });
+
   }, []);
 
   function callPeer(id) {
+    setisCalled(true)
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -69,34 +85,42 @@ function WebRtc() {
     });
 
     peer.on("signal", (data) => {
-      socket.current.emit("callUser", {
+      console.log(data, "ini Data");
+      socketVid.current.emit("callUser", {
+        roomid: props.roomid,
         userToCall: id,
         signalData: data,
-        from: yourID,
+        from: props.userData.id,
       });
     });
 
     peer.on("stream", (stream) => {
       if (partnerVideo.current) {
+        console.log(stream, 'ini yang di line 100')
         partnerVideo.current.srcObject = stream;
       }
     });
 
-    socket.current.on("callAccepted", (signal) => {
+    socketVid.current.on("callAccepted", (signal) => {
+      console.log(signal,'video sudah sampai callaccepted')
       setCallAccepted(true);
       peer.signal(signal);
     });
   }
 
   function acceptCall() {
+    setReceivingCall(false)
+    console.log('acceptCall triggered')
     setCallAccepted(true);
+    console.log(stream, 'ini stream usernya sendiri di accept call') // ternyata undefined
     const peer = new Peer({
       initiator: false,
       trickle: false,
       stream: stream,
     });
     peer.on("signal", (data) => {
-      socket.current.emit("acceptCall", { signal: data, to: caller });
+      console.log(data, 'acceptcall data signal sebelum emit')
+      socketVid.current.emit("acceptCall", { signal: data, roomid: props.roomid, to: caller });
     });
 
     peer.on("stream", (stream) => {
@@ -120,7 +144,7 @@ function WebRtc() {
   if (receivingCall) {
     incomingCall = (
       <div>
-        <h1>{caller} is calling you</h1>
+        <h3>{caller} is asking you to open cam</h3>
         <button onClick={acceptCall}>Accept</button>
       </div>
     );
@@ -131,15 +155,16 @@ function WebRtc() {
         {UserVideo}
         {PartnerVideo}
       </Row>
-      <Row>
-        {Object.keys(users).map((key) => {
-          console.log(key, "ini key");
-          if (key === yourID) {
-            return null;
-          }
-          return <button onClick={() => callPeer(key)}>Call {key}</button>;
-        })}
-      </Row>
+      {
+        isCalled?
+        <> </>
+        : 
+        <Row>
+          <button onClick={() => callPeer(props.enemy.id)}>
+            Ask you opponent to open cam
+          </button>
+        </Row>
+      }
       <Row>{incomingCall}</Row>
     </Container>
   );

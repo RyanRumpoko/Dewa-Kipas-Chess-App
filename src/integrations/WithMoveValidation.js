@@ -17,6 +17,7 @@ import { useHistory, withRouter } from "react-router-dom";
 
 import { useParams } from "react-router-dom";
 // const EloRating = require('elo-rating')
+import Testing from "../pages/TestingWebRtc";
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
@@ -106,16 +107,15 @@ class HumanVsHuman extends Component {
     });
 
     socket.on("youlose", () => {
-      console.log("dapat socket you lose");
-      let newScore = this.state.userData.eloRating - 10;
+
+      this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
+      console.log('kamu loser')
+      this.setState({ openGameOverModal: true })
+      console.log('dapat socket you lose')
+      let newScore = this.state.userData.eloRating - 10
       // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
-      this.updateScore({ id: this.state.userData.id, eloRating: newScore });
-      this.setState({
-        playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
-      });
-      console.log("kamu loser");
-      this.setState({ openGameOverModal: true });
-    });
+      this.updateScore({id: this.state.userData.id, eloRating: newScore})
+    })
   }
 
   // keep clicked square style and remove hint squares
@@ -270,7 +270,7 @@ class HumanVsHuman extends Component {
       });
       console.log(response);
     } catch ({ response }) {
-      console.log(response.data);
+      console.log(response);
     }
   };
 
@@ -371,6 +371,8 @@ class HumanVsHuman extends Component {
       openGameOverModal: this.state.openGameOverModal,
       handleCloseGameOver: this.handleCloseGameOver,
       playerWinStatus: this.state.playerWinStatus,
+      userData: this.state.userData,
+      enemy: this.state.enemy,
     });
   }
 }
@@ -384,7 +386,6 @@ export default function WithMoveValidation(props) {
   // }
   return (
     <div>
-      {/* <p>{JSON.stringify(dataFetch)}</p> */}
       <HumanVsHuman roomid={param.roomid} userData={userData} history={history}>
         {({
           position,
@@ -401,6 +402,8 @@ export default function WithMoveValidation(props) {
           openGameOverModal,
           handleCloseGameOver,
           playerWinStatus,
+          userData,
+          enemy,
         }) => (
           // {
           //   // this.game.current
@@ -425,6 +428,8 @@ export default function WithMoveValidation(props) {
               onSquareClick={onSquareClick}
               onSquareRightClick={onSquareRightClick}
             />
+            <Testing roomid={roomid} userData={userData} enemy={enemy} color={color} />
+
             <Dialog
               open={openGameOverModal}
               onClose={handleCloseGameOver}
