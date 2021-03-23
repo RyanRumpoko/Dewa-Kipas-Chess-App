@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   function back() {
     socket.emit("leave-room");
-    history.goBack();
+    history.push("/home", state);
   }
 
   function sendEmot(input) {

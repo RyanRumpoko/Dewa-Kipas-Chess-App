@@ -1,12 +1,12 @@
 import { useHistory, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Nav from "../components/Nav";
 import axios from "../api/axios";
 import CardHistory from "../components/CardHistory";
 
 export default function Home() {
   const { state } = useLocation();
-  // console.log(state, "<<<<<");
+  console.log(state, "<<<<<");
   const history = useHistory();
   const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false);
   const [inputRoomId, setInputRoomId] = useState("");
@@ -29,23 +29,27 @@ export default function Home() {
   function vsBot() {
     history.push("/dashboard/bot", state);
   }
+
   useEffect(() => {
+    const ac = new AbortController();
     async function getHistoryUser() {
       try {
         const { data } = await axios({
           method: "get",
-          url: `/histories/${state.id}`,
+          url: `/histories/${state ? state.id : 1}`,
           headers: {
             access_token: localStorage.access_token,
           },
         });
+
         setHistories(data);
       } catch ({ response }) {
         console.log(response.data);
       }
     }
     getHistoryUser();
-  }, [openModalCreateRoom, state.id]);
+    return () => ac.abort();
+  }, [openModalCreateRoom, state]);
   return (
     <div className="container-fluid bg-info">
       <div className="row">
@@ -147,8 +151,8 @@ export default function Home() {
                 className="row"
               >
                 {histories
-                  ? histories.map((history) => (
-                      <CardHistory history={history} key={history} />
+                  ? histories.map((history, i) => (
+                      <CardHistory history={history} key={`data ke${i + 1}`} />
                     ))
                   : null}
                 {/* <div className="card mb-3" id="2">
