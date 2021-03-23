@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import Nav from "../components/Nav";
 import axios from "../api/axios";
 import CardHistory from "../components/CardHistory";
+import { socket, ENDPOINT } from "../connections/socketio.js";
 
 export default function Home() {
   const { state } = useLocation();
@@ -29,6 +30,10 @@ export default function Home() {
   function vsBot() {
     history.push("/dashboard/bot", state);
   }
+  function matchmaking () {
+    socket.emit("matchmaking", state)
+    history.push("/dashboard/player/matchmaking", state)
+  }
 
   useEffect(() => {
     const ac = new AbortController();
@@ -49,6 +54,7 @@ export default function Home() {
     }
     getHistoryUser();
     return () => ac.abort();
+
   }, [openModalCreateRoom, state]);
   return (
     <div className="container-fluid bg-info">
@@ -105,6 +111,11 @@ export default function Home() {
                 <li>
                   <button className=" dropdown-item" onClick={vsBot}>
                     <i className="fas fa-robot"> V.S. Bot</i>
+                  </button>
+                </li>
+                <li>
+                  <button className=" dropdown-item" onClick={matchmaking}>
+                    <i className="fas fa-robot"> Matchmaking</i>
                   </button>
                 </li>
               </ul>
