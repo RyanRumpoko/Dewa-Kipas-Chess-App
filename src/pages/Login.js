@@ -21,11 +21,7 @@ export default function Login() {
           data: { email, password },
         });
         console.log(data);
-<<<<<<< HEAD
         localStorage.access_token = data.access_token;
-=======
-        await localStorage.setItem("access_token", data.access_token);
->>>>>>> afee3b67b7ae7a4f1c64d84a5858d49adde123af
         history.push("/home", data);
       }
     } catch ({ response }) {
