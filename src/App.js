@@ -5,7 +5,7 @@ import Regis from "./pages/Regis";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 
-import WebRtc from "./pages/TestingWebRtc";
+import TestingTimer from "./pages/TestingTimer";
 
 function App() {
   return (
@@ -50,7 +50,7 @@ function App() {
       <Route
         path="/testing"
         render={() =>
-          localStorage.access_token ? <WebRtc /> : <Redirect to="/home" />
+          localStorage.access_token ? <TestingTimer /> : <Redirect to="/home" />
         }
       />
     </Switch>
