@@ -103,16 +103,14 @@ class HumanVsHuman extends Component {
     });
 
     socket.on("youlose", () => {
-      console.log("dapat socket you lose");
-      let newScore = this.state.userData.eloRating - 10;
+      this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
+      console.log('kamu loser')
+      this.setState({ openGameOverModal: true })
+      console.log('dapat socket you lose')
+      let newScore = this.state.userData.eloRating - 10
       // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
-      this.updateScore({ id: this.state.userData.id, eloRating: newScore });
-      this.setState({
-        playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
-      });
-      console.log("kamu loser");
-      this.setState({ openGameOverModal: true });
-    });
+      this.updateScore({id: this.state.userData.id, eloRating: newScore})
+    })
   }
 
   // keep clicked square style and remove hint squares
@@ -267,7 +265,7 @@ class HumanVsHuman extends Component {
       });
       console.log(response);
     } catch ({ response }) {
-      console.log(response.data);
+      console.log(response);
     }
   };
 
@@ -381,7 +379,6 @@ export default function WithMoveValidation(props) {
   console.log(param, "ini param");
   return (
     <div>
-      {/* <p>{JSON.stringify(dataFetch)}</p> */}
       <HumanVsHuman roomid={param.roomid} userData={userData} history={history}>
         {({
           position,
@@ -424,6 +421,8 @@ export default function WithMoveValidation(props) {
               onSquareClick={onSquareClick}
               onSquareRightClick={onSquareRightClick}
             />
+            <Testing roomid={roomid} userData={userData} enemy={enemy} color={color} />
+
             <Dialog
               open={openGameOverModal}
               onClose={handleCloseGameOver}
@@ -442,7 +441,6 @@ export default function WithMoveValidation(props) {
                 </Button>
               </DialogActions>
             </Dialog>
-            <Testing roomid={roomid} userData={userData} enemy={enemy} />
           </>
         )}
       </HumanVsHuman>
