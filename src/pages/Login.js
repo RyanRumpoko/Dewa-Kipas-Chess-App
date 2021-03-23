@@ -48,7 +48,6 @@ export default function Login() {
 
       <div className="col-4">
         <h1>Login</h1>
-
         <form
           className={
             !validate ? "needs-validation" : "needs-validation was-validated"

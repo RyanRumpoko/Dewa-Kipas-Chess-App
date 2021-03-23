@@ -15,10 +15,9 @@ import {
 } from "@material-ui/core";
 import { useHistory, withRouter } from "react-router-dom";
 
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 // const EloRating = require('elo-rating')
-
-
+import Testing from "../pages/TestingWebRtc";
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
@@ -100,8 +99,8 @@ class HumanVsHuman extends Component {
         fen: data.fen,
         history: data.history,
         squareStyles: data.squareStyles,
-      })
-    })
+      });
+    });
 
     socket.on("youlose", () => {
       this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
@@ -211,13 +210,18 @@ class HumanVsHuman extends Component {
           ) {
             // berarti client ini yang lose
             // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
-            let newScore = this.state.userData.eloRating - 10
-            this.updateScore({id: this.state.userData.id, eloRating: newScore})
-            socket.emit('gameOver', { roomid: this.state.roomid })
-            this.setState({ playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...` })
-            console.log('kamu loser')
+            let newScore = this.state.userData.eloRating - 10;
+            this.updateScore({
+              id: this.state.userData.id,
+              eloRating: newScore,
+            });
+            socket.emit("gameOver", { roomid: this.state.roomid });
+            this.setState({
+              playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
+            });
+            console.log("kamu loser");
 
-            this.setState({ openGameOverModal: true })
+            this.setState({ openGameOverModal: true });
           } else {
             // berarti client ini yang win
             this.setState({ status: 1 });
@@ -228,14 +232,18 @@ class HumanVsHuman extends Component {
             });
             // harusnya disini update user score
             // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, true)
-            let newScore = this.state.userData.eloRating + 10
-            this.updateScore({id: this.state.userData.id, eloRating: newScore})
-            console.log('kamu winner')
-            socket.emit('gameOver', { roomid: this.state.roomid })
-            this.setState({ playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!` })
-            this.setState({ openGameOverModal: true })
+            let newScore = this.state.userData.eloRating + 10;
+            this.updateScore({
+              id: this.state.userData.id,
+              eloRating: newScore,
+            });
+            console.log("kamu winner");
+            socket.emit("gameOver", { roomid: this.state.roomid });
+            this.setState({
+              playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!`,
+            });
+            this.setState({ openGameOverModal: true });
           }
-
         }
       }
       const losercolor = this.game.fen().split(" ")[1];
@@ -246,19 +254,20 @@ class HumanVsHuman extends Component {
     }
   };
 
-  updateScore = async (data) => { // data is obj with id and eloRating key
+  updateScore = async (data) => {
+    // data is obj with id and eloRating key
     try {
       const response = await axios({
         method: "put",
         url: `${ENDPOINT}users/updatescore`,
         data: data,
-        headers: {'access_token': localStorage.getItem('access_token')}
-      })
+        headers: { access_token: localStorage.getItem("access_token") },
+      });
       console.log(response);
     } catch ({ response }) {
       console.log(response);
     }
-  }
+  };
 
   postHistory = async (input) => {
     try {
@@ -357,6 +366,8 @@ class HumanVsHuman extends Component {
       openGameOverModal: this.state.openGameOverModal,
       handleCloseGameOver: this.handleCloseGameOver,
       playerWinStatus: this.state.playerWinStatus,
+      userData: this.state.userData,
+      enemy: this.state.enemy,
     });
   }
 }
@@ -368,7 +379,6 @@ export default function WithMoveValidation(props) {
   console.log(param, "ini param");
   return (
     <div>
-      {/* <p>{JSON.stringify(dataFetch)}</p> */}
       <HumanVsHuman roomid={param.roomid} userData={userData} history={history}>
         {({
           position,
@@ -385,6 +395,8 @@ export default function WithMoveValidation(props) {
           openGameOverModal,
           handleCloseGameOver,
           playerWinStatus,
+          userData,
+          enemy,
         }) => (
           // {
           //   // this.game.current
@@ -409,6 +421,8 @@ export default function WithMoveValidation(props) {
               onSquareClick={onSquareClick}
               onSquareRightClick={onSquareRightClick}
             />
+            <Testing roomid={roomid} userData={userData} enemy={enemy} color={color} />
+
             <Dialog
               open={openGameOverModal}
               onClose={handleCloseGameOver}
