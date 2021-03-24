@@ -1,7 +1,7 @@
 // import { useState } from "react";
 import { useHistory } from "react-router-dom";
 // import Button from "react-bootstrap/Button";
-import logoImage from "../assets/horse.png"
+import logoImage from "../assets/horse.png";
 
 export default function Nav() {
   // const [color, setColor] = useState("btn btn-outline-dark");
@@ -39,21 +39,47 @@ export default function Nav() {
     //     <span>&nbsp;Log Out</span>
     //   </Button>
     // </div>
-    <nav className="navbar navbar-dark bg-dark">
-      <div>
-        <div className="d-flex align-items-center">
-          <img src={logoImage} className="mr-3" alt="logo" width="45" height="39"></img>
-          <span className="navbar-brand m-1 h1" style={{fontSize: "23px"}}>DEWA KIPAS</span>
-        </div>
-      </div>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <span className="navbar-brand m-1 h1" style={{ fontSize: "23px" }}>
+        <img
+          src={logoImage}
+          className="mr-3"
+          alt="logo"
+          width="45"
+          height="39"
+        ></img>
+        DEWA KIPAS
+      </span>
+      {/* <div className="d-flex align-items-center">
+      </div> */}
       <button
-        className="btn btn-outline-light"
-        style={{ justifyContent: "flex-end" }}
-        onClick={() => logout()}
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
       >
-        <i className="fas fa-sign-out-alt" style={{ color: "white" }} />
-        <span>&nbsp;Log Out</span>
+        <span class="navbar-toggler-icon"></span>
       </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          {/* <li class="nav-item active">
+            <a class="nav-link" href="#">
+              Home <span class="sr-only">(current)</span>
+            </a>
+          </li> */}
+        </ul>
+        <button
+          className="btn btn-outline-danger"
+          style={{ justifyContent: "flex-end" }}
+          onClick={() => logout()}
+        >
+          <i className="fas fa-sign-out-alt" style={{ color: "red" }} />
+          <span>&nbsp;Log Out</span>
+        </button>
+      </div>
     </nav>
   );
 }

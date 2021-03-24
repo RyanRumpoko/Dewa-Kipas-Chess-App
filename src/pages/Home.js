@@ -5,6 +5,7 @@ import axios from "../api/axios";
 import CardHistory from "../components/CardHistory";
 import { socket } from "../connections/socketio.js";
 import Table from "../components/Table";
+import ChessVSBot from "./ChessVSBot";
 
 export default function Home() {
   const { state } = useLocation();
@@ -30,9 +31,6 @@ export default function Home() {
   }
   function onChangeInputRoomId(e) {
     setInputRoomId(e.target.value);
-  }
-  function vsBot() {
-    history.push("/dashboard/bot", state);
   }
   function matchmaking() {
     socket.emit("matchmaking", state);
@@ -79,16 +77,18 @@ export default function Home() {
       <Nav />
       <div className="container-fluid">
         <div className="row justify-content-center">
-          <div className="col-10 col-md-8 col-lg-6 my-3">
+          <div className="col-12 col-md-8 col-lg-6 my-3">
             <div
               className="card text-center"
               style={{
                 height: "300px",
-                width: "825px",
+                // width: "825px",
                 backgroundColor: "#262421",
               }}
             >
-              <div className="card-header text-white h1">Want to play now?</div>
+              <div className="card-header h1" style={{ color: "#999999" }}>
+                Want to play now?
+              </div>
               {isDropdown ? (
                 <div
                   className="dropdown mt-5"
@@ -118,11 +118,6 @@ export default function Home() {
                       </button>
                     </li>
                     <li>
-                      <button className=" dropdown-item" onClick={vsBot}>
-                        <i className="fas fa-robot"> V.S. Bot</i>
-                      </button>
-                    </li>
-                    <li>
                       <button className=" dropdown-item" onClick={matchmaking}>
                         <i className="fas fa-robot"> Matchmaking</i>
                       </button>
@@ -144,7 +139,12 @@ export default function Home() {
                   </div>
                   <div className="row justify-content-center">
                     <div className="col-8 my-3">
-                      <label className="text-white mr-2">Input Room ID</label>
+                      <label
+                        className="text-white mr-2"
+                        style={{ color: "#999999" }}
+                      >
+                        Input Room ID
+                      </label>
                       <input
                         type="text"
                         onChange={(e) => onChangeInputRoomId(e)}
@@ -173,12 +173,12 @@ export default function Home() {
               )}
             </div>
           </div>
-          <div className="col-10 col-md-8 col-lg-3 my-3">
+          <div className="col-12 col-md-8 col-lg-3 my-3">
             <div
               className="card"
               style={{
-                height: "150px",
-                width: "450px",
+                // height: "150px",
+                // width: "420px",
                 backgroundColor: "#262421",
               }}
             >
@@ -186,82 +186,118 @@ export default function Home() {
                 <div className="col-4 my-3">
                   <img
                     src={state.pictureUrl}
-                    className="img-thumbnail"
+                    className="img-thumbnail bg-dark"
                     alt=""
                   />
                 </div>
                 <div className="col-8 my-3">
-                  <h3 className="text-white">{state.username}</h3>
-                  <h3 className="text-white">Score : {state.eloRating}</h3>
+                  <h3 className="" style={{ color: "#999999" }}>
+                    {state.username}
+                  </h3>
+                  <h3 className="" style={{ color: "#999999" }}>
+                    Score : {state.eloRating}
+                  </h3>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className="row justify-content-center">
-          <div className="col-10 col-md-8 col-lg-3 my-3">
+          <div className="col-12 col-md-8 col-lg-6 my-3">
             <div
               className="card text-center"
               style={{
-                height: "300px",
-                width: "350px",
+                height: "620px",
+                // width: "825px",
                 backgroundColor: "#262421",
               }}
             >
-              <div className="card-header text-white h1">Leaderboard</div>
-              <table className="table text-light table-dark table-hover">
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      <i className="fas fa-crown"></i>
-                    </th>
-                    <th scope="col">Username</th>
-                    <th scope="col">EloRating</th>
-                  </tr>
-                </thead>
-                <tbody className="mb-3">
-                  {leaderboard
-                    ? leaderboard.map((data, i) => (
-                        <Table data={{ data, i }} key={`data ke ${i + 1}`} />
-                      ))
-                    : null}
-                </tbody>
-                <tfoot>
-                  {leaderboard
-                    ? leaderboard.map((data, i) => {
-                        if (data.email === state.email) {
-                          return (
-                            <tr className="bg-light text-dark">
-                              <th scope="row">{i + 1}</th>
-                              <td>{data.username}</td>
-                              <td>{data.eloRating}</td>
-                            </tr>
-                          );
-                        }
-                      })
-                    : null}
-                </tfoot>
-              </table>
+              <div className="card-header h1" style={{ color: "#999999" }}>
+                Practice your skill
+              </div>
+              <ChessVSBot userData={state} />
             </div>
           </div>
-          <div className="col-10 col-md-8 col-lg-3 my-3">
-            <div
-              className="card text-center"
-              style={{
-                height: "300px",
-                width: "350px",
-                backgroundColor: "#262421",
-              }}
-            >
-              <div className="card-header text-white h1">History</div>
-              {histories
-                ? histories.map((history, i) => (
-                    <CardHistory history={history} key={`data ke${i + 1}`} />
-                  ))
-                : null}
+          <div className="col-12 col-md-8 col-lg-3 my-3">
+            <div className="row">
+              <div className="col-12 mb-3">
+                <div
+                  className="card text-center"
+                  style={{
+                    height: "300px",
+                    // width: "350px",
+                    backgroundColor: "#262421",
+                  }}
+                >
+                  <div className="card-header h1" style={{ color: "#999999" }}>
+                    History
+                  </div>
+                  <div class="overflow-auto">
+                    {histories
+                      ? histories.map((history, i) => (
+                          <CardHistory
+                            history={history}
+                            key={`data ke${i + 1}`}
+                          />
+                        ))
+                      : null}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <div
+                  className="card text-center"
+                  style={{
+                    height: "370px",
+                    // width: "350px",
+                    backgroundColor: "#262421",
+                  }}
+                >
+                  <div className="card-header h1" style={{ color: "#999999" }}>
+                    Leaderboard
+                  </div>
+                  <table className="table text-light table-dark table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">
+                          <i className="fas fa-crown"></i>
+                        </th>
+                        <th scope="col">Username</th>
+                        <th scope="col">EloRating</th>
+                      </tr>
+                    </thead>
+                    <tbody className="mb-3">
+                      {leaderboard
+                        ? leaderboard.map((data, i) => (
+                            <Table
+                              data={{ data, i }}
+                              key={`data ke ${i + 1}`}
+                            />
+                          ))
+                        : null}
+                    </tbody>
+                    <tfoot>
+                      {leaderboard
+                        ? leaderboard.map((data, i) => {
+                            if (data.email === state.email) {
+                              return (
+                                <tr className="bg-light text-dark">
+                                  <th scope="row">{i + 1}</th>
+                                  <td>{data.username}</td>
+                                  <td>{data.eloRating}</td>
+                                </tr>
+                              );
+                            }
+                          })
+                        : null}
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="col-10 col-md-8 col-lg-3 my-3"></div>
         </div>
       </div>
       {/* <div className="container-fluid">
