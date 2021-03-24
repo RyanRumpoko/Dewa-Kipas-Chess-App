@@ -38,7 +38,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const ac = new AbortController();
+    // const ac = new AbortController();
     async function getHistoryUser() {
       try {
         const { data } = await axios({
@@ -69,7 +69,7 @@ export default function Home() {
     }
     getHistoryUser();
     getLeaderboard();
-    return () => ac.abort();
+    // return () => ac.abort();
   }, [openModalCreateRoom, state]);
 
   return (

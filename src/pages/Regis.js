@@ -26,7 +26,7 @@ export default function Login() {
     }
   }
   return (
-    <div className="row">
+    <div className="row justify-content-center color-light" style={{color: "#999999"}}>
       <div className="col-4"></div>
 
       <div className="col-4">
