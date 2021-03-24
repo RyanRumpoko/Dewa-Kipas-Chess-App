@@ -70,6 +70,12 @@ export default function MatchmakingQueueDialogs(props) {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={props.openMatchmakingLoader}
+        PaperProps={{
+          style: {
+            backgroundColor: '#2d2b28',
+            color:'grey'
+          },
+        }}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Matchmaking
