@@ -1,6 +1,7 @@
 // import { useState } from "react";
 import { useHistory } from "react-router-dom";
 // import Button from "react-bootstrap/Button";
+import logoImage from "../assets/horse.png";
 
 export default function Nav() {
   // const [color, setColor] = useState("btn btn-outline-dark");
@@ -39,9 +40,18 @@ export default function Nav() {
     //   </Button>
     // </div>
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <span className="navbar-brand mb-0 h1" style={{ color: "#999999" }}>
+      <span className="navbar-brand m-1 h1" style={{ fontSize: "23px" }}>
+        <img
+          src={logoImage}
+          className="mr-3"
+          alt="logo"
+          width="45"
+          height="39"
+        ></img>
         DEWA KIPAS
       </span>
+      {/* <div className="d-flex align-items-center">
+      </div> */}
       <button
         class="navbar-toggler"
         type="button"
