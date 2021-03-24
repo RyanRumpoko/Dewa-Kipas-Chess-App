@@ -1,6 +1,6 @@
 export default function Table(props) {
   const { data } = props;
-  console.log(data.data, "<<<<<< TABLE");
+  // console.log(data.data, "<<<<<< TABLE");
   return (
     <tr>
       <th scope="row">{data.i + 1}</th>

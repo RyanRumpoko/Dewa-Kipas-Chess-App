@@ -15,6 +15,7 @@ export default function Home() {
   const [histories, setHistories] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
   const [isDropdown, setIsDropdown] = useState(true);
+  const [userLogin, setUserLogin] = useState({});
   function vsPlayer() {
     setOpenModalCreateRoom(true);
     setIsDropdown(false);
@@ -69,8 +70,20 @@ export default function Home() {
         console.log(response.data);
       }
     }
+    async function getUser() {
+      try {
+        const { data } = await axios({
+          method: "get",
+          url: `users/${localStorage.access_token}`,
+        });
+        setUserLogin(data);
+      } catch ({ response }) {
+        console.log(response.data);
+      }
+    }
     getHistoryUser();
     getLeaderboard();
+    getUser();
     return () => ac.abort();
   }, [openModalCreateRoom, state]);
 
@@ -185,14 +198,14 @@ export default function Home() {
               <div className="d-flex justify-content-around">
                 <div className="col-4 my-3">
                   <img
-                    src={state.pictureUrl}
+                    src={userLogin.pictureUrl}
                     className="img-thumbnail"
                     alt=""
                   />
                 </div>
                 <div className="col-8 my-3">
-                  <h3 className="text-white">{state.username}</h3>
-                  <h3 className="text-white">Score : {state.eloRating}</h3>
+                  <h3 className="text-white">{userLogin.username}</h3>
+                  <h3 className="text-white">Score : {userLogin.eloRating}</h3>
                 </div>
               </div>
             </div>
@@ -216,7 +229,7 @@ export default function Home() {
                       <i className="fas fa-crown"></i>
                     </th>
                     <th scope="col">Username</th>
-                    <th scope="col">EloRating</th>
+                    <th scope="col">Rating</th>
                   </tr>
                 </thead>
                 <tbody className="mb-3">
@@ -231,7 +244,10 @@ export default function Home() {
                     ? leaderboard.map((data, i) => {
                         if (data.email === state.email) {
                           return (
-                            <tr className="bg-light text-dark">
+                            <tr
+                              className="bg-light text-dark"
+                              key={`data ke ${i + 1}`}
+                            >
                               <th scope="row">{i + 1}</th>
                               <td>{data.username}</td>
                               <td>{data.eloRating}</td>

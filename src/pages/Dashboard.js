@@ -4,6 +4,9 @@ import WithMoveValidation from "../integrations/WithMoveValidation";
 import angry from "../images/angry.gif";
 import smile from "../images/smile.gif";
 import love from "../images/love.gif";
+import cry from "../images/cry.gif";
+import sad from "../images/sad.gif";
+import angries from "../images/angries.gif";
 import { socket } from "../connections/socketio";
 import Test from "../components/Test";
 import { Modal } from "@material-ui/core";
@@ -15,21 +18,25 @@ export default function Dashboard() {
   const [open, setOpen] = useState(false);
   // console.log(roomid, "ini room id");
   const history = useHistory();
+  const emoticon = [angry, smile, love, cry, sad, angries];
+  const [idRoom, setIdRoom] = useState("");
 
   function back() {
-    socket.emit("leave-room");
+    socket.emit("leave-room", idRoom);
     history.push("/home", state);
   }
-
+  socket.on("result", (data) => {
+    console.log(data, "<<<<<<<< SOCKET DASHBOARD");
+    setIdRoom(data);
+  });
   function sendEmot(input) {
     setOpen(true);
     socket.emit("sendEmot", input);
+    socket.on("testing", (msg) => {
+      console.log(msg, "testingg");
+      setOpen(true);
+    });
   }
-
-  socket.on("testing", (msg) => {
-    console.log(msg);
-    setOpen(true);
-  });
 
   return (
     <div className="row ">
@@ -89,14 +96,32 @@ export default function Dashboard() {
                       </button>
                       <div className="dropdown-menu">
                         <div className="row" style={{ width: "420px" }}>
-                          <div className="col-4">
+                          {emoticon
+                            ? emoticon.map((el, i) => {
+                                return (
+                                  <div
+                                    className="col-4"
+                                    key={`data ke ${i + 1}`}
+                                  >
+                                    <button
+                                      className="dropdown-item"
+                                      onClick={() => sendEmot(el)}
+                                    >
+                                      <img src={el} alt="angry" width="50" />
+                                    </button>
+                                    {/* client/src/pages/Dashboard.js */}
+                                  </div>
+                                );
+                              })
+                            : null}
+                          {/* client/src/pages/Dashboard.js */}
+                          {/* <div className="col-4">
                             <button
                               className="dropdown-item"
                               onClick={() => sendEmot(angry)}
                             >
                               <img src={angry} alt="angry" width="50" />
                             </button>
-                            {/* client/src/pages/Dashboard.js */}
                           </div>
                           <div className="col-4">
                             <button
@@ -113,7 +138,7 @@ export default function Dashboard() {
                             >
                               <img src={love} alt="love" width="50" />
                             </button>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </div>

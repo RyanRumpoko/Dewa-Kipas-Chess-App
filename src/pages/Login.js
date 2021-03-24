@@ -2,8 +2,7 @@ import axios from "../api/axios";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
-import loginImage from "../assets/login-image.svg"
-
+import loginImage from "../assets/login-image.svg";
 
 export default function Login() {
   const history = useHistory();
@@ -45,38 +44,58 @@ export default function Login() {
     }
   }
   return (
-    <div className="row justify-content-center color-light" style={{color: "#999999"}}>
+    <div
+      className="row justify-content-center color-light"
+      style={{ color: "#999999" }}
+    >
       {/* <div className="col-4"></div> */}
 
       <div id="form-login">
         <div className="container">
           <div className="row content">
             <div className="col-md-6 mt-5">
-              <img src={loginImage} className="img-fluid" alt="image"/>
+              <img src={loginImage} className="img-fluid" alt={loginImage} />
             </div>
             <div className="col-md-6">
               <h3 className="header-text mb-3">FORM LOGIN</h3>
               <form id="form-login-user" noValidate onSubmit={(e) => login(e)}>
                 <div className="form-group">
                   <label>Email :</label>
-                  <input type="email" name="email" className="form-control" required onChange={(e) => setEmail(e.target.value)}/>
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    required
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Password :</label>
-                  <input type="password" name="password" className="form-control" required onChange={(e) => setPassword(e.target.value)}/>
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
-                <button type="submit" className="btn btn-outline-danger btn-login mb-3">LOGIN</button>
+                <button
+                  type="submit"
+                  className="btn btn-outline-danger btn-login mb-3"
+                >
+                  LOGIN
+                </button>
               </form>
               <GoogleLogin
-              clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
-              buttonText="Login"
-              onSuccess={responseGoogle}
-              onFailure={responseGoogle}
-              cookiePolicy={"single_host_origin"}
-              className="btn-google"
+                clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
+                buttonText="Login"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={"single_host_origin"}
+                className="btn-google"
               />
               <p>
-              Don't have an account? <Link to="/register">Register here</Link>
+                Don't have an account? <Link to="/register">Register here</Link>
               </p>
               {/* <a href="#" id="link-register" className="badge badge-info mt-3 text-center" style="width: 420px; height: 22px">Dont have an account? Click here to Register</a> */}
             </div>
@@ -148,7 +167,6 @@ export default function Login() {
           </div>
         </form>
       </div> */}
-
     </div>
   );
 }
