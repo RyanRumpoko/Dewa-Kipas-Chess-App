@@ -30,6 +30,7 @@ function WebRtc(props) {
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
   const [isCalled, setisCalled] = useState(false);
+  const [callerUser, setCallerUser] = useState("");
 
   const userVideo = useRef();
   const partnerVideo = useRef();
@@ -70,6 +71,7 @@ function WebRtc(props) {
       setReceivingCall(true);
       setCaller(data.from);
       setCallerSignal(data.signal);
+      setCallerUser(data.callerUsername);
       // console.log(stream, 'ini isi stream ketika hey dan sebelum accept call')
     });
   }, []);
@@ -89,6 +91,7 @@ function WebRtc(props) {
         userToCall: id,
         signalData: data,
         from: props.userData.id,
+        callerUsername: props.userData.username,
       });
     });
 
@@ -146,7 +149,7 @@ function WebRtc(props) {
   if (receivingCall) {
     incomingCall = (
       <div>
-        <h5>{caller} is asking you to open cam</h5>
+        <h5>{callerUser} is asking you to open cam</h5>
         <button onClick={acceptCall} className="btn btn-dark">
           Accept
         </button>
