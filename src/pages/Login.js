@@ -51,8 +51,11 @@ export default function Login() {
       <div id="form-login">
         <div className="container">
           <div className="row content">
-            <div className="col-md-6 mt-1">
-              <img src={loginImage} className="img-fluid" alt="image" style={{width: "25em"}}/>
+            <div className="col-md-6 mt-1" style={{textAlign: "center"}}>
+              <div>
+                <img src={loginImage} className="img-fluid" alt="image" style={{width: "13em"}}/>
+              </div>
+              <span className="title-logo mt-1">Dewa Kipas</span>
             </div>
             <div className="col-md-6 mt-1">
               <h3 className="header-text mb-3">FORM LOGIN</h3>
@@ -67,14 +70,17 @@ export default function Login() {
                 </div>
                 <button type="submit" className="btn btn-outline-danger btn-login mb-3">LOGIN</button>
               </form>
+              <button type="button" className="btn btn-outline-dark btn-login mb-3">
               <GoogleLogin
               clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
-              buttonText="Login"
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
               cookiePolicy={"single_host_origin"}
               className="btn-google"
+              style={{ backgroundColor: "transparent"}}
               />
+              </button>
+              
               <p>
               Don't have an account? <Link to="/register">Register here</Link>
               </p>
