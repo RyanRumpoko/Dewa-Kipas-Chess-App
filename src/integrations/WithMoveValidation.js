@@ -65,7 +65,7 @@ class HumanVsHuman extends Component {
     // console.log(this.props.userData, "ini props userdata di class component");
     // console.log(this.state.userData, "ini state userdata di class component");
     if (this.state.roomid === "new") {
-      let uuid = uuidv4();
+      let uuid = uuidv4().substring(0, 7);
       this.setState({ roomid: uuid });
       socket.emit("create-room", {
         roomid: uuid,
@@ -220,6 +220,9 @@ class HumanVsHuman extends Component {
   };
 
   onDrop = ({ sourceSquare, targetSquare }) => {
+    if (!this.state.enemy.username) {
+      return;
+    }
     // see if the move is legal
     const nowTurn = this.game.fen().split(" ")[1];
     console.log(nowTurn, "<< seharunya ini yang boleh gerak");
@@ -622,24 +625,35 @@ export default function WithMoveValidation(props) {
                         ) : (
                           <> </>
                         )}
-                        <div className="d-flex justify-content-around">
-                          <div className="col-4 p-3 justify-content-center">
-                            <img
-                              src={enemy.pictureUrl}
-                              className="img-thumbnail bg-dark border-dark"
-                              alt=""
-                              width="120px"
-                              height="120px"
-                            />
+                        {enemy.username ? (
+                          <div className="d-flex justify-content-around">
+                            <div className="col-4 p-3 justify-content-center">
+                              <img
+                                src={enemy.pictureUrl}
+                                className="img-thumbnail bg-dark border-dark"
+                                alt=""
+                                width="120px"
+                                height="120px"
+                              />
+                            </div>
+                            <div className="col-8 p-3">
+                              <h3 className="text-gray">{enemy.username}</h3>
+                              <h5 className="gray">
+                                <i class="fas fa-chess-pawn"></i>
+                                &nbsp;{enemy.eloRating}
+                              </h5>
+                            </div>
                           </div>
-                          <div className="col-8 p-3">
-                            <h3 className="text-gray">{enemy.username}</h3>
-                            <h5 className="gray">
-                              <i class="fas fa-chess-pawn"></i>
-                              &nbsp;{enemy.eloRating}
-                            </h5>
+                        ) : (
+                          <div className="d-flex justify-content-around">
+                            <div className="col-4 p-3 justify-content-center"></div>
+                            <div className="col-8 p-3">
+                              <h3 className="text-gray">
+                                Waiting for your opponent
+                              </h3>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -653,7 +667,6 @@ export default function WithMoveValidation(props) {
                       />
                     </div>
                     <div className="col justify-content-center my-auto">
-                      {/* <div className="h1 row"> */}
                       <div className="timer-wrapper h2 row">
                         <div className="col-8">
                           <Timer
@@ -681,30 +694,16 @@ export default function WithMoveValidation(props) {
                           </>
                         )}
                       </div>
-                      {/* </div> */}
-                      {/* {
-                      pauseTimerEnemy?
-                      <>
-                        <div className="row mb-3 justify-content-center">
-                            <i class="fas fa-circle text-dark"></i>
 
-                        </div>
-                        <div className="row justify-content-center">
-                            <i class="fas fa-circle text-success"></i>
-                        </div>
-                      </>
-                      :
-                      <>
-                        <div className="row mb-3 justify-content-center">
-                          <i class="fas fa-circle text-success"></i>
-                        </div>
-                        <div className="row justify-content-center">
-                          <i class="fas fa-circle text-dark"></i>
-                        </div>
-                      </>
-                    } */}
-                      <hr />
-                      {/* <div className="h1 row"> */}
+                      <hr
+                        style={{
+                          height: "2px",
+                          width: "50%",
+                          borderWidth: 0,
+                          color: "grey",
+                          backgroundColor: "grey",
+                        }}
+                      />
                       <div className="timer-wrapper h2 row">
                         <div className="col-8">
                           <Timer
@@ -727,7 +726,6 @@ export default function WithMoveValidation(props) {
                           </>
                         )}
                       </div>
-                      {/* </div> */}
                     </div>
                   </div>
                   <div className="row justify-content-start">
@@ -867,6 +865,12 @@ export default function WithMoveValidation(props) {
                   onClose={handleCloseGameOver}
                   aria-labelledby="alert-dialog-title"
                   aria-describedby="alert-dialog-description"
+                  PaperProps={{
+                    style: {
+                      backgroundColor: "#2d2b28",
+                      color: "grey",
+                    },
+                  }}
                 >
                   <DialogTitle id="alert-dialog-title">{`${playerWinStatus}`}</DialogTitle>
                   {/* <DialogContent>
