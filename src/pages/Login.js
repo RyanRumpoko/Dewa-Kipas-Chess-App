@@ -68,7 +68,8 @@ export default function Login() {
                   <label>Password :</label>
                   <input type="password" name="password" className="form-control" required onChange={(e) => setPassword(e.target.value)}/>
                 </div>
-                <button type="submit" className="btn btn-outline-danger btn-login mb-3">LOGIN</button>
+                {/* style={{backgroundColor: "#b84703", color: "#161512"}} */}
+                <button type="submit" className="btn btn-login mb-3 btn-outline-danger">LOGIN</button>
               </form>
               <button type="button" className="btn btn-outline-dark btn-login mb-3">
               <GoogleLogin

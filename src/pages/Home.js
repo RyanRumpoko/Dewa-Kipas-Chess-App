@@ -186,7 +186,7 @@ export default function Home() {
                 <div className="col-4 my-3">
                   <img
                     src={state.pictureUrl}
-                    className="img-thumbnail bg-dark"
+                    className="img-thumbnail bg-dark border-dark"
                     alt=""
                   />
                 </div>
@@ -265,7 +265,7 @@ export default function Home() {
                           <i className="fas fa-crown"></i>
                         </th>
                         <th scope="col">Username</th>
-                        <th scope="col">EloRating</th>
+                        <th scope="col">Rating</th>
                       </tr>
                     </thead>
                     <tbody className="mb-3">

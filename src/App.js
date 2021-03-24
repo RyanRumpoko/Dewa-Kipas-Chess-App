@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Regis from "./pages/Regis";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import WithMoveValidation from "./integrations/WithMoveValidation";
 
 // import TestingTimer from "./pages/TestingTimer";
 
@@ -32,13 +33,13 @@ function App() {
       <Route
         path="/dashboard/bot"
         render={() =>
-          localStorage.access_token ? <Dashboard /> : <Redirect to="/login" />
+          localStorage.access_token ? <WithMoveValidation /> : <Redirect to="/login" />
         }
       />
       <Route
         path="/dashboard/:loc/:roomid"
         render={() =>
-          localStorage.access_token ? <Dashboard /> : <Redirect to="/login" />
+          localStorage.access_token ? <WithMoveValidation /> : <Redirect to="/login" />
         }
       />
       <Route
