@@ -18,9 +18,12 @@ import { useParams, useLocation, useHistory } from "react-router-dom";
 import VidCam from "../pages/Camera";
 import { Timer } from "react-countdown-clock-timer";
 import {CopyToClipboard} from 'react-copy-to-clipboard'
-import angry from "../images/angry.gif";
-import smile from "../images/smile.gif";
-import love from "../images/love.gif";
+import wink from "../images/wink.gif";
+import mindblown from "../images/mindblown.gif";
+import sleep from "../images/sleep.gif";
+import sad from "../images/sad.gif";
+import sweat from "../images/sweat.gif";
+import hugemoji from "../images/hugemoji.gif";
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
@@ -453,10 +456,27 @@ export default function WithMoveValidation(props) {
   const [openEmojiEnemy, setOpenEmojiEnemy] = useState(false);
   const [emojiEnemyToShow, setEmojiEnemyToShow] = useState('');
   const [showCopied, setShowCopied] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(0);
+  const [boardWidth, setBoardWidth] = useState(0);
 
-  function back() {
-    socket.emit("leave-room");
-    history.push("/home", state);
+  // function back() {
+  //   socket.emit("leaveRoom");
+  //   history.push("/home", state);
+  // }
+
+  function calcBoardWidth (data) {
+    console.log(data)
+    if (data.screenWidth < 576) {
+      setBoardWidth(data.screenWidth - 40)
+      // setBoardWidth(2)
+    } else if ( data.screenWidth < 768) {
+      setBoardWidth(450)
+    } else if (data.screenWidth < 992) {
+      setBoardWidth(400)
+
+    } else {
+      setBoardWidth(540)
+    }
   }
 
   function sendEmot(input) {
@@ -517,7 +537,7 @@ export default function WithMoveValidation(props) {
             />
 
             <div className="row m-2">
-            <button className="btn btn-dark" onClick={() => back()}>
+            <button className="btn btn-dark" onClick={timeIsOut}>
               <i class="fas fa-chevron-circle-left"></i>
             </button>
             </div>
@@ -526,8 +546,8 @@ export default function WithMoveValidation(props) {
               <div className="col align-items-center">
                 <Chessboard
                   id="humanVsHuman"
-                  width={540}
-                  // calcWidth={(data)=> console.log(data, 'isi calcwidth') }
+                  width={boardWidth}
+                  calcWidth={calcBoardWidth}
                   position={position}
                   onDrop={onDrop}
                   orientation={color}
@@ -565,8 +585,19 @@ export default function WithMoveValidation(props) {
                         style={{
                           height: "150px",
                           backgroundColor: "#262421",
+                          position: "relative"
                         }}
                       >
+                    {
+                      openEmojiEnemy
+                      ? 
+                      <img src={emojiEnemyToShow}
+                        style={{position: "absolute", bottom:"-10px", zIndex: "100", borderRadius:"40px"}}
+                        alt="smile"
+                        width="80"
+                      />
+                      : <> </>
+                    }
                         <div className="d-flex justify-content-around">
                           <div className="col-4 p-3 justify-content-center">
                             <img
@@ -583,16 +614,10 @@ export default function WithMoveValidation(props) {
                           </div>
                         </div>
                       </div>
-                    {
-                    openEmojiEnemy
-                    ? 
-                    <img src={emojiEnemyToShow} alt="smile" width="100" />
-                    : <> </>
-                }
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col">
+                <div className="row" style={{position:"relative"}}>
+                  <div className="col align-items-start">
                   <VidCam
                     roomid={roomid}
                     userData={userData}
@@ -615,20 +640,20 @@ export default function WithMoveValidation(props) {
                       pauseTimerEnemy?
                       <>
                         <div className="row mb-3 justify-content-center">
-                            <i class="fas fa-circle text-success"></i>
+                            <i class="fas fa-circle text-dark"></i>
 
                         </div>
                         <div className="row justify-content-center">
-                            <i class="fas fa-circle text-dark"></i>
+                            <i class="fas fa-circle text-success"></i>
                         </div>
                       </>
                       :
                       <>
                         <div className="row mb-3 justify-content-center">
-                          <i class="fas fa-circle text-dark"></i>
+                          <i class="fas fa-circle text-success"></i>
                         </div>
                         <div className="row justify-content-center">
-                          <i class="fas fa-circle text-success"></i>
+                          <i class="fas fa-circle text-dark"></i>
                         </div>
                       </>
                     }
@@ -641,13 +666,8 @@ export default function WithMoveValidation(props) {
                       />
                     </div>
                   </div>
+
                 </div>
-                {
-                    openEmoji
-                    ? 
-                    <img src={emojiToShow} alt="smile" width="100" />
-                    : <> </>
-                }
                 <div className="row justify-content-start">
                   <div className="col-10 col-md-8 col-lg-12 my-3">
                     <div
@@ -655,8 +675,19 @@ export default function WithMoveValidation(props) {
                       style={{
                         height: "150px",
                         backgroundColor: "#262421",
+                        position: "relative"
                       }}
                     >
+                    {
+                      openEmoji
+                      ? 
+                      <img src={emojiToShow} 
+                        style={{position: "absolute", top: "-10px",zIndex: "100", borderRadius:"40px"}}
+                        alt="smile"
+                        width="80"
+                      />
+                      : <> </>
+                    }
                       <div className="d-flex justify-content-around">
                         <div className="col-4 p-3 justify-content-center">
                           <img
@@ -685,31 +716,55 @@ export default function WithMoveValidation(props) {
                       <i className="fas fa-paper-plane"/>
                       <span>&nbsp; Send Emoji</span>
                     </button>
-                    <div className="dropdown-menu">
-                      <div className="row" style={{ width: "420px" }}>
+                    <div className="dropdown-menu bg-dark">
+                      <div className="row bg-dark m-3" style={{ width: "450px" }}>
                         <div className="col-4">
                           <button
                             className="dropdown-item"
-                            onClick={() => sendEmot({emote: angry, roomId: roomid})}
+                            onClick={() => sendEmot({emote: hugemoji, roomId: roomid})}
                           >
-                            <img src={angry} alt="angry" width="50" />
+                            <img src={hugemoji} alt="hugemoji" width="50" />
                           </button>
                           {/* client/src/pages/Dashboard.js */}
                         </div>
                         <div className="col-4">
                           <button
                             className="dropdown-item"
-                            onClick={() => sendEmot({emote: smile, roomId: roomid})}
+                            onClick={() => sendEmot({emote: mindblown, roomId: roomid})}
                           >
-                            <img src={smile} alt="smile" width="50" />
+                            <img src={mindblown} alt="mindblown" width="50" />
                           </button>
                         </div>
                         <div className="col-4">
                           <button
                             className="dropdown-item"
-                            onClick={() => sendEmot({emote: love, roomId: roomid})}
+                            onClick={() => sendEmot({emote: sad, roomId: roomid})}
                           >
-                            <img src={love} alt="love" width="50" />
+                            <img src={sad} alt="sad" width="50" />
+                          </button>
+                        </div>
+                        <div className="col-4">
+                          <button
+                            className="dropdown-item"
+                            onClick={() => sendEmot({emote: sleep, roomId: roomid})}
+                          >
+                            <img src={sleep} alt="sleep" width="50" />
+                          </button>
+                        </div>
+                        <div className="col-4">
+                          <button
+                            className="dropdown-item"
+                            onClick={() => sendEmot({emote: sweat, roomId: roomid})}
+                          >
+                            <img src={sweat} alt="sweat" width="50" />
+                          </button>
+                        </div>
+                        <div className="col-4">
+                          <button
+                            className="dropdown-item"
+                            onClick={() => sendEmot({emote: wink, roomId: roomid})}
+                          >
+                            <img src={wink} alt="wink" width="50" />
                           </button>
                         </div>
                       </div>

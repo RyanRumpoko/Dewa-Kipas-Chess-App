@@ -57,7 +57,7 @@ export default function Login() {
 
             <div className="col-md-6 mt-1" style={{textAlign: "center"}}>
               <div>
-                <img src={loginImage} className="img-fluid" alt="image" style={{width: "13em"}}/>
+                <img src={loginImage} className="img-fluid" alt="loginimage" style={{width: "13em"}}/>
               </div>
               <span className="title-logo mt-1">Dewa Kipas</span>
             </div>
@@ -86,7 +86,7 @@ export default function Login() {
                 </div>
 
                 {/* style={{backgroundColor: "#b84703", color: "#161512"}} */}
-                <button type="submit" className="btn btn-login mb-3 btn-outline-danger">LOGIN</button>
+                <button type="submit" className="btn btn-login mb-3 btn-outline-dark">LOGIN</button>
               </form>
               <button type="button" className="btn btn-outline-dark btn-login mb-3">
               <GoogleLogin
