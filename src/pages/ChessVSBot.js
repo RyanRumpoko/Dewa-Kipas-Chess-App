@@ -3,7 +3,7 @@ import Chessboard from "chessboardjsx";
 
 import StockFish from "../integrations/Stockfish.js";
 
-class Demo extends Component {
+class VSBot extends Component {
   render() {
     return (
       <div style={boardsContainer}>
@@ -24,7 +24,7 @@ class Demo extends Component {
   }
 }
 
-export default Demo;
+export default VSBot;
 
 const boardsContainer = {
   display: "flex",

@@ -454,15 +454,16 @@ export default function WithMoveValidation(props) {
   }
 
   function sendEmot(input) {
-    setEmojiToShow(input)
+    setEmojiToShow(input.emote)
     setOpenEmoji(true);
-    socket.emit("sendEmote", {roomid,input});
+    socket.emit("sendEmote", {roomid: input.roomId,input: input.emote});
     setTimeout(() => {
       setOpenEmoji(false)
     }, 5000);
   }
   useEffect (() => {
     socket.on("enemyEmoji", (data) => {
+      console.log(data, 'masuk emoji enemy')
       setEmojiEnemyToShow(data.input)
       setOpenEmojiEnemy(true);
       setTimeout(() => {
@@ -519,7 +520,7 @@ export default function WithMoveValidation(props) {
                 <Chessboard
                   id="humanVsHuman"
                   width={540}
-                  calcWidth={(data)=> console.log(data, 'isi calcwidth') }
+                  // calcWidth={(data)=> console.log(data, 'isi calcwidth') }
                   position={position}
                   onDrop={onDrop}
                   orientation={color}
@@ -598,32 +599,28 @@ export default function WithMoveValidation(props) {
                       <Timer
                         durationInSeconds={600}
                         formatted={true}
-                        isPaused={pauseTimerKita}
+                        isPaused={pauseTimerEnemy}
                         onFinish={timeIsOut}
                       />
                       </div>
                     </div>
                     {
-                      pauseTimerKita?
+                      pauseTimerEnemy?
                       <>
                         <div className="row mb-3 justify-content-center">
                             <i class="fas fa-circle text-success"></i>
 
                         </div>
                         <div className="row justify-content-center">
-                          <p>
                             <i class="fas fa-circle text-dark"></i>
-                          </p>
                         </div>
                       </>
                       :
                       <>
-                        <div className="row mb-3 text-center">
-                          <p>
-                            <i class="fas fa-circle text-dark"></i>
-                          </p>
+                        <div className="row mb-3 justify-content-center">
+                          <i class="fas fa-circle text-dark"></i>
                         </div>
-                        <div className="row text-center">
+                        <div className="row justify-content-center">
                           <i class="fas fa-circle text-success"></i>
                         </div>
                       </>
@@ -633,7 +630,7 @@ export default function WithMoveValidation(props) {
                       <Timer
                         durationInSeconds={600}
                         formatted={true}
-                        isPaused={pauseTimerEnemy}
+                        isPaused={pauseTimerKita}
                       />
                     </div>
                   </div>
@@ -686,7 +683,7 @@ export default function WithMoveValidation(props) {
                         <div className="col-4">
                           <button
                             className="dropdown-item"
-                            onClick={() => sendEmot(angry)}
+                            onClick={() => sendEmot({emote: angry, roomId: roomid})}
                           >
                             <img src={angry} alt="angry" width="50" />
                           </button>
@@ -695,7 +692,7 @@ export default function WithMoveValidation(props) {
                         <div className="col-4">
                           <button
                             className="dropdown-item"
-                            onClick={() => sendEmot(smile)}
+                            onClick={() => sendEmot({emote: smile, roomId: roomid})}
                           >
                             <img src={smile} alt="smile" width="50" />
                           </button>
@@ -703,7 +700,7 @@ export default function WithMoveValidation(props) {
                         <div className="col-4">
                           <button
                             className="dropdown-item"
-                            onClick={() => sendEmot(love)}
+                            onClick={() => sendEmot({emote: love, roomId: roomid})}
                           >
                             <img src={love} alt="love" width="50" />
                           </button>
