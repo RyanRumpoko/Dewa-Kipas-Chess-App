@@ -1,11 +1,13 @@
+
 import React, { Component, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess() not being a constructor
 import Chessboard from "chessboardjsx";
 import axios from "../api/axios";
-import MatchmakingQueueDialogs from '../components/loaderMatchmaking'
+import MatchmakingQueueDialogs from "../components/loaderMatchmaking";
 import { socket, ENDPOINT } from "../connections/socketio.js";
 import { v4 as uuidv4 } from "uuid";
+
 import {
   Button,
   Dialog,
@@ -65,7 +67,7 @@ class HumanVsHuman extends Component {
 
   componentDidMount() {
     // console.log(this.props, "<<<<<<<<<< ini yg di class");
-    console.log(this.props.roomid, "<<<<<<<<<< ini yang di class");
+    // console.log(this.props.roomid, "<<<<<<<<<< ini yang di class");
     // console.log(this.props.userData, "ini props userdata di class component");
     // console.log(this.state.userData, "ini state userdata di class component");
     if (this.state.roomid === "new") {
@@ -75,13 +77,17 @@ class HumanVsHuman extends Component {
         roomid: uuid,
         playerData: this.state.userData,
       });
-      console.log(
-        this.state.roomid,
-        "<<<<<<<<<<<<<<<<<<<< DI COMPONENT DID MOUNT"
-      );
+      socket.on("result", (data) => {
+        // console.log(data, "<<<<<<<<<< DATA DARI SOCKET");
+        this.setState({ roomid: data });
+      });
+      // console.log(
+      //   this.state.roomid,
+      //   "<<<<<<<<<<<<<<<<<<<< DI COMPONENT DID MOUNT"
+      // );
     } else if (this.state.roomid === "matchmaking") {
-      this.setState({openMatchmakingLoader: true})
-    }else {
+      this.setState({ openMatchmakingLoader: true });
+    } else {
       this.setState({ color: "black" });
       socket.emit("join-room", {
         roomid: this.state.roomid,
@@ -91,9 +97,9 @@ class HumanVsHuman extends Component {
     this.game = new Chess();
 
     socket.on("matchStart", (dataRoom) => {
-      console.log("matchstart dapet")
-      this.setState({openMatchmakingLoader: false})
-      if (this.state.userData.id === dataRoom.playerOne.id){
+      console.log("matchstart dapet");
+      this.setState({ openMatchmakingLoader: false });
+      if (this.state.userData.id === dataRoom.playerOne.id) {
         this.setState({ color: "white", roomid: dataRoom.roomid });
         this.setState({ enemy: dataRoom.playerTwo });
         this.handleTimerEnemy();
@@ -102,8 +108,7 @@ class HumanVsHuman extends Component {
         this.setState({ enemy: dataRoom.playerOne });
         this.handleTimerKita();
       }
-    })
-    
+    });
 
     socket.on("fullroom", (dataRoom) => {
       // console.log("fullroom", dataRoom);
@@ -155,7 +160,7 @@ class HumanVsHuman extends Component {
         playerOne: this.state.userData.id,
         playerTwo: this.state.enemy.id,
         status: 1,
-      })
+      });
       console.log("kamu winner");
       this.setState({
         playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!`,
@@ -197,8 +202,8 @@ class HumanVsHuman extends Component {
   };
 
   createEloRating = (currentRating, enemyRating, status) => {
-    return (enemyRating+(400*status))/10
-  }
+    return (enemyRating + 400 * status) / 10;
+  };
 
   onDrop = ({ sourceSquare, targetSquare }) => {
     // see if the move is legal
@@ -372,7 +377,7 @@ class HumanVsHuman extends Component {
 
   handleCloseGameOver = () => {
     this.setState({ openGameOverModal: false });
-    this.props.history.push("/home", {...this.state.userData});
+    this.props.history.push("/home", { ...this.state.userData });
   };
 
   onMouseOverSquare = (square) => {
@@ -441,6 +446,7 @@ class HumanVsHuman extends Component {
 export default function WithMoveValidation(props) {
   // const param = useParams();
   const history = useHistory();
+
   const { state } = useLocation();
   console.log(state, 'ini isi statee')
   // const { userData } = props;
@@ -523,13 +529,13 @@ export default function WithMoveValidation(props) {
           pauseTimerEnemy,
           timeIsOut,
           openMatchmakingLoader,
-          
         }) => (
           <div style={{color: "#999999"}}>
             <MatchmakingQueueDialogs
               openMatchmakingLoader={openMatchmakingLoader}
               userData={userData}
             />
+
             <div className="row m-2">
             <button className="btn btn-dark" onClick={timeIsOut}>
               <i class="fas fa-chevron-circle-left"></i>
