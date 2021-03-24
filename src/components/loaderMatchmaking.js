@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
+import { socket } from "../connections/socketio.js";
 
 const styles = (theme) => ({
   root: {
@@ -60,7 +61,7 @@ export default function MatchmakingQueueDialogs(props) {
   const handleClose = () => {
     history.push("/home", props.userData);
     // harus mengemit batal queue
-    
+    socket.emit()
   };
 
   return (

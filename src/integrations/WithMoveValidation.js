@@ -137,7 +137,8 @@ class HumanVsHuman extends Component {
         playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
       });
       console.log("kamu loser");
-      this.setState({ openGameOverModal: true });
+      this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true });
+
       console.log("dapat socket you lose");
       let newScore = this.state.userData.eloRating - 10;
       // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
@@ -159,8 +160,15 @@ class HumanVsHuman extends Component {
       this.setState({
         playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!`,
       });
-      this.setState({ openGameOverModal: true });
+      this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true });
     });
+
+    socket.on("onStalemate", () => {
+      this.setState({
+        playerWinStatus: `Stalemate, You get draw versus ${this.state.enemy.username}!!`,
+      });
+      this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true })
+    })
   }
 
   // keep clicked square style and remove hint squares
@@ -246,15 +254,11 @@ class HumanVsHuman extends Component {
         console.log("draw");
 
         // harusnya disini update user score
-        this.postHistory({
-          playerOne: this.state.userData.id,
-          playerTwo: this.state.enemy.id,
-          status: 3,
-        });
+        socket.emit("stalemate", { roomid: this.state.roomid })
         this.setState({
           playerWinStatus: `Stalemate, You get draw versus ${this.state.enemy.username}!!`,
         });
-        this.setState({ openGameOverModal: true });
+        this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true })
       } else {
         console.log(this.game.game_over(), "ini isi gameover ");
         const isGameOver = this.game.game_over();
@@ -284,7 +288,7 @@ class HumanVsHuman extends Component {
             this.postHistory({
               playerOne: this.state.userData.id,
               playerTwo: this.state.enemy.id,
-              status: 1,
+              status: 1, // playerOne yg win, 2 playerTwo yg win
             });
             // harusnya disini update user score
             // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, true)
@@ -298,7 +302,7 @@ class HumanVsHuman extends Component {
             this.setState({
               playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!`,
             });
-            this.setState({ openGameOverModal: true });
+            this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true });
           }
         }
       }
@@ -326,12 +330,14 @@ class HumanVsHuman extends Component {
   };
 
   timeIsOut = () => {
-    let newScore = this.state.userData.eloRating - 10;
-    this.updateScore({
-      id: this.state.userData.id,
-      eloRating: newScore,
-    });
-    socket.emit("enemyTimeout", { roomid: this.state.roomid });
+    if (this.state.enemy.username){
+      let newScore = this.state.userData.eloRating - 10;
+      this.updateScore({
+        id: this.state.userData.id,
+        eloRating: newScore,
+      });
+      socket.emit("enemyTimeout", { roomid: this.state.roomid });
+    }
     this.setState({
       playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
     });
@@ -356,16 +362,18 @@ class HumanVsHuman extends Component {
   };
 
   postHistory = async (input) => {
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${ENDPOINT}histories/`,
-        data: input,
-        headers: { access_token: localStorage.getItem("access_token") },
-      });
-      console.log(response);
-    } catch ({ response }) {
-      console.log(response.data);
+    if (input.playerOne && input.playerTwo && input.status) {
+      try {
+        const response = await axios({
+          method: "post",
+          url: `${ENDPOINT}histories/`,
+          data: input,
+          headers: { access_token: localStorage.getItem("access_token") },
+        });
+        console.log(response);
+      } catch ({ response }) {
+        console.log(response.data);
+      }
     }
   };
 
@@ -463,9 +471,15 @@ export default function WithMoveValidation(props) {
     if (data.screenWidth < 576) {
       setBoardWidth(280);
     } else if (data.screenWidth < 992) {
+<<<<<<< HEAD
       setBoardWidth(550);
     } else {
       setBoardWidth(610);
+=======
+      setBoardWidth(560)
+    } else {
+      setBoardWidth(640)
+>>>>>>> 0ecd808aca223090c55aff3df646121260fec60a
     }
   }
 
@@ -603,12 +617,16 @@ export default function WithMoveValidation(props) {
                           </div>
                           <div className="col-8 p-3">
                             <h3 className="text-gray">{enemy.username}</h3>
-                            <h5 className="gray">{enemy.eloRating}</h5>
+                            <h5 className="gray">
+                              <i class="fas fa-chess-pawn"></i>
+                              &nbsp;{enemy.eloRating}
+                            </h5>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+<<<<<<< HEAD
                   <div className="row" style={{ position: "relative" }}>
                     <div className="col align-items-start">
                       <VidCam
@@ -627,6 +645,55 @@ export default function WithMoveValidation(props) {
                             isPaused={pauseTimerEnemy}
                             onFinish={timeIsOut}
                           />
+=======
+                </div>
+                <div className="row" style={{position:"relative"}}>
+                  <div className="col align-items-start">
+                  <VidCam
+                    roomid={roomid}
+                    userData={userData}
+                    enemy={enemy}
+                    color={color}
+                  />
+                  </div>
+                  <div className="col justify-content-center my-auto">
+                    {/* <div className="h1 row"> */}
+                      <div className="timer-wrapper h2 row">
+                      <div className="col-8">
+                      <Timer
+                        durationInSeconds={600}
+                        formatted={true}
+                        isPaused={pauseTimerEnemy}
+                        onFinish={timeIsOut}
+                        />
+                      </div>
+                      {
+                        pauseTimerEnemy?
+                        <>
+                        <div className="col-2">
+                          <span className="">
+                              <i class="fas fa-circle text-dark"></i>
+                          </span>
+                        </div>
+                        </>
+                        :
+                        <>
+                        <div className="col-2">
+                          <span className="">
+                            <i class="fas fa-circle text-success"></i>
+                          </span>
+                        </div>
+                        </>
+                      }
+                    </div>
+                    {/* </div> */}
+                    {/* {
+                      pauseTimerEnemy?
+                      <>
+                        <div className="row mb-3 justify-content-center">
+                            <i class="fas fa-circle text-dark"></i>
+
+>>>>>>> 0ecd808aca223090c55aff3df646121260fec60a
                         </div>
                       </div>
                       {pauseTimerEnemy ? (
@@ -636,6 +703,7 @@ export default function WithMoveValidation(props) {
                           </div>
                           <div className="row justify-content-center">
                             <i class="fas fa-circle text-success"></i>
+<<<<<<< HEAD
                           </div>
                         </>
                       ) : (
@@ -657,6 +725,47 @@ export default function WithMoveValidation(props) {
                         />
                       </div>
                     </div>
+=======
+                        </div>
+                      </>
+                      :
+                      <>
+                        <div className="row mb-3 justify-content-center">
+                          <i class="fas fa-circle text-success"></i>
+                        </div>
+                        <div className="row justify-content-center">
+                          <i class="fas fa-circle text-dark"></i>
+                        </div>
+                      </>
+                    } */}
+                    <hr />
+                    {/* <div className="h1 row"> */}
+                      <div className="timer-wrapper h2 row">
+
+                        <div className="col-8">
+                          <Timer
+                            durationInSeconds={600}
+                            formatted={true}
+                            isPaused={pauseTimerKita}
+                          />
+                        </div>
+                        {
+                          pauseTimerEnemy?
+                          <>
+                            <div className="col-2">
+                                <i class="fas fa-circle text-success"></i>
+                            </div>
+                          </>
+                          :
+                          <>
+                            <div className="col-2">
+                              <i class="fas fa-circle text-dark"></i>
+                            </div>
+                          </>
+                        }
+                      </div>
+                    {/* </div> */}
+>>>>>>> 0ecd808aca223090c55aff3df646121260fec60a
                   </div>
                   <div className="row justify-content-start">
                     <div className="col-10 col-md-8 col-lg-12 my-3">
@@ -680,6 +789,7 @@ export default function WithMoveValidation(props) {
                             alt="smile"
                             width="80"
                           />
+<<<<<<< HEAD
                         ) : (
                           <> </>
                         )}
@@ -697,6 +807,15 @@ export default function WithMoveValidation(props) {
                             <h3 className="text-gray">{state.username}</h3>
                             <h5 className="gray">{state.eloRating}</h5>
                           </div>
+=======
+                        </div>
+                        <div className="col-8 p-3">
+                          <h3 className="text-gray">{state.username}</h3>
+                          <h5 className="gray">
+                            <i class="fas fa-chess-pawn"></i>
+                            &nbsp;{state.eloRating}
+                            </h5>
+>>>>>>> 0ecd808aca223090c55aff3df646121260fec60a
                         </div>
                       </div>
                     </div>

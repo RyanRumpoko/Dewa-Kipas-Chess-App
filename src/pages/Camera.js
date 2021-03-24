@@ -17,7 +17,7 @@ const Row = styled.div`
 const Video = styled.video`
   border: 1px solid gray;
   width: 100%;
-  max-width: 300px;
+  max-width: 400px;
 `;
 
 function WebRtc(props) {
@@ -39,7 +39,7 @@ function WebRtc(props) {
     console.log("Masuk Use Effect");
     socketVid.current = socket;
     navigator.mediaDevices
-      .getUserMedia({ video: false, audio: false })
+      .getUserMedia({ video: true, audio: false })
       .then((stream) => {
         setStream(stream);
         if (userVideo.current) {
@@ -155,21 +155,23 @@ function WebRtc(props) {
   }
   return (
     <Container>
-      <div className="row justify-content-center">
-        <div className="col-8">{UserVideo}</div>
-        <div className="col-8">{PartnerVideo}</div>
+      <div className="row justify-content-start">
+        <div className="col-10">{UserVideo}</div>
+        <div className="col-10">{PartnerVideo}</div>
       </div>
       {isCalled ? (
         <> </>
       ) : (
-        <Row>
-          <button
-            onClick={() => callPeer(props.enemy.id)}
-            className="btn btn-dark"
-          >
-            Ask you opponent to open cam
-          </button>
-        </Row>
+        <div className="row justify-content-start">
+          <div className="col-10">
+            <button
+              onClick={() => callPeer(props.enemy.id)}
+              className="btn btn-dark"
+            >
+              Ask your opponent to open cam
+            </button>
+          </div>
+        </div>
       )}
       <Row>{incomingCall}</Row>
     </Container>
