@@ -16,6 +16,7 @@ export default function Home() {
   const [histories, setHistories] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
   const [isDropdown, setIsDropdown] = useState(true);
+  const [userLogin, setUserLogin] = useState({});
   function vsPlayer() {
     setOpenModalCreateRoom(true);
     setIsDropdown(false);
@@ -67,8 +68,20 @@ export default function Home() {
         console.log(response.data);
       }
     }
+    async function getUser() {
+      try {
+        const { data } = await axios({
+          method: "get",
+          url: `users/${localStorage.access_token}`,
+        });
+        setUserLogin(data);
+      } catch ({ response }) {
+        console.log(response.data);
+      }
+    }
     getHistoryUser();
     getLeaderboard();
+    getUser();
     return () => ac.abort();
   }, [openModalCreateRoom, state]);
 
@@ -185,12 +198,14 @@ export default function Home() {
               <div className="d-flex justify-content-around">
                 <div className="col-4 my-3">
                   <img
+
                     src={state.pictureUrl}
                     className="img-thumbnail bg-dark border-dark"
                     alt=""
                   />
                 </div>
                 <div className="col-8 my-3">
+
                   <h3 className="" style={{ color: "#999999" }}>
                     {state.username}
                   </h3>

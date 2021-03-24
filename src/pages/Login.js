@@ -2,8 +2,8 @@ import axios from "../api/axios";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
-import loginImage from "../assets/horse.svg"
 
+import loginImage from "../assets/horse.svg"
 
 export default function Login() {
   const history = useHistory();
@@ -45,12 +45,16 @@ export default function Login() {
     }
   }
   return (
-    <div className="row justify-content-center color-light" style={{color: "#999999"}}>
+    <div
+      className="row justify-content-center color-light"
+      style={{ color: "#999999" }}
+    >
       {/* <div className="col-4"></div> */}
 
       <div id="form-login">
         <div className="container">
           <div className="row content">
+
             <div className="col-md-6 mt-1" style={{textAlign: "center"}}>
               <div>
                 <img src={loginImage} className="img-fluid" alt="image" style={{width: "13em"}}/>
@@ -62,17 +66,31 @@ export default function Login() {
               <form id="form-login-user" noValidate onSubmit={(e) => login(e)}>
                 <div className="form-group">
                   <label>Email :</label>
-                  <input type="email" name="email" className="form-control" required onChange={(e) => setEmail(e.target.value)}/>
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    required
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Password :</label>
-                  <input type="password" name="password" className="form-control" required onChange={(e) => setPassword(e.target.value)}/>
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
+
                 {/* style={{backgroundColor: "#b84703", color: "#161512"}} */}
                 <button type="submit" className="btn btn-login mb-3 btn-outline-danger">LOGIN</button>
               </form>
               <button type="button" className="btn btn-outline-dark btn-login mb-3">
               <GoogleLogin
+
               clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
@@ -83,7 +101,7 @@ export default function Login() {
               </button>
               
               <p>
-              Don't have an account? <Link to="/register">Register here</Link>
+                Don't have an account? <Link to="/register">Register here</Link>
               </p>
               {/* <a href="#" id="link-register" className="badge badge-info mt-3 text-center" style="width: 420px; height: 22px">Dont have an account? Click here to Register</a> */}
             </div>
@@ -155,7 +173,6 @@ export default function Login() {
           </div>
         </form>
       </div> */}
-
     </div>
   );
 }
