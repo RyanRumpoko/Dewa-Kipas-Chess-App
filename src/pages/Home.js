@@ -206,11 +206,12 @@ export default function Home() {
                 </div>
                 <div className="col-8 my-3">
 
-                  <h3 className="" style={{ color: "#999999" }}>
+                  <h3 className="font-minecraft" style={{ color: "#999999" }}>
                     {state.username}
                   </h3>
                   <h3 className="" style={{ color: "#999999" }}>
-                    Score : {state.eloRating}
+                  <i class="fas fa-chess-pawn"></i>
+                  &nbsp; : {state.eloRating}
                   </h3>
                 </div>
               </div>
@@ -222,13 +223,13 @@ export default function Home() {
             <div
               className="card text-center"
               style={{
-                height: "620px",
+                height: "650px",
                 // width: "825px",
                 backgroundColor: "#262421",
               }}
             >
               <div className="card-header h1" style={{ color: "#999999" }}>
-                Practice your skill
+                Practice your skill with AI
               </div>
               <ChessVSBot userData={state} />
             </div>
@@ -244,14 +245,15 @@ export default function Home() {
                     backgroundColor: "#262421",
                   }}
                 >
-                  <div className="card-header h1" style={{ color: "#999999" }}>
+                  <div className="card-header h3 font-minecraft" style={{ color: "#999999" }}>
                     History
                   </div>
-                  <div class="overflow-auto">
+                  <div className="overflow-auto">
                     {histories
                       ? histories.map((history, i) => (
                           <CardHistory
                             history={history}
+                            user={state}
                             key={`data ke${i + 1}`}
                           />
                         ))
@@ -270,17 +272,17 @@ export default function Home() {
                     backgroundColor: "#262421",
                   }}
                 >
-                  <div className="card-header h1" style={{ color: "#999999" }}>
+                  <div className="card-header h3 font-minecraft" style={{ color: "#999999" }}>
                     Leaderboard
                   </div>
                   <table className="table text-light table-dark table-hover">
                     <thead>
                       <tr>
                         <th scope="col">
-                          <i className="fas fa-crown"></i>
+                          <i className="fas fa-crown" style={{ color: "#999999" }}></i>
                         </th>
-                        <th scope="col">Username</th>
-                        <th scope="col">Rating</th>
+                        <th scope="col" style={{ color: "#999999" }}>Username</th>
+                        <th scope="col" style={{ color: "#999999" }}>Rating</th>
                       </tr>
                     </thead>
                     <tbody className="mb-3">
@@ -298,7 +300,7 @@ export default function Home() {
                         ? leaderboard.map((data, i) => {
                             if (data.email === state.email) {
                               return (
-                                <tr className="bg-light text-dark">
+                                <tr className="text-dark" style={{ backgroundColor: "#999999" }}>
                                   <th scope="row">{i + 1}</th>
                                   <td>{data.username}</td>
                                   <td>{data.eloRating}</td>

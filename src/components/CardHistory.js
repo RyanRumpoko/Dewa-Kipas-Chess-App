@@ -1,15 +1,18 @@
 export default function CardHistory(props) {
   // console.log(props);
-  const { history } = props;
+  const { history, user } = props;
   // console.log(history);
   return (
-    <div className="card mb-3" id={history.id}>
+    <div className="card mb-3 bg-dark" id={history.id}>
+      {console.log(user)}
       <div className="card-body">
-        <div className="row">
-          <div className="col-4">
-            <div className="row">
-              {history.status === 1 ? "Winner" : "Lose"}
-            </div>
+        <div className="row justify-content-center">
+          <div className="col-12 h3 font-minecraft m-0" style={{ color: "#999999" }}>
+            {+history.playerOne === +user.id ? "WIN" : "LOSE"}
+          </div>
+        </div>
+        <div className="row justify-content-center">
+          <div className="col-5">
             <div
               className="row"
               style={{ justifyContent: "center", alignItems: "center" }}
@@ -21,29 +24,24 @@ export default function CardHistory(props) {
               />
             </div>
             <div className="row">
-              <div className="col-12">Name:</div>
-            </div>
-            <div className="row">
-              <div className="col-12">{history.PlayerOne.username}</div>
+              <div className="col-12 h5" style={{ color: "#999999" }}>{history.PlayerOne.username}</div>
             </div>
           </div>
           <div
-            className="col-4"
+            className="col-2 p-0 m-0"
             style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <p style={{ fontSize: "3rem" }}>
-              <i className="fab fa-vimeo-v" size="5"></i>
-              <i className="fab fa-stripe-s"></i>
+            <p style={{ fontSize: "3rem", color: "#999999" }}>
+              {/* <i className="fab fa-vimeo-v" size="5" style={{ color: "#999999" }}></i>
+              <i className="fab fa-stripe-s" style={{ color: "#999999" }}></i> */}
+              VS
             </p>
           </div>
-          <div className="col-4">
-            <div className="row">
-              {history.status === 2 ? "Winner" : "Lose"}
-            </div>
+          <div className="col-5">
             <div
               className="row"
               style={{ justifyContent: "center", alignItems: "center" }}
@@ -55,10 +53,7 @@ export default function CardHistory(props) {
               />
             </div>
             <div className="row">
-              <div className="col-12">Name:</div>
-            </div>
-            <div className="row">
-              <div className="col-12">{history.PlayerTwo.username}</div>
+              <div className="col-12 h5" style={{ color: "#999999" }}>{history.PlayerTwo.username}</div>
             </div>
           </div>
         </div>

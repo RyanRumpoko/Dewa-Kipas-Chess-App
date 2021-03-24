@@ -68,7 +68,7 @@ class HumanVsHuman extends Component {
     // console.log(this.props.userData, "ini props userdata di class component");
     // console.log(this.state.userData, "ini state userdata di class component");
     if (this.state.roomid === "new") {
-      let uuid = uuidv4();
+      let uuid = uuidv4().substring(0, 7);
       this.setState({ roomid: uuid });
       socket.emit("create-room", {
         roomid: uuid,

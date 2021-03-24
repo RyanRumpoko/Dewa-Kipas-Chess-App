@@ -3,9 +3,9 @@ export default function Table(props) {
   // console.log(data.data, "<<<<<< TABLE");
   return (
     <tr>
-      <th scope="row">{data.i + 1}</th>
-      <td>{data.data.username}</td>
-      <td>{data.data.eloRating}</td>
+      <th scope="row" style={{ color: "#999999" }}>{data.i + 1}</th>
+      <td style={{ color: "#999999" }}>{data.data.username}</td>
+      <td style={{ color: "#999999" }}>{data.data.eloRating}</td>
     </tr>
   );
 }
