@@ -3,7 +3,7 @@ import Chessboard from "chessboardjsx";
 
 import StockFish from "../integrations/Stockfish.js";
 
-class Demo extends Component {
+class VSBot extends Component {
   render() {
     return (
       <div style={boardsContainer}>
@@ -12,7 +12,7 @@ class Demo extends Component {
             <Chessboard
               id="stockfish"
               position={position}
-              width={540}
+              width={420}
               onDrop={onDrop}
               boardStyle={boardStyle}
               orientation="black"
@@ -24,7 +24,7 @@ class Demo extends Component {
   }
 }
 
-export default Demo;
+export default VSBot;
 
 const boardsContainer = {
   display: "flex",

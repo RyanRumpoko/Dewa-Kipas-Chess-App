@@ -21,12 +21,10 @@ export default function CardHistory(props) {
               />
             </div>
             <div className="row">
-              <div className="col-6">Name:</div>
-              <div className="col-6">EloRating:</div>
+              <div className="col-12">Name:</div>
             </div>
             <div className="row">
-              <div className="col-6">{history.PlayerOne.username}</div>
-              <div className="col-6">{history.PlayerOne.eloRating}</div>
+              <div className="col-12">{history.PlayerOne.username}</div>
             </div>
           </div>
           <div
@@ -57,12 +55,10 @@ export default function CardHistory(props) {
               />
             </div>
             <div className="row">
-              <div className="col-6">Name:</div>
-              <div className="col-6">EloRating:</div>
+              <div className="col-12">Name:</div>
             </div>
             <div className="row">
-              <div className="col-6">{history.PlayerTwo.username}</div>
-              <div className="col-6">{history.PlayerTwo.eloRating}</div>
+              <div className="col-12">{history.PlayerTwo.username}</div>
             </div>
           </div>
         </div>
