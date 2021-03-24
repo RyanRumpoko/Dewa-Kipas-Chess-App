@@ -65,7 +65,7 @@ class HumanVsHuman extends Component {
     // console.log(this.props.userData, "ini props userdata di class component");
     // console.log(this.state.userData, "ini state userdata di class component");
     if (this.state.roomid === "new") {
-      let uuid = uuidv4().substring(0, 7);
+      let uuid = uuidv4();
       this.setState({ roomid: uuid });
       socket.emit("create-room", {
         roomid: uuid,
@@ -119,7 +119,7 @@ class HumanVsHuman extends Component {
     });
 
     socket.on("enemymove", (data) => {
-      this.game.move({
+      let move = this.game.move({
         from: data.sourceSquare,
         to: data.targetSquare,
         promotion: "q", // always promote to a queen for example simplicity
@@ -137,7 +137,11 @@ class HumanVsHuman extends Component {
         playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
       });
       console.log("kamu loser");
-      this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true });
+      this.setState({
+        openGameOverModal: true,
+        pauseTimerKita: true,
+        pauseTimerEnemy: true,
+      });
 
       console.log("dapat socket you lose");
       let newScore = this.state.userData.eloRating - 10;
@@ -160,15 +164,23 @@ class HumanVsHuman extends Component {
       this.setState({
         playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!`,
       });
-      this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true });
+      this.setState({
+        openGameOverModal: true,
+        pauseTimerKita: true,
+        pauseTimerEnemy: true,
+      });
     });
 
     socket.on("onStalemate", () => {
       this.setState({
         playerWinStatus: `Stalemate, You get draw versus ${this.state.enemy.username}!!`,
       });
-      this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true })
-    })
+      this.setState({
+        openGameOverModal: true,
+        pauseTimerKita: true,
+        pauseTimerEnemy: true,
+      });
+    });
   }
 
   // keep clicked square style and remove hint squares
@@ -254,11 +266,15 @@ class HumanVsHuman extends Component {
         console.log("draw");
 
         // harusnya disini update user score
-        socket.emit("stalemate", { roomid: this.state.roomid })
+        socket.emit("stalemate", { roomid: this.state.roomid });
         this.setState({
           playerWinStatus: `Stalemate, You get draw versus ${this.state.enemy.username}!!`,
         });
-        this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true })
+        this.setState({
+          openGameOverModal: true,
+          pauseTimerKita: true,
+          pauseTimerEnemy: true,
+        });
       } else {
         console.log(this.game.game_over(), "ini isi gameover ");
         const isGameOver = this.game.game_over();
@@ -302,7 +318,11 @@ class HumanVsHuman extends Component {
             this.setState({
               playerWinStatus: `Nice Job, You Win versus ${this.state.enemy.username}!!`,
             });
-            this.setState({ openGameOverModal: true, pauseTimerKita: true, pauseTimerEnemy: true });
+            this.setState({
+              openGameOverModal: true,
+              pauseTimerKita: true,
+              pauseTimerEnemy: true,
+            });
           }
         }
       }
@@ -330,7 +350,7 @@ class HumanVsHuman extends Component {
   };
 
   timeIsOut = () => {
-    if (this.state.enemy.username){
+    if (this.state.enemy.username) {
       let newScore = this.state.userData.eloRating - 10;
       this.updateScore({
         id: this.state.userData.id,
@@ -452,13 +472,13 @@ export default function WithMoveValidation(props) {
   const { state } = useLocation();
   console.log(state, "ini isi statee");
   // const { userData } = props;
-  let { roomid } = useParams();
+  let { loc, roomid } = useParams();
   const [openEmoji, setOpenEmoji] = useState(false);
   const [emojiToShow, setEmojiToShow] = useState("");
   const [openEmojiEnemy, setOpenEmojiEnemy] = useState(false);
   const [emojiEnemyToShow, setEmojiEnemyToShow] = useState("");
   const [showCopied, setShowCopied] = useState(false);
-  // const [screenWidth, setScreenWidth] = useState(0);
+  const [screenWidth, setScreenWidth] = useState(0);
   const [boardWidth, setBoardWidth] = useState(0);
 
   // function back() {
@@ -469,17 +489,14 @@ export default function WithMoveValidation(props) {
   function calcBoardWidth(data) {
     console.log(data);
     if (data.screenWidth < 576) {
-      setBoardWidth(280);
+      setBoardWidth(data.screenWidth - 40);
+      // setBoardWidth(2)
+    } else if (data.screenWidth < 768) {
+      setBoardWidth(450);
     } else if (data.screenWidth < 992) {
-<<<<<<< HEAD
-      setBoardWidth(550);
+      setBoardWidth(560);
     } else {
-      setBoardWidth(610);
-=======
-      setBoardWidth(560)
-    } else {
-      setBoardWidth(640)
->>>>>>> 0ecd808aca223090c55aff3df646121260fec60a
+      setBoardWidth(640);
     }
   }
 
@@ -626,7 +643,6 @@ export default function WithMoveValidation(props) {
                       </div>
                     </div>
                   </div>
-<<<<<<< HEAD
                   <div className="row" style={{ position: "relative" }}>
                     <div className="col align-items-start">
                       <VidCam
@@ -636,96 +652,45 @@ export default function WithMoveValidation(props) {
                         color={color}
                       />
                     </div>
-                    <div className="col align-items-center">
-                      <div className="h1 row">
-                        <div className="timer-wrapper">
+                    <div className="col justify-content-center my-auto">
+                      {/* <div className="h1 row"> */}
+                      <div className="timer-wrapper h2 row">
+                        <div className="col-8">
                           <Timer
                             durationInSeconds={600}
                             formatted={true}
                             isPaused={pauseTimerEnemy}
                             onFinish={timeIsOut}
                           />
-=======
-                </div>
-                <div className="row" style={{position:"relative"}}>
-                  <div className="col align-items-start">
-                  <VidCam
-                    roomid={roomid}
-                    userData={userData}
-                    enemy={enemy}
-                    color={color}
-                  />
-                  </div>
-                  <div className="col justify-content-center my-auto">
-                    {/* <div className="h1 row"> */}
-                      <div className="timer-wrapper h2 row">
-                      <div className="col-8">
-                      <Timer
-                        durationInSeconds={600}
-                        formatted={true}
-                        isPaused={pauseTimerEnemy}
-                        onFinish={timeIsOut}
-                        />
+                        </div>
+                        {pauseTimerEnemy ? (
+                          <>
+                            <div className="col-2">
+                              <span className="">
+                                <i class="fas fa-circle text-dark"></i>
+                              </span>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="col-2">
+                              <span className="">
+                                <i class="fas fa-circle text-success"></i>
+                              </span>
+                            </div>
+                          </>
+                        )}
                       </div>
-                      {
-                        pauseTimerEnemy?
-                        <>
-                        <div className="col-2">
-                          <span className="">
-                              <i class="fas fa-circle text-dark"></i>
-                          </span>
-                        </div>
-                        </>
-                        :
-                        <>
-                        <div className="col-2">
-                          <span className="">
-                            <i class="fas fa-circle text-success"></i>
-                          </span>
-                        </div>
-                        </>
-                      }
-                    </div>
-                    {/* </div> */}
-                    {/* {
+                      {/* </div> */}
+                      {/* {
                       pauseTimerEnemy?
                       <>
                         <div className="row mb-3 justify-content-center">
                             <i class="fas fa-circle text-dark"></i>
 
->>>>>>> 0ecd808aca223090c55aff3df646121260fec60a
                         </div>
-                      </div>
-                      {pauseTimerEnemy ? (
-                        <>
-                          <div className="row mb-3 justify-content-center">
-                            <i class="fas fa-circle text-dark"></i>
-                          </div>
-                          <div className="row justify-content-center">
+                        <div className="row justify-content-center">
                             <i class="fas fa-circle text-success"></i>
-<<<<<<< HEAD
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="row mb-3 justify-content-center">
-                            <i class="fas fa-circle text-success"></i>
-                          </div>
-                          <div className="row justify-content-center">
-                            <i class="fas fa-circle text-dark"></i>
-                          </div>
-                        </>
-                      )}
-
-                      <div className="h1 row">
-                        <Timer
-                          durationInSeconds={600}
-                          formatted={true}
-                          isPaused={pauseTimerKita}
-                        />
-                      </div>
-                    </div>
-=======
                         </div>
                       </>
                       :
@@ -738,10 +703,9 @@ export default function WithMoveValidation(props) {
                         </div>
                       </>
                     } */}
-                    <hr />
-                    {/* <div className="h1 row"> */}
+                      <hr />
+                      {/* <div className="h1 row"> */}
                       <div className="timer-wrapper h2 row">
-
                         <div className="col-8">
                           <Timer
                             durationInSeconds={600}
@@ -749,23 +713,22 @@ export default function WithMoveValidation(props) {
                             isPaused={pauseTimerKita}
                           />
                         </div>
-                        {
-                          pauseTimerEnemy?
+                        {pauseTimerEnemy ? (
                           <>
                             <div className="col-2">
-                                <i class="fas fa-circle text-success"></i>
+                              <i class="fas fa-circle text-success"></i>
                             </div>
                           </>
-                          :
+                        ) : (
                           <>
                             <div className="col-2">
                               <i class="fas fa-circle text-dark"></i>
                             </div>
                           </>
-                        }
+                        )}
                       </div>
-                    {/* </div> */}
->>>>>>> 0ecd808aca223090c55aff3df646121260fec60a
+                      {/* </div> */}
+                    </div>
                   </div>
                   <div className="row justify-content-start">
                     <div className="col-10 col-md-8 col-lg-12 my-3">
@@ -789,7 +752,6 @@ export default function WithMoveValidation(props) {
                             alt="smile"
                             width="80"
                           />
-<<<<<<< HEAD
                         ) : (
                           <> </>
                         )}
@@ -805,17 +767,11 @@ export default function WithMoveValidation(props) {
                           </div>
                           <div className="col-8 p-3">
                             <h3 className="text-gray">{state.username}</h3>
-                            <h5 className="gray">{state.eloRating}</h5>
-                          </div>
-=======
-                        </div>
-                        <div className="col-8 p-3">
-                          <h3 className="text-gray">{state.username}</h3>
-                          <h5 className="gray">
-                            <i class="fas fa-chess-pawn"></i>
-                            &nbsp;{state.eloRating}
+                            <h5 className="gray">
+                              <i class="fas fa-chess-pawn"></i>
+                              &nbsp;{state.eloRating}
                             </h5>
->>>>>>> 0ecd808aca223090c55aff3df646121260fec60a
+                          </div>
                         </div>
                       </div>
                     </div>
