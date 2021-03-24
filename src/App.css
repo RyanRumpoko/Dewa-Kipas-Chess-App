@@ -13,32 +13,32 @@
   background-color: #262421;
 }
 
-.content{
+.content {
   margin: 7%;
   background-color: #262421;
   padding: 4rem 1rem 4rem 1rem;
-  box-shadow: 0 0 5px 5px rgba(0, 0, 0, .05);
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.05);
 }
 
-.header-text{
+.header-text {
   font-style: normal;
   font-weight: 600;
 }
 
-.title-logo{
-  font-family: 'Press Start 2P', cursive;
+.title-logo {
+  font-family: "Press Start 2P", cursive;
   font-weight: 800;
   text-align: center;
   font-size: 3rem;
 }
 
-.form-control{
+.form-control {
   display: block;
   width: 100%;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  border-color: #F50057 !important;
+  border-color: yellow !important;
   border-style: solid;
   border-width: 0 0 1px 0 !important;
   padding: 0px;
@@ -48,30 +48,40 @@
   background-clip: padding-box;
 }
 
-.form-control:focus{
-  color: #F50057;
+.form-control:focus {
+  color: yellow;
   background-color: #262421;
   border-color: #262421;
   outline: 0;
   box-shadow: none;
 }
 
-.navbar-brand{
-  font-family: 'Press Start 2P', cursive;
+.navbar-brand {
+  font-family: "Press Start 2P", cursive;
   font-weight: 800;
   font-size: 90px;
 }
 
-.btn-login{
-  width: 100%;
-  border-color: #F50057;
-  color: #F50057;
+.font-minecraft {
+  font-family: "Press Start 2P", cursive;
+  font-size: 20px;
 }
 
-.btn-google{
+.font-loser {
+  font-family: "Permanent Marker", cursive;
+  color: #999999;
+}
+
+.btn-login {
   width: 100%;
-  border-color: #F50057;
-  color: #F50057;
+  border-color: #f50057;
+  color: #f50057;
+}
+
+.btn-google {
+  width: 100%;
+  border-color: #f50057;
+  color: #f50057;
   align-items: center;
 }
 
@@ -103,4 +113,31 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited {
+  background-color: #8064a2 !important;
+}
+
+.handle-overflow {
+  /* flex-wrap: 'nowrap'; */
+  /* transform: 'translateZ(0)'; */
+  /* overflow-x: "hidden"; */
+  overflow-y: "scroll";
+  width: 100%;
+  height: 400px;
+  padding: 10;
+}
+.handle-overflow::-webkit-scrollbar {
+  width: 5;
+}
+.handle-overflow::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+.handle-overflow::-webkit-scrollbar-thumb {
+  background-color: #150c0c;
+  border-radius: 8;
 }

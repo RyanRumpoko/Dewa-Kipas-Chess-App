@@ -2,8 +2,7 @@ import axios from "../api/axios";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
-
-import loginImage from "../assets/horse.svg"
+import loginImage from "../assets/horse.svg";
 
 export default function Login() {
   const history = useHistory();
@@ -49,20 +48,22 @@ export default function Login() {
       className="row justify-content-center color-light"
       style={{ color: "#999999" }}
     >
-      {/* <div className="col-4"></div> */}
-
       <div id="form-login">
         <div className="container">
           <div className="row content">
-
-            <div className="col-md-6 mt-1" style={{textAlign: "center"}}>
+            <div className="col-md-6 mt-1" style={{ textAlign: "center" }}>
               <div>
-                <img src={loginImage} className="img-fluid" alt="loginimage" style={{width: "13em"}}/>
+                <img
+                  src={loginImage}
+                  className="img-fluid"
+                  alt="loginimage"
+                  style={{ width: "13em" }}
+                />
               </div>
               <span className="title-logo mt-1">Dewa Kipas</span>
             </div>
             <div className="col-md-6 mt-1">
-              <h3 className="header-text mb-3">FORM LOGIN</h3>
+              <h3 className="header-text mb-3">LOGIN</h3>
               <form id="form-login-user" noValidate onSubmit={(e) => login(e)}>
                 <div className="form-group">
                   <label>Email :</label>
@@ -84,95 +85,34 @@ export default function Login() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-
-                {/* style={{backgroundColor: "#b84703", color: "#161512"}} */}
-                <button type="submit" className="btn btn-login mb-3 btn-outline-dark">LOGIN</button>
+                <button
+                  type="submit"
+                  className="btn btn-login mb-3 btn-outline-warning"
+                >
+                  LOGIN
+                </button>
               </form>
-              <button type="button" className="btn btn-outline-dark btn-login mb-3">
-              <GoogleLogin
-
-              clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
-              onSuccess={responseGoogle}
-              onFailure={responseGoogle}
-              cookiePolicy={"single_host_origin"}
-              className="btn-google"
-              style={{ backgroundColor: "transparent"}}
-              />
+              <button
+                type="button"
+                className="btn btn-outline-dark btn-login mb-3"
+              >
+                <GoogleLogin
+                  clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
+                  cookiePolicy={"single_host_origin"}
+                  className="btn-google"
+                  style={{ backgroundColor: "transparent" }}
+                />
               </button>
-              
+
               <p>
                 Don't have an account? <Link to="/register">Register here</Link>
               </p>
-              {/* <a href="#" id="link-register" className="badge badge-info mt-3 text-center" style="width: 420px; height: 22px">Dont have an account? Click here to Register</a> */}
             </div>
           </div>
         </div>
       </div>
-
-      {/* <div className="col-sm-12 col-md-6 col-xl-4 mt-5" style={{}}>
-        <h1>Login</h1>
-        <form
-          className={
-            !validate ? "needs-validation" : "needs-validation was-validated"
-          }
-          noValidate
-          onSubmit={(e) => login(e)}
-        >
-          <div className="mb-3">
-            <label className="form-label">Email address</label>
-            <input
-              type="email"
-              className="form-control"
-              required
-              onChange={(e) => setEmail(e.target.value)}
-              autoFocus
-            />
-            <div className="valid-feedback">Looks good!</div>
-            <div className="invalid-feedback">Please fill it</div>
-          </div>
-
-          <div className="mb-3" hidden>
-            <label className="form-label">Username</label>
-            <input
-              type="text"
-              className="form-control"
-              required
-              onChange={(e) => setUserName(e.target.value)}
-            />
-            <div className="valid-feedback">Looks good!</div>
-            <div className="invalid-feedback">Please fill it</div>
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <div className="valid-feedback">Looks good!</div>
-            <div className="invalid-feedback">Please fill it</div>
-          </div>
-
-          <div className="mb-3">
-            <button className="btn btn-primary" type="submit">
-              Submit
-            </button>
-            <p>
-              Don't have an account? <Link to="/register">Register here</Link>
-            </p>
-            <GoogleLogin
-              clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
-              buttonText="Login"
-              onSuccess={responseGoogle}
-              onFailure={responseGoogle}
-              cookiePolicy={"single_host_origin"}
-            />
-            ,
-          </div>
-        </form>
-      </div> */}
     </div>
   );
 }
