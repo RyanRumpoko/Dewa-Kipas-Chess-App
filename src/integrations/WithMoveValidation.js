@@ -590,7 +590,7 @@ export default function WithMoveValidation(props) {
                 </div>
                 <div className="col">
                   <div className="row">
-                    {roomid !== "matchmaking" ? (
+                    {/* {roomid !== "matchmaking" ? (
                       <CopyToClipboard text={roomid} onCopy={onCopy}>
                         <span>Room ID: {roomid}</span>
                       </CopyToClipboard>
@@ -599,9 +599,9 @@ export default function WithMoveValidation(props) {
                     )}
                     {showCopied ? (
                       <span style={{ color: "green" }}>&nbsp;Copied.</span>
-                    ) : null}
+                    ) : null} */}
 
-                    <div className="col-10 col-md-8 col-lg-12 my-3">
+                    <div className="col-10 col-md-8 col-lg-12 mb-3">
                       <div
                         className="card"
                         style={{
@@ -773,7 +773,7 @@ export default function WithMoveValidation(props) {
                         </div>
                       </div>
                     </div>
-                    <div className="col">
+                    <div className="col-4">
                       <div className="btn-group dropup">
                         <button
                           type="button"
@@ -857,6 +857,26 @@ export default function WithMoveValidation(props) {
                           </div>
                         </div>
                       </div>
+                    </div>
+                    <div className="col-8">
+                      {roomid !== "matchmaking" ? (
+                        <CopyToClipboard text={roomid} onCopy={onCopy}>
+                          <button className="btn btn-dark float-right">
+                            Room ID : {roomid}
+                          </button>
+                          {/* <span>Room ID: {roomid}</span> */}
+                        </CopyToClipboard>
+                      ) : (
+                        <></>
+                      )}
+                      {showCopied ? (
+                        <span
+                          className="text-center"
+                          style={{ color: "green" }}
+                        >
+                          &nbsp;Copied.
+                        </span>
+                      ) : null}
                     </div>
                   </div>
                 </div>
