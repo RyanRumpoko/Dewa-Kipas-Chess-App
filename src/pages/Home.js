@@ -39,7 +39,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const ac = new AbortController();
+    // const ac = new AbortController();
     async function getHistoryUser() {
       try {
         const { data } = await axios({
@@ -82,19 +82,20 @@ export default function Home() {
     getHistoryUser();
     getLeaderboard();
     getUser();
-    return () => ac.abort();
+    // return () => ac.abort();
   }, [openModalCreateRoom, state]);
 
   return (
     <>
       <Nav />
       <div className="container-fluid">
+        {console.log(userLogin)}
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6 my-3">
             <div
               className="card text-center"
               style={{
-                height: "300px",
+                // height: "300px",
                 // width: "825px",
                 backgroundColor: "#262421",
               }}
@@ -102,88 +103,105 @@ export default function Home() {
               <div className="card-header h1" style={{ color: "#999999" }}>
                 Want to play now?
               </div>
-              {isDropdown ? (
-                <div
-                  className="dropdown mt-5"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <button
-                    className="btn btn-outline-light dropdown-toggle"
-                    type="button"
-                    id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    style={{ height: "100px", width: "100px" }}
-                  >
-                    Play
-                  </button>
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton1"
-                  >
-                    <li>
-                      <button className=" dropdown-item" onClick={vsPlayer}>
-                        <i className="fas fa-user"> V.S. Player</i>
-                      </button>
-                    </li>
-                    <li>
-                      <button className=" dropdown-item" onClick={matchmaking}>
-                        <i className="fas fa-robot"> Matchmaking</i>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : (
-                <>
+              <div className="card-body">
+                {isDropdown ? (
                   <div className="row justify-content-center">
-                    <div className="col-4 my-3">
+                    <div className="col-12 col-md-8 col-lg-4 mt-1">
+                      <button
+                        className="btn btn-outline-dark"
+                        style={{
+                          height: "150px",
+                          width: "150px",
+                          borderColor: "#999999",
+                        }}
+                        onClick={vsPlayer}
+                      >
+                        <div className="row justify-content-center">
+                          <div className="col-10" style={{ color: "#999999" }}>
+                            <i className="fas fa-robot fa-5x"></i>
+                          </div>
+                          <div
+                            className="col-10 mt-2"
+                            style={{ color: "#999999" }}
+                          >
+                            VS Friend
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                    <div className="col-12 col-md-8 col-lg-4 mt-1">
                       <button
                         className="btn btn-outline-light"
-                        type="button"
-                        onClick={createRoom}
+                        style={{
+                          height: "150px",
+                          width: "150px",
+                          borderColor: "#999999",
+                        }}
+                        onClick={matchmaking}
                       >
-                        Create Room
+                        <div className="row justify-content-center">
+                          <div className="col-10" style={{ color: "#999999" }}>
+                            <i className="fas fa-user fa-5x"></i>
+                          </div>
+                          <div
+                            className="col-10 mt-2"
+                            style={{ color: "#999999" }}
+                          >
+                            Matchmaking
+                          </div>
+                        </div>
                       </button>
                     </div>
                   </div>
-                  <div className="row justify-content-center">
-                    <div className="col-8 my-3">
-                      <label
-                        className="text-white mr-2"
-                        style={{ color: "#999999" }}
-                      >
-                        Input Room ID
-                      </label>
-                      <input
-                        type="text"
-                        onChange={(e) => onChangeInputRoomId(e)}
-                      />
-                      <button
-                        className="btn btn-outline-light ml-2"
-                        type="button"
-                        onClick={joinRoom}
-                      >
-                        Join Room
-                      </button>
+                ) : (
+                  <>
+                    <div className="row justify-content-center">
+                      <div className="col-4 my-3">
+                        <button
+                          className="btn btn-outline-dark"
+                          type="button"
+                          style={{ color: "#999999", borderColor: "#999999" }}
+                          onClick={createRoom}
+                        >
+                          Create Room
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="row justify-content-center">
-                    <div className="col-4 my-3">
-                      <button
-                        className="btn btn-outline-light"
-                        type="button"
-                        onClick={handleBack}
-                      >
-                        Back
-                      </button>
+                    <div className="row justify-content-center">
+                      <div className="col-8 my-3">
+                        <label className="text-white mr-2">
+                          <p style={{ color: "#999999" }}>Input Room ID</p>
+                        </label>
+                        <input
+                          type="text"
+                          style={{ backgroundColor: "#999999" }}
+                          onChange={(e) => onChangeInputRoomId(e)}
+                        />
+                        <button
+                          className="btn btn-outline-dark ml-2"
+                          type="button"
+                          style={{ color: "#999999", borderColor: "#999999" }}
+                          onClick={joinRoom}
+                        >
+                          Join Room
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                    <div className="row justify-content-center">
+                      <div className="col-4 my-3">
+                        <button
+                          className="btn btn-outline-dark"
+                          type="button"
+                          style={{ color: "#999999", borderColor: "#999999" }}
+                          onClick={handleBack}
+                        >
+                          Back
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
           <div className="col-12 col-md-8 col-lg-3 my-3">
@@ -198,20 +216,18 @@ export default function Home() {
               <div className="d-flex justify-content-around">
                 <div className="col-4 my-3">
                   <img
-
                     src={state.pictureUrl}
                     className="img-thumbnail bg-dark border-dark"
                     alt=""
                   />
                 </div>
                 <div className="col-8 my-3">
-
                   <h3 className="font-minecraft" style={{ color: "#999999" }}>
                     {state.username}
                   </h3>
                   <h3 className="" style={{ color: "#999999" }}>
-                  <i class="fas fa-chess-pawn"></i>
-                  &nbsp; : {state.eloRating}
+                    <i class="fas fa-chess-pawn"></i>
+                    &nbsp; : {state.eloRating}
                   </h3>
                 </div>
               </div>
@@ -223,7 +239,7 @@ export default function Home() {
             <div
               className="card text-center"
               style={{
-                height: "650px",
+                // height: "650px",
                 // width: "825px",
                 backgroundColor: "#262421",
               }}
@@ -245,7 +261,10 @@ export default function Home() {
                     backgroundColor: "#262421",
                   }}
                 >
-                  <div className="card-header h3 font-minecraft" style={{ color: "#999999" }}>
+                  <div
+                    className="card-header h3 font-minecraft"
+                    style={{ color: "#999999" }}
+                  >
                     History
                   </div>
                   <div className="overflow-auto">
@@ -272,17 +291,27 @@ export default function Home() {
                     backgroundColor: "#262421",
                   }}
                 >
-                  <div className="card-header h3 font-minecraft" style={{ color: "#999999" }}>
+                  <div
+                    className="card-header h3 font-minecraft"
+                    style={{ color: "#999999" }}
+                  >
                     Leaderboard
                   </div>
                   <table className="table text-light table-dark table-hover">
                     <thead>
                       <tr>
                         <th scope="col">
-                          <i className="fas fa-crown" style={{ color: "#999999" }}></i>
+                          <i
+                            className="fas fa-crown"
+                            style={{ color: "#999999" }}
+                          ></i>
                         </th>
-                        <th scope="col" style={{ color: "#999999" }}>Username</th>
-                        <th scope="col" style={{ color: "#999999" }}>Rating</th>
+                        <th scope="col" style={{ color: "#999999" }}>
+                          Username
+                        </th>
+                        <th scope="col" style={{ color: "#999999" }}>
+                          Rating
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="mb-3">
@@ -300,7 +329,10 @@ export default function Home() {
                         ? leaderboard.map((data, i) => {
                             if (data.email === state.email) {
                               return (
-                                <tr className="text-dark" style={{ backgroundColor: "#999999" }}>
+                                <tr
+                                  className="text-dark"
+                                  style={{ backgroundColor: "#999999" }}
+                                >
                                   <th scope="row">{i + 1}</th>
                                   <td>{data.username}</td>
                                   <td>{data.eloRating}</td>

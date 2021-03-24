@@ -39,21 +39,21 @@ function WebRtc(props) {
     console.log("Masuk Use Effect");
     socketVid.current = socket;
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
+      .getUserMedia({ video: false, audio: false })
       .then((stream) => {
-        setStream(stream)
+        setStream(stream);
         if (userVideo.current) {
           userVideo.current.srcObject = stream;
         }
-      // return
-      // })
-      // .then(() => {
-      //   console.log(props.color, 'ini color di useEffect awal')
-      //   if (props.color === 'black') {
-      //     console.log(stream, 'ini stream sebelum nelpon')
-      //     callPeer(props.enemy.id)
-      // }
-      })
+        // return
+        // })
+        // .then(() => {
+        //   console.log(props.color, 'ini color di useEffect awal')
+        //   if (props.color === 'black') {
+        //     console.log(stream, 'ini stream sebelum nelpon')
+        //     callPeer(props.enemy.id)
+        // }
+      });
 
     socketVid.current.on("yourID", (id) => {
       console.log("Masuk Socket ID");
@@ -66,17 +66,16 @@ function WebRtc(props) {
 
     socketVid.current.on("hey", (data) => {
       console.log(data, "Masuk hey");
-      setisCalled(true)
+      setisCalled(true);
       setReceivingCall(true);
       setCaller(data.from);
       setCallerSignal(data.signal);
       // console.log(stream, 'ini isi stream ketika hey dan sebelum accept call')
     });
-
   }, []);
 
   function callPeer(id) {
-    setisCalled(true)
+    setisCalled(true);
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -95,31 +94,35 @@ function WebRtc(props) {
 
     peer.on("stream", (stream) => {
       if (partnerVideo.current) {
-        console.log(stream, 'ini yang di line 100')
+        console.log(stream, "ini yang di line 100");
         partnerVideo.current.srcObject = stream;
       }
     });
 
     socketVid.current.on("callAccepted", (signal) => {
-      console.log(signal,'video sudah sampai callaccepted')
+      console.log(signal, "video sudah sampai callaccepted");
       setCallAccepted(true);
       peer.signal(signal);
     });
   }
 
   function acceptCall() {
-    setReceivingCall(false)
-    console.log('acceptCall triggered')
+    setReceivingCall(false);
+    console.log("acceptCall triggered");
     setCallAccepted(true);
-    console.log(stream, 'ini stream usernya sendiri di accept call') // ternyata undefined
+    console.log(stream, "ini stream usernya sendiri di accept call"); // ternyata undefined
     const peer = new Peer({
       initiator: false,
       trickle: false,
       stream: stream,
     });
     peer.on("signal", (data) => {
-      console.log(data, 'acceptcall data signal sebelum emit')
-      socketVid.current.emit("acceptCall", { signal: data, roomid: props.roomid, to: caller });
+      console.log(data, "acceptcall data signal sebelum emit");
+      socketVid.current.emit("acceptCall", {
+        signal: data,
+        roomid: props.roomid,
+        to: caller,
+      });
     });
 
     peer.on("stream", (stream) => {
@@ -144,30 +147,30 @@ function WebRtc(props) {
     incomingCall = (
       <div>
         <h5>{caller} is asking you to open cam</h5>
-        <button onClick={acceptCall} className="btn btn-dark">Accept</button>
+        <button onClick={acceptCall} className="btn btn-dark">
+          Accept
+        </button>
       </div>
     );
   }
   return (
     <Container>
-        <div className="row justify-content-center">
-        <div className="col-8">
-          {UserVideo}
-        </div>
-        <div className="col-8">
-          {PartnerVideo}
-        </div>
-        </div>
-      {
-        isCalled?
+      <div className="row justify-content-center">
+        <div className="col-8">{UserVideo}</div>
+        <div className="col-8">{PartnerVideo}</div>
+      </div>
+      {isCalled ? (
         <> </>
-        : 
+      ) : (
         <Row>
-          <button onClick={() => callPeer(props.enemy.id)} className="btn btn-dark">
+          <button
+            onClick={() => callPeer(props.enemy.id)}
+            className="btn btn-dark"
+          >
             Ask you opponent to open cam
           </button>
         </Row>
-      }
+      )}
       <Row>{incomingCall}</Row>
     </Container>
   );

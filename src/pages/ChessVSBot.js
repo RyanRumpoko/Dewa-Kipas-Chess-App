@@ -3,6 +3,19 @@ import Chessboard from "chessboardjsx";
 
 import StockFish from "../integrations/Stockfish.js";
 
+let boardWidth = 0;
+
+function calcBoardWidth(data) {
+  // console.log(data);
+  if (data.screenWidth < 576) {
+    boardWidth = 280;
+  } else if (data.screenWidth < 992) {
+    boardWidth = 550;
+  } else {
+    boardWidth = 610;
+  }
+}
+
 class VSBot extends Component {
   render() {
     return (
@@ -12,7 +25,10 @@ class VSBot extends Component {
             <Chessboard
               id="stockfish"
               position={position}
-              width={550}
+              // width={550}
+              width={boardWidth}
+              // calcWidth={(data) => console.log(data, "ini calcwidth")}
+              calcWidth={(data) => calcBoardWidth(data)}
               onDrop={onDrop}
               boardStyle={boardStyle}
               orientation="black"

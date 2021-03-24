@@ -57,12 +57,12 @@ export default function Login() {
 
             <div className="col-md-6 mt-1" style={{textAlign: "center"}}>
               <div>
-                <img src={loginImage} className="img-fluid" alt="image" style={{width: "13em"}}/>
+                <img src={loginImage} className="img-fluid" alt="loginimage" style={{width: "13em"}}/>
               </div>
               <span className="title-logo mt-1">Dewa Kipas</span>
             </div>
             <div className="col-md-6 mt-1">
-              <h3 className="header-text mb-3">FORM LOGIN</h3>
+              <h3 className="header-text mb-3">LOGIN</h3>
               <form id="form-login-user" noValidate onSubmit={(e) => login(e)}>
                 <div className="form-group">
                   <label>Email :</label>

@@ -1,4 +1,3 @@
-
 import React, { Component, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess() not being a constructor
@@ -8,19 +7,17 @@ import MatchmakingQueueDialogs from "../components/loaderMatchmaking";
 import { socket, ENDPOINT } from "../connections/socketio.js";
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-} from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogTitle } from "@material-ui/core";
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import VidCam from "../pages/Camera";
 import { Timer } from "react-countdown-clock-timer";
-import {CopyToClipboard} from 'react-copy-to-clipboard'
-import angry from "../images/angry.gif";
-import smile from "../images/smile.gif";
-import love from "../images/love.gif";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import wink from "../images/wink.gif";
+import mindblown from "../images/mindblown.gif";
+import sleep from "../images/sleep.gif";
+import sad from "../images/sad.gif";
+import sweat from "../images/sweat.gif";
+import hugemoji from "../images/hugemoji.gif";
 
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
@@ -122,7 +119,7 @@ class HumanVsHuman extends Component {
     });
 
     socket.on("enemymove", (data) => {
-      let move = this.game.move({
+      this.game.move({
         from: data.sourceSquare,
         to: data.targetSquare,
         promotion: "q", // always promote to a queen for example simplicity
@@ -445,43 +442,56 @@ export default function WithMoveValidation(props) {
   const history = useHistory();
 
   const { state } = useLocation();
-  console.log(state, 'ini isi statee')
+  console.log(state, "ini isi statee");
   // const { userData } = props;
-  let { loc, roomid } = useParams();
+  let { roomid } = useParams();
   const [openEmoji, setOpenEmoji] = useState(false);
-  const [emojiToShow, setEmojiToShow] = useState('');
+  const [emojiToShow, setEmojiToShow] = useState("");
   const [openEmojiEnemy, setOpenEmojiEnemy] = useState(false);
-  const [emojiEnemyToShow, setEmojiEnemyToShow] = useState('');
+  const [emojiEnemyToShow, setEmojiEnemyToShow] = useState("");
   const [showCopied, setShowCopied] = useState(false);
+  // const [screenWidth, setScreenWidth] = useState(0);
+  const [boardWidth, setBoardWidth] = useState(0);
 
-  function back() {
-    socket.emit("leave-room");
-    history.push("/home", state);
+  // function back() {
+  //   socket.emit("leaveRoom");
+  //   history.push("/home", state);
+  // }
+
+  function calcBoardWidth(data) {
+    console.log(data);
+    if (data.screenWidth < 576) {
+      setBoardWidth(280);
+    } else if (data.screenWidth < 992) {
+      setBoardWidth(550);
+    } else {
+      setBoardWidth(610);
+    }
   }
 
   function sendEmot(input) {
-    setEmojiToShow(input.emote)
+    setEmojiToShow(input.emote);
     setOpenEmoji(true);
-    socket.emit("sendEmote", {roomid: input.roomId,input: input.emote});
+    socket.emit("sendEmote", { roomid: input.roomId, input: input.emote });
     setTimeout(() => {
-      setOpenEmoji(false)
+      setOpenEmoji(false);
     }, 5000);
   }
-  useEffect (() => {
+  useEffect(() => {
     socket.on("enemyEmoji", (data) => {
-      console.log(data, 'masuk emoji enemy')
-      setEmojiEnemyToShow(data.input)
+      console.log(data, "masuk emoji enemy");
+      setEmojiEnemyToShow(data.input);
       setOpenEmojiEnemy(true);
       setTimeout(() => {
         setOpenEmojiEnemy(false);
       }, 5000);
     });
-  }, [])
-  
-  function onCopy () {
-    setShowCopied(true)
+  }, []);
+
+  function onCopy() {
+    setShowCopied(true);
     setTimeout(() => {
-      setShowCopied(false)
+      setShowCopied(false);
     }, 3000);
   }
 
@@ -510,63 +520,77 @@ export default function WithMoveValidation(props) {
           timeIsOut,
           openMatchmakingLoader,
         }) => (
-          <div style={{color: "#999999"}}>
+          <div style={{ color: "#999999" }}>
             <MatchmakingQueueDialogs
               openMatchmakingLoader={openMatchmakingLoader}
               userData={userData}
             />
 
             <div className="row m-2">
-            <button className="btn btn-dark" onClick={() => back()}>
-              <i class="fas fa-chevron-circle-left"></i>
-            </button>
+              <button className="btn btn-dark" onClick={timeIsOut}>
+                <i class="fas fa-chevron-circle-left"></i>
+              </button>
             </div>
             <div className="container">
-            <div className="row justify-content-center">
-              <div className="col align-items-center">
-                <Chessboard
-                  id="humanVsHuman"
-                  width={540}
-                  // calcWidth={(data)=> console.log(data, 'isi calcwidth') }
-                  position={position}
-                  onDrop={onDrop}
-                  orientation={color}
-                  onMouseOverSquare={onMouseOverSquare}
-                  onMouseOutSquare={onMouseOutSquare}
-                  boardStyle={{
-                    borderRadius: "5px",
-                    boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
-                  }}
-                  squareStyles={squareStyles}
-                  dropSquareStyle={dropSquareStyle}
-                  onDragOverSquare={onDragOverSquare}
-                  // onSquareClick={onSquareClick}
-                  onSquareRightClick={onSquareRightClick}
-                />
-              </div>
-              <div className="col">
-                <div className="row">
-                { roomid !== "matchmaking" ?
-                    <CopyToClipboard text={roomid}
-                      onCopy={onCopy}>
-                      <span>Room ID: {roomid}</span>
-                    </CopyToClipboard>
-                    : <></>
-                  }
-                  { showCopied ?
-                    <span style={{color: 'green'}}>&nbsp;Copied.</span>
-                    : null
-                  }
+              <div className="row justify-content-center">
+                <div className="col align-items-center">
+                  <Chessboard
+                    id="humanVsHuman"
+                    width={boardWidth}
+                    calcWidth={calcBoardWidth}
+                    position={position}
+                    onDrop={onDrop}
+                    orientation={color}
+                    onMouseOverSquare={onMouseOverSquare}
+                    onMouseOutSquare={onMouseOutSquare}
+                    boardStyle={{
+                      borderRadius: "5px",
+                      boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
+                    }}
+                    squareStyles={squareStyles}
+                    dropSquareStyle={dropSquareStyle}
+                    onDragOverSquare={onDragOverSquare}
+                    // onSquareClick={onSquareClick}
+                    onSquareRightClick={onSquareRightClick}
+                  />
+                </div>
+                <div className="col">
+                  <div className="row">
+                    {roomid !== "matchmaking" ? (
+                      <CopyToClipboard text={roomid} onCopy={onCopy}>
+                        <span>Room ID: {roomid}</span>
+                      </CopyToClipboard>
+                    ) : (
+                      <></>
+                    )}
+                    {showCopied ? (
+                      <span style={{ color: "green" }}>&nbsp;Copied.</span>
+                    ) : null}
 
-                  <div className="col-10 col-md-8 col-lg-12 my-3">
-
-                    <div
+                    <div className="col-10 col-md-8 col-lg-12 my-3">
+                      <div
                         className="card"
                         style={{
                           height: "150px",
                           backgroundColor: "#262421",
+                          position: "relative",
                         }}
                       >
+                        {openEmojiEnemy ? (
+                          <img
+                            src={emojiEnemyToShow}
+                            style={{
+                              position: "absolute",
+                              bottom: "-10px",
+                              zIndex: "100",
+                              borderRadius: "40px",
+                            }}
+                            alt="smile"
+                            width="80"
+                          />
+                        ) : (
+                          <> </>
+                        )}
                         <div className="d-flex justify-content-around">
                           <div className="col-4 p-3 justify-content-center">
                             <img
@@ -583,161 +607,210 @@ export default function WithMoveValidation(props) {
                           </div>
                         </div>
                       </div>
-                    {
-                    openEmojiEnemy
-                    ? 
-                    <img src={emojiEnemyToShow} alt="smile" width="100" />
-                    : <> </>
-                }
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col">
-                  <VidCam
-                    roomid={roomid}
-                    userData={userData}
-                    enemy={enemy}
-                    color={color}
-                  />
-                  </div>
-                  <div className="col align-items-center">
-                    <div className="h1 row">
-                      <div className="timer-wrapper">
-                      <Timer
-                        durationInSeconds={600}
-                        formatted={true}
-                        isPaused={pauseTimerEnemy}
-                        onFinish={timeIsOut}
-                      />
-                      </div>
-                    </div>
-                    {
-                      pauseTimerEnemy?
-                      <>
-                        <div className="row mb-3 justify-content-center">
-                            <i class="fas fa-circle text-success"></i>
-
-                        </div>
-                        <div className="row justify-content-center">
-                            <i class="fas fa-circle text-dark"></i>
-                        </div>
-                      </>
-                      :
-                      <>
-                        <div className="row mb-3 justify-content-center">
-                          <i class="fas fa-circle text-dark"></i>
-                        </div>
-                        <div className="row justify-content-center">
-                          <i class="fas fa-circle text-success"></i>
-                        </div>
-                      </>
-                    }
-
-                    <div className="h1 row">
-                      <Timer
-                        durationInSeconds={600}
-                        formatted={true}
-                        isPaused={pauseTimerKita}
-                      />
                     </div>
                   </div>
-                </div>
-                {
-                    openEmoji
-                    ? 
-                    <img src={emojiToShow} alt="smile" width="100" />
-                    : <> </>
-                }
-                <div className="row justify-content-start">
-                  <div className="col-10 col-md-8 col-lg-12 my-3">
-                    <div
-                      className="card"
-                      style={{
-                        height: "150px",
-                        backgroundColor: "#262421",
-                      }}
-                    >
-                      <div className="d-flex justify-content-around">
-                        <div className="col-4 p-3 justify-content-center">
-                          <img
-                            src={state.pictureUrl}
-                            className="img-thumbnail bg-dark border-dark"
-                            alt=""
-                            width="120px"
-                            height="120px"
+                  <div className="row" style={{ position: "relative" }}>
+                    <div className="col align-items-start">
+                      <VidCam
+                        roomid={roomid}
+                        userData={userData}
+                        enemy={enemy}
+                        color={color}
+                      />
+                    </div>
+                    <div className="col align-items-center">
+                      <div className="h1 row">
+                        <div className="timer-wrapper">
+                          <Timer
+                            durationInSeconds={600}
+                            formatted={true}
+                            isPaused={pauseTimerEnemy}
+                            onFinish={timeIsOut}
                           />
                         </div>
-                        <div className="col-8 p-3">
-                          <h3 className="text-gray">{state.username}</h3>
-                          <h5 className="gray">{state.eloRating}</h5>
-                        </div>
+                      </div>
+                      {pauseTimerEnemy ? (
+                        <>
+                          <div className="row mb-3 justify-content-center">
+                            <i class="fas fa-circle text-dark"></i>
+                          </div>
+                          <div className="row justify-content-center">
+                            <i class="fas fa-circle text-success"></i>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="row mb-3 justify-content-center">
+                            <i class="fas fa-circle text-success"></i>
+                          </div>
+                          <div className="row justify-content-center">
+                            <i class="fas fa-circle text-dark"></i>
+                          </div>
+                        </>
+                      )}
+
+                      <div className="h1 row">
+                        <Timer
+                          durationInSeconds={600}
+                          formatted={true}
+                          isPaused={pauseTimerKita}
+                        />
                       </div>
                     </div>
                   </div>
-                  <div className="col">
-                  <div className="btn-group dropup">
-                    <button
-                      type="button"
-                      className="btn btn-dark dropdown-toggle"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <i className="fas fa-paper-plane"/>
-                      <span>&nbsp; Send Emoji</span>
-                    </button>
-                    <div className="dropdown-menu">
-                      <div className="row" style={{ width: "420px" }}>
-                        <div className="col-4">
-                          <button
-                            className="dropdown-item"
-                            onClick={() => sendEmot({emote: angry, roomId: roomid})}
-                          >
-                            <img src={angry} alt="angry" width="50" />
-                          </button>
-                          {/* client/src/pages/Dashboard.js */}
-                        </div>
-                        <div className="col-4">
-                          <button
-                            className="dropdown-item"
-                            onClick={() => sendEmot({emote: smile, roomId: roomid})}
-                          >
-                            <img src={smile} alt="smile" width="50" />
-                          </button>
-                        </div>
-                        <div className="col-4">
-                          <button
-                            className="dropdown-item"
-                            onClick={() => sendEmot({emote: love, roomId: roomid})}
-                          >
-                            <img src={love} alt="love" width="50" />
-                          </button>
+                  <div className="row justify-content-start">
+                    <div className="col-10 col-md-8 col-lg-12 my-3">
+                      <div
+                        className="card"
+                        style={{
+                          height: "150px",
+                          backgroundColor: "#262421",
+                          position: "relative",
+                        }}
+                      >
+                        {openEmoji ? (
+                          <img
+                            src={emojiToShow}
+                            style={{
+                              position: "absolute",
+                              top: "-10px",
+                              zIndex: "100",
+                              borderRadius: "40px",
+                            }}
+                            alt="smile"
+                            width="80"
+                          />
+                        ) : (
+                          <> </>
+                        )}
+                        <div className="d-flex justify-content-around">
+                          <div className="col-4 p-3 justify-content-center">
+                            <img
+                              src={state.pictureUrl}
+                              className="img-thumbnail bg-dark border-dark"
+                              alt=""
+                              width="120px"
+                              height="120px"
+                            />
+                          </div>
+                          <div className="col-8 p-3">
+                            <h3 className="text-gray">{state.username}</h3>
+                            <h5 className="gray">{state.eloRating}</h5>
+                          </div>
                         </div>
                       </div>
+                    </div>
+                    <div className="col">
+                      <div className="btn-group dropup">
+                        <button
+                          type="button"
+                          className="btn btn-dark dropdown-toggle"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <i className="fas fa-paper-plane" />
+                          <span>&nbsp; Send Emoji</span>
+                        </button>
+                        <div className="dropdown-menu bg-dark">
+                          <div
+                            className="row bg-dark m-3"
+                            style={{ width: "450px" }}
+                          >
+                            <div className="col-4">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  sendEmot({ emote: hugemoji, roomId: roomid })
+                                }
+                              >
+                                <img src={hugemoji} alt="hugemoji" width="50" />
+                              </button>
+                              {/* client/src/pages/Dashboard.js */}
+                            </div>
+                            <div className="col-4">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  sendEmot({ emote: mindblown, roomId: roomid })
+                                }
+                              >
+                                <img
+                                  src={mindblown}
+                                  alt="mindblown"
+                                  width="50"
+                                />
+                              </button>
+                            </div>
+                            <div className="col-4">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  sendEmot({ emote: sad, roomId: roomid })
+                                }
+                              >
+                                <img src={sad} alt="sad" width="50" />
+                              </button>
+                            </div>
+                            <div className="col-4">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  sendEmot({ emote: sleep, roomId: roomid })
+                                }
+                              >
+                                <img src={sleep} alt="sleep" width="50" />
+                              </button>
+                            </div>
+                            <div className="col-4">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  sendEmot({ emote: sweat, roomId: roomid })
+                                }
+                              >
+                                <img src={sweat} alt="sweat" width="50" />
+                              </button>
+                            </div>
+                            <div className="col-4">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  sendEmot({ emote: wink, roomId: roomid })
+                                }
+                              >
+                                <img src={wink} alt="wink" width="50" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <Dialog
-                open={openGameOverModal}
-                onClose={handleCloseGameOver}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">{`${playerWinStatus}`}</DialogTitle>
-                {/* <DialogContent>
+                <Dialog
+                  open={openGameOverModal}
+                  onClose={handleCloseGameOver}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">{`${playerWinStatus}`}</DialogTitle>
+                  {/* <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   {playerWinStatus}
                 </DialogContentText>
               </DialogContent> */}
-                <DialogActions>
-                  <Button onClick={handleCloseGameOver} color="primary" autoFocus>
-                    Back to Lobby
-                  </Button>
-                </DialogActions>
-              </Dialog>
+                  <DialogActions>
+                    <Button
+                      onClick={handleCloseGameOver}
+                      color="primary"
+                      autoFocus
+                    >
+                      Back to Lobby
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
             </div>
-          </div>
           </div>
         )}
       </HumanVsHuman>

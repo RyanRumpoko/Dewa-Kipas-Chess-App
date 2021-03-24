@@ -1,13 +1,14 @@
 export default function CardHistory(props) {
-  // console.log(props);
   const { history, user } = props;
-  // console.log(history);
+
   return (
     <div className="card mb-3 bg-dark" id={history.id}>
-      {console.log(user)}
       <div className="card-body">
         <div className="row justify-content-center">
-          <div className="col-12 h3 font-minecraft m-0" style={{ color: "#999999" }}>
+          <div
+            className="col-12 h3 font-minecraft m-0"
+            style={{ color: "#999999" }}
+          >
             {+history.playerOne === +user.id ? "WIN" : "LOSE"}
           </div>
         </div>
@@ -24,7 +25,9 @@ export default function CardHistory(props) {
               />
             </div>
             <div className="row">
-              <div className="col-12 h5" style={{ color: "#999999" }}>{history.PlayerOne.username}</div>
+              <div className="col-12 h5" style={{ color: "#999999" }}>
+                {history.PlayerOne.username}
+              </div>
             </div>
           </div>
           <div
@@ -53,7 +56,9 @@ export default function CardHistory(props) {
               />
             </div>
             <div className="row">
-              <div className="col-12 h5" style={{ color: "#999999" }}>{history.PlayerTwo.username}</div>
+              <div className="col-12 h5" style={{ color: "#999999" }}>
+                {history.PlayerTwo.username}
+              </div>
             </div>
           </div>
         </div>
