@@ -59,6 +59,8 @@ export default function MatchmakingQueueDialogs(props) {
 
   const handleClose = () => {
     history.push("/home", props.userData);
+    // harus mengemit batal queue
+    
   };
 
   return (

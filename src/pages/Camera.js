@@ -4,7 +4,6 @@ import Peer from "simple-peer";
 import styled from "styled-components";
 
 const Container = styled.div`
-  height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -16,9 +15,9 @@ const Row = styled.div`
 `;
 
 const Video = styled.video`
-  border: 1px solid blue;
-  width: 50%;
-  height: 50%;
+  border: 1px solid gray;
+  width: 100%;
+  max-width: 300px;
 `;
 
 function WebRtc(props) {
@@ -144,23 +143,27 @@ function WebRtc(props) {
   if (receivingCall) {
     incomingCall = (
       <div>
-        <h3>{caller} is asking you to open cam</h3>
-        <button onClick={acceptCall}>Accept</button>
+        <h5>{caller} is asking you to open cam</h5>
+        <button onClick={acceptCall} className="btn btn-dark">Accept</button>
       </div>
     );
   }
   return (
     <Container>
-      <Row>
-        {UserVideo}
-        {PartnerVideo}
-      </Row>
+        <div className="row justify-content-center">
+        <div className="col-8">
+          {UserVideo}
+        </div>
+        <div className="col-8">
+          {PartnerVideo}
+        </div>
+        </div>
       {
         isCalled?
         <> </>
         : 
         <Row>
-          <button onClick={() => callPeer(props.enemy.id)}>
+          <button onClick={() => callPeer(props.enemy.id)} className="btn btn-dark">
             Ask you opponent to open cam
           </button>
         </Row>

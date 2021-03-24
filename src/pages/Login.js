@@ -52,7 +52,7 @@ export default function Login() {
         <div className="container">
           <div className="row content">
             <div className="col-md-6 mt-5">
-              <img src={loginImage} className="img-fluid" alt="image"/>
+              <img src={loginImage} className="img-fluid" alt="login"/>
             </div>
             <div className="col-md-6">
               <h3 className="header-text mb-3">FORM LOGIN</h3>
@@ -65,8 +65,10 @@ export default function Login() {
                   <label>Password :</label>
                   <input type="password" name="password" className="form-control" required onChange={(e) => setPassword(e.target.value)}/>
                 </div>
-                <button type="submit" className="btn btn-outline-danger btn-login mb-3">LOGIN</button>
+                {/* style={{backgroundColor: "#b84703", color: "#161512"}} */}
+                <button type="submit" className="btn btn-login mb-3 btn-outline-danger">LOGIN</button>
               </form>
+              <div className="text-center mb-2"> OR </div>
               <GoogleLogin
               clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
               buttonText="Login"

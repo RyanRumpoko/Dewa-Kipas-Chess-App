@@ -12,7 +12,7 @@ class Demo extends Component {
             <Chessboard
               id="stockfish"
               position={position}
-              width={540}
+              width={420}
               onDrop={onDrop}
               boardStyle={boardStyle}
               orientation="black"

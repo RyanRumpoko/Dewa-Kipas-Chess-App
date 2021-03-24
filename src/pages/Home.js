@@ -5,6 +5,7 @@ import axios from "../api/axios";
 import CardHistory from "../components/CardHistory";
 import { socket } from "../connections/socketio.js";
 import Table from "../components/Table";
+import ChessVSBot from "../pages/ChessVSBot";
 
 export default function Home() {
   const { state } = useLocation();
@@ -186,7 +187,7 @@ export default function Home() {
                 <div className="col-4 my-3">
                   <img
                     src={state.pictureUrl}
-                    className="img-thumbnail"
+                    className="img-thumbnail bg-dark border-dark"
                     alt=""
                   />
                 </div>
@@ -261,7 +262,9 @@ export default function Home() {
                 : null}
             </div>
           </div>
-          <div className="col-10 col-md-8 col-lg-3 my-3"></div>
+          <div className="col-10 col-md-8 col-lg-3 my-3">
+          <ChessVSBot userData={state} />
+          </div>
         </div>
       </div>
       {/* <div className="container-fluid">
