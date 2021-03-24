@@ -3,7 +3,7 @@ export default function CardHistory(props) {
   const { history } = props;
   // console.log(history);
   return (
-    <div className="card mb-3" id="1">
+    <div className="card mb-3" id={history.id}>
       <div className="card-body">
         <div className="row">
           <div className="col-4">
