@@ -4,14 +4,16 @@ import Nav from "../components/Nav";
 import axios from "../api/axios";
 import CardHistory from "../components/CardHistory";
 import { socket } from "../connections/socketio.js";
+import Table from "../components/Table";
 
 export default function Home() {
   const { state } = useLocation();
-  console.log(state, "<<<<<");
+  // console.log(state, "<<<<<");
   const history = useHistory();
   const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false);
   const [inputRoomId, setInputRoomId] = useState("");
   const [histories, setHistories] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
   const [isDropdown, setIsDropdown] = useState(true);
   function vsPlayer() {
     setOpenModalCreateRoom(true);
@@ -50,10 +52,25 @@ export default function Home() {
         });
         setHistories(data);
       } catch ({ response }) {
+        console.log(response);
+      }
+    }
+    async function getLeaderboard() {
+      try {
+        const { data } = await axios({
+          method: "get",
+          url: "users/leaderboard",
+          headers: {
+            access_token: localStorage.access_token,
+          },
+        });
+        setLeaderboard(data);
+      } catch ({ response }) {
         console.log(response.data);
       }
     }
     getHistoryUser();
+    getLeaderboard();
     return () => ac.abort();
   }, [openModalCreateRoom, state]);
 
@@ -67,7 +84,7 @@ export default function Home() {
               className="card text-center"
               style={{
                 height: "300px",
-                width: "800px",
+                width: "825px",
                 backgroundColor: "#262421",
               }}
             >
@@ -192,6 +209,39 @@ export default function Home() {
               }}
             >
               <div className="card-header text-white h1">Leaderboard</div>
+              <table className="table text-light table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <i className="fas fa-crown"></i>
+                    </th>
+                    <th scope="col">Username</th>
+                    <th scope="col">EloRating</th>
+                  </tr>
+                </thead>
+                <tbody className="mb-3">
+                  {leaderboard
+                    ? leaderboard.map((data, i) => (
+                        <Table data={{ data, i }} key={`data ke ${i + 1}`} />
+                      ))
+                    : null}
+                </tbody>
+                <tfoot>
+                  {leaderboard
+                    ? leaderboard.map((data, i) => {
+                        if (data.email === state.email) {
+                          return (
+                            <tr className="bg-light text-dark">
+                              <th scope="row">{i + 1}</th>
+                              <td>{data.username}</td>
+                              <td>{data.eloRating}</td>
+                            </tr>
+                          );
+                        }
+                      })
+                    : null}
+                </tfoot>
+              </table>
             </div>
           </div>
           <div className="col-10 col-md-8 col-lg-3 my-3">
