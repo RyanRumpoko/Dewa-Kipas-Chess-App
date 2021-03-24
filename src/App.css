@@ -9,6 +9,10 @@
   pointer-events: none;
 }
 
+.navbar-dark {
+  background-color: #262421;
+}
+
 .content{
   margin: 7%;
   background-color: #262421;
@@ -43,6 +47,12 @@
   border-color: #262421;
   outline: 0;
   box-shadow: none;
+}
+
+.navbar-brand{
+  font-family: 'Press Start 2P', cursive;
+  font-weight: 800;
+  font-size: 90px;
 }
 
 .btn-login{
