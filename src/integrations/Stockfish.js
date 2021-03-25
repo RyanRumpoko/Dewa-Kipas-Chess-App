@@ -8,7 +8,7 @@ let game = new Chess();
 class Stockfish extends Component {
   static propTypes = { children: PropTypes.func };
 
-  state = { fen: "start", board: "" };
+  state = { fen: "start", board: "start" };
 
   componentDidMount() {
     this.setState({ fen: game.fen(), board: game.fen() });
@@ -57,7 +57,7 @@ class Stockfish extends Component {
         : new Worker(options.stockfishjs || "stockfish.js");
     let engineStatus = {};
     let time = { wtime: 3000, btime: 3000, winc: 1500, binc: 1500 };
-    let playerColor = "black";
+    let playerColor = "white";
     let clockTimeoutID = null;
     // let isEngineRunning = false;
     // do not pick up pieces if the game is over

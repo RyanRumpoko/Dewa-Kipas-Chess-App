@@ -32,7 +32,7 @@ class VSBot extends Component {
                 calcWidth={(data) => calcBoardWidth(data)}
                 onDrop={onDrop}
                 boardStyle={boardStyle}
-                orientation="black"
+                orientation="white"
               />
               <button
                 class="btn btn-outline-dark"
