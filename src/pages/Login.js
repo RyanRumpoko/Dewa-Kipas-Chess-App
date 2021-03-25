@@ -85,17 +85,11 @@ export default function Login() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="btn btn-login mb-3 btn-outline-warning"
-                >
+                <button type="submit" className="btn mb-3 btn-outline-warning">
                   LOGIN
                 </button>
               </form>
-              <span
-                type="button"
-                className="btn btn-outline-dark btn-login mb-3"
-              >
+              <button type="button" className="btn btn-outline-dark mb-3">
                 <GoogleLogin
                   clientId="530630525203-62hcamr2a1e2or3qkidkgashtfd0tj4l.apps.googleusercontent.com"
                   onSuccess={responseGoogle}
@@ -104,7 +98,7 @@ export default function Login() {
                   className="btn-google"
                   style={{ backgroundColor: "transparent" }}
                 />
-              </span>
+              </button>
 
               <p>
                 Don't have an account? <Link to="/register">Register here</Link>
