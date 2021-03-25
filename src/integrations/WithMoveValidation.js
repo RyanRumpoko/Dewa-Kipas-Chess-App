@@ -374,7 +374,7 @@ class HumanVsHuman extends Component {
     try {
       const response = await axios({
         method: "put",
-        url: `${ENDPOINT}users/updatescore`,
+        url: `users/updatescore`,
         data: data,
         headers: { access_token: localStorage.getItem("access_token") },
       });
@@ -389,7 +389,7 @@ class HumanVsHuman extends Component {
       try {
         const response = await axios({
           method: "post",
-          url: `${ENDPOINT}histories/`,
+          url: `histories/`,
           data: input,
           headers: { access_token: localStorage.getItem("access_token") },
         });

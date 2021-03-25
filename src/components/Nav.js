@@ -40,7 +40,10 @@ export default function Nav() {
     //   </Button>
     // </div>
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <span className="navbar-brand m-1 h1" style={{ fontSize: "23px", color: "#999999" }}>
+      <span
+        className="navbar-brand m-1 h1"
+        style={{ fontSize: "23px", color: "#999999" }}
+      >
         <img
           src={logoImage}
           className="mr-3"
@@ -53,7 +56,7 @@ export default function Nav() {
       {/* <div className="d-flex align-items-center">
       </div> */}
       <button
-        class="navbar-toggler"
+        className="navbar-toggler"
         type="button"
         data-toggle="collapse"
         data-target="#navbarNav"
@@ -61,13 +64,13 @@ export default function Nav() {
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
-        <span class="navbar-toggler-icon"></span>
+        <span className="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-          {/* <li class="nav-item active">
-            <a class="nav-link" href="#">
-              Home <span class="sr-only">(current)</span>
+      <div className="collapse navbar-collapse" id="navbarNav">
+        <ul className="navbar-nav mr-auto">
+          {/* <li className="nav-item active">
+            <a className="nav-link" href="#">
+              Home <span className="sr-only">(current)</span>
             </a>
           </li> */}
         </ul>

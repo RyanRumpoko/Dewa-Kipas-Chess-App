@@ -40,7 +40,7 @@ export default function Login() {
       await history.push("/home", data);
       console.log(data);
     } catch ({ response }) {
-      console.log(response.data);
+      console.log(response);
     }
   }
   return (
@@ -92,7 +92,7 @@ export default function Login() {
                   LOGIN
                 </button>
               </form>
-              <button
+              <span
                 type="button"
                 className="btn btn-outline-dark btn-login mb-3"
               >
@@ -104,7 +104,7 @@ export default function Login() {
                   className="btn-google"
                   style={{ backgroundColor: "transparent" }}
                 />
-              </button>
+              </span>
 
               <p>
                 Don't have an account? <Link to="/register">Register here</Link>

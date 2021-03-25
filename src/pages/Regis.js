@@ -106,7 +106,7 @@ export default function Login() {
                   REGISTER
                 </button>
               </form>
-              <button
+              <span
                 type="button"
                 className="btn btn-outline-dark btn-login mb-3"
               >
@@ -118,7 +118,7 @@ export default function Login() {
                   cookiePolicy={"single_host_origin"}
                   className="btn-google"
                 />
-              </button>
+              </span>
               <p>
                 Already have an Account? <Link to="/login">Login here</Link>
               </p>
