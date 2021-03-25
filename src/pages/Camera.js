@@ -37,7 +37,6 @@ function WebRtc(props) {
   const socketVid = useRef();
 
   useEffect(() => {
-    console.log("Masuk Use Effect");
     socketVid.current = socket;
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
@@ -57,7 +56,6 @@ function WebRtc(props) {
       });
 
     socketVid.current.on("yourID", (id) => {
-      console.log("Masuk Socket ID");
       setYourID(id);
     });
 
@@ -66,7 +64,6 @@ function WebRtc(props) {
     });
 
     socketVid.current.on("hey", (data) => {
-      console.log(data, "Masuk hey");
       setisCalled(true);
       setReceivingCall(true);
       setCaller(data.from);
@@ -85,7 +82,6 @@ function WebRtc(props) {
     });
 
     peer.on("signal", (data) => {
-      console.log(data, "ini Data");
       socketVid.current.emit("callUser", {
         roomid: props.roomid,
         userToCall: id,
@@ -97,13 +93,11 @@ function WebRtc(props) {
 
     peer.on("stream", (stream) => {
       if (partnerVideo.current) {
-        console.log(stream, "ini yang di line 100");
         partnerVideo.current.srcObject = stream;
       }
     });
 
     socketVid.current.on("callAccepted", (signal) => {
-      console.log(signal, "video sudah sampai callaccepted");
       setCallAccepted(true);
       peer.signal(signal);
     });
@@ -111,16 +105,13 @@ function WebRtc(props) {
 
   function acceptCall() {
     setReceivingCall(false);
-    console.log("acceptCall triggered");
     setCallAccepted(true);
-    console.log(stream, "ini stream usernya sendiri di accept call"); // ternyata undefined
     const peer = new Peer({
       initiator: false,
       trickle: false,
       stream: stream,
     });
     peer.on("signal", (data) => {
-      console.log(data, "acceptcall data signal sebelum emit");
       socketVid.current.emit("acceptCall", {
         signal: data,
         roomid: props.roomid,
@@ -159,8 +150,8 @@ function WebRtc(props) {
   return (
     <Container>
       <div className="row justify-content-start">
-        <div className="col-10">{UserVideo}</div>
         <div className="col-10">{PartnerVideo}</div>
+        <div className="col-10">{UserVideo}</div>
       </div>
       {isCalled ? (
         <> </>

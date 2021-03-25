@@ -22,7 +22,6 @@ export default function Login() {
           url: "users/register",
           data: { username, email, password },
         });
-        console.log(data);
         history.push("/login");
       }
     } catch ({ response }) {
@@ -38,7 +37,6 @@ export default function Login() {
       });
       await localStorage.setItem("access_token", data.access_token);
       await history.push("/home", data);
-      console.log(data);
     } catch ({ response }) {
       console.log(response.data);
     }

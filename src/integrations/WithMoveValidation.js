@@ -110,11 +110,9 @@ class HumanVsHuman extends Component {
       if (this.state.color === "white") {
         this.setState({ enemy: dataRoom.selectedRoom.playerTwo });
         this.handleTimerEnemy();
-        console.log(this.state.enemy, "ini enemyku di white");
       } else {
         this.setState({ enemy: dataRoom.selectedRoom.playerOne });
         this.handleTimerKita();
-        console.log(this.state.enemy, "ini enemyku di black");
       }
     });
 
@@ -136,14 +134,12 @@ class HumanVsHuman extends Component {
       this.setState({
         playerWinStatus: `You lose versus ${this.state.enemy.username}, try harder next time...`,
       });
-      console.log("kamu loser");
       this.setState({
         openGameOverModal: true,
         pauseTimerKita: true,
         pauseTimerEnemy: true,
       });
 
-      console.log("dapat socket you lose");
       let newScore = this.state.userData.eloRating - 10;
       // let newScore = EloRating(this.state.userData.eloRating, this.state.enemy.eloRating, false)
       this.updateScore({ id: this.state.userData.id, eloRating: newScore });
@@ -490,7 +486,6 @@ export default function WithMoveValidation(props) {
   // }
 
   function calcBoardWidth(data) {
-    console.log(data);
     if (data.screenWidth < 576) {
       setBoardWidth(data.screenWidth - 40);
       // setBoardWidth(2)

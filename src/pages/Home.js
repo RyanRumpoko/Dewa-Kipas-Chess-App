@@ -9,7 +9,6 @@ import ChessVSBot from "./ChessVSBot";
 
 export default function Home() {
   const { state } = useLocation();
-  console.log(state, "<<<<<");
   const history = useHistory();
   const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false);
   const [inputRoomId, setInputRoomId] = useState("");
@@ -75,7 +74,6 @@ export default function Home() {
           method: "get",
           url: `users/${state.id}`,
         });
-        console.log(data, "<<<<<<<<FETCH DATA USER");
         setUserLogin(data);
       } catch ({ response }) {
         console.log(response);
