@@ -21,18 +21,33 @@ class VSBot extends Component {
     return (
       <div style={boardsContainer}>
         <StockFish>
-          {({ position, onDrop }) => (
-            <Chessboard
-              id="stockfish"
-              position={position}
-              // width={550}
-              width={boardWidth}
-              // calcWidth={(data) => console.log(data, "ini calcwidth")}
-              calcWidth={(data) => calcBoardWidth(data)}
-              onDrop={onDrop}
-              boardStyle={boardStyle}
-              orientation="black"
-            />
+          {({ position, onDrop, resetGame }) => (
+            <div>
+              <Chessboard
+                id="stockfish"
+                position={position}
+                // width={550}
+                width={boardWidth}
+                // calcWidth={(data) => console.log(data, "ini calcwidth")}
+                calcWidth={(data) => calcBoardWidth(data)}
+                onDrop={onDrop}
+                boardStyle={boardStyle}
+                orientation="black"
+              />
+              <button
+                class="btn btn-outline-dark"
+                style={{
+                  borderColor: "#999999",
+                  marginTop: "5px",
+                  color: "#999999",
+                }}
+                onClick={() => resetGame()}
+              >
+                Reset
+              </button>
+              {/* <p className="text-light">{JSON.stringify(game, null, 2)}</p> */}
+              {/* {console.log(game, "<<<<< TESTING")} */}
+            </div>
           )}
         </StockFish>
       </div>

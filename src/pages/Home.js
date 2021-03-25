@@ -25,26 +25,27 @@ export default function Home() {
     setIsDropdown(true);
   }
   function createRoom() {
-    history.push(`/dashboard/player/new`, state);
+    history.push(`/dashboard/player/new`, userLogin);
   }
   function joinRoom() {
-    history.push(`/dashboard/player/${inputRoomId}`, state);
+    history.push(`/dashboard/player/${inputRoomId}`, userLogin);
   }
   function onChangeInputRoomId(e) {
     setInputRoomId(e.target.value);
   }
   function matchmaking() {
-    socket.emit("matchmaking", state);
-    history.push("/dashboard/player/matchmaking", state);
+    socket.emit("matchmaking", userLogin);
+    history.push("/dashboard/player/matchmaking", userLogin);
   }
 
   useEffect(() => {
     // const ac = new AbortController();
     async function getHistoryUser() {
       try {
+        console.log(userLogin, "<<<<<<<<");
         const { data } = await axios({
           method: "get",
-          url: `/histories/${state ? state.id : 1}`,
+          url: `/histories/${userLogin.id || state.id}`,
           headers: {
             access_token: localStorage.access_token,
           },
@@ -64,8 +65,8 @@ export default function Home() {
           },
         });
         setLeaderboard(data);
-      } catch ({ response }) {
-        console.log(response.data);
+      } catch (response) {
+        console.log(response);
       }
     }
     async function getUser() {
@@ -76,13 +77,15 @@ export default function Home() {
         });
         setUserLogin(data);
       } catch ({ response }) {
-        console.log(response.data);
+        console.log(response);
       }
     }
+    getUser();
     getHistoryUser();
     getLeaderboard();
-    getUser();
-    // return () => ac.abort();
+    return () => {
+      setUserLogin([]);
+    };
   }, [openModalCreateRoom, state]);
 
   return (
@@ -216,18 +219,18 @@ export default function Home() {
               <div className="d-flex justify-content-around">
                 <div className="col-4 my-3">
                   <img
-                    src={state.pictureUrl}
+                    src={userLogin.pictureUrl}
                     className="img-thumbnail bg-dark border-dark"
                     alt=""
                   />
                 </div>
                 <div className="col-8 my-3">
                   <h3 className="font-minecraft" style={{ color: "#999999" }}>
-                    {state.username}
+                    {userLogin.username}
                   </h3>
                   <h3 className="" style={{ color: "#999999" }}>
-                    <i class="fas fa-chess-pawn"></i>
-                    &nbsp; : {state.eloRating}
+                    <i className="fas fa-chess-pawn"></i>
+                    &nbsp; : {userLogin.eloRating}
                   </h3>
                 </div>
               </div>
@@ -327,11 +330,12 @@ export default function Home() {
                     <tfoot>
                       {leaderboard
                         ? leaderboard.map((data, i) => {
-                            if (data.email === state.email) {
+                            if (data.email === userLogin.email) {
                               return (
                                 <tr
                                   className="text-dark"
                                   style={{ backgroundColor: "#999999" }}
+                                  key={`data ke ${i + 1}`}
                                 >
                                   <th scope="row">{i + 1}</th>
                                   <td>{data.username}</td>
