@@ -9,7 +9,7 @@ import ChessVSBot from "./ChessVSBot";
 
 export default function Home() {
   const { state } = useLocation();
-  // console.log(state, "<<<<<");
+  console.log(state, "<<<<<");
   const history = useHistory();
   const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false);
   const [inputRoomId, setInputRoomId] = useState("");
@@ -42,7 +42,7 @@ export default function Home() {
     // const ac = new AbortController();
     async function getHistoryUser() {
       try {
-        console.log(userLogin, "<<<<<<<<");
+        // console.log(userLogin, "<<<<<<<<");
         const { data } = await axios({
           method: "get",
           url: `/histories/${userLogin.id || state.id}`,
@@ -73,16 +73,17 @@ export default function Home() {
       try {
         const { data } = await axios({
           method: "get",
-          url: `users/${localStorage.access_token}`,
+          url: `users/${state.id}`,
         });
+        console.log(data, "<<<<<<<<FETCH DATA USER");
         setUserLogin(data);
       } catch ({ response }) {
         console.log(response);
       }
     }
-    getUser();
     getHistoryUser();
     getLeaderboard();
+    getUser();
     return () => {
       setUserLogin([]);
     };
@@ -92,7 +93,7 @@ export default function Home() {
     <>
       <Nav />
       <div className="container-fluid">
-        {console.log(userLogin)}
+        {/* {console.log(userLogin)} */}
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6 my-3">
             <div
