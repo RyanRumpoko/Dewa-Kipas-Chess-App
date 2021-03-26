@@ -87,6 +87,9 @@ class HumanVsHuman extends Component {
         roomid: this.state.roomid,
         playerData: this.state.userData,
       });
+      socket.on("fullRoom", () => {
+        this.props.history.push("/home", { ...this.state.userData });
+      });
     }
     this.game = new Chess();
 

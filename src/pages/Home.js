@@ -72,7 +72,7 @@ export default function Home() {
       try {
         const { data } = await axios({
           method: "get",
-          url: `users/${state.id}`,
+          url: `users/${localStorage.access_token}`,
         });
         setUserLogin(data);
       } catch ({ response }) {
