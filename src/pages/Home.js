@@ -9,7 +9,6 @@ import ChessVSBot from "./ChessVSBot";
 
 export default function Home() {
   const { state } = useLocation();
-  console.log(state, "<<<<<");
   const history = useHistory();
   const [openModalCreateRoom, setOpenModalCreateRoom] = useState(false);
   const [inputRoomId, setInputRoomId] = useState("");
@@ -73,9 +72,8 @@ export default function Home() {
       try {
         const { data } = await axios({
           method: "get",
-          url: `users/${state.id}`,
+          url: `users/${localStorage.access_token}`,
         });
-        console.log(data, "<<<<<<<<FETCH DATA USER");
         setUserLogin(data);
       } catch ({ response }) {
         console.log(response);
@@ -112,7 +110,7 @@ export default function Home() {
                   <div className="row justify-content-center">
                     <div className="col-12 col-md-8 col-lg-4 mt-1">
                       <button
-                        className="btn btn-outline-dark"
+                        className="btn btn-outline-dark p-2"
                         style={{
                           height: "150px",
                           width: "150px",
@@ -122,7 +120,7 @@ export default function Home() {
                       >
                         <div className="row justify-content-center">
                           <div className="col-10" style={{ color: "#999999" }}>
-                            <i className="fas fa-robot fa-5x"></i>
+                            <i className="fas fa-user-friends fa-5x"></i>
                           </div>
                           <div
                             className="col-10 mt-2"
@@ -135,7 +133,7 @@ export default function Home() {
                     </div>
                     <div className="col-12 col-md-8 col-lg-4 mt-1">
                       <button
-                        className="btn btn-outline-light"
+                        className="btn btn-outline-dark p-2"
                         style={{
                           height: "150px",
                           width: "150px",

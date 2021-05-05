@@ -59,9 +59,9 @@ export default function MatchmakingQueueDialogs(props) {
   const history = useHistory();
 
   const handleClose = () => {
-    history.push("/home", props.userData);
     // harus mengemit batal queue
-    socket.emit()
+    socket.emit("cancelMatchmaking", props.userData);
+    history.push("/home", props.userData);
   };
 
   return (
@@ -72,8 +72,8 @@ export default function MatchmakingQueueDialogs(props) {
         open={props.openMatchmakingLoader}
         PaperProps={{
           style: {
-            backgroundColor: '#2d2b28',
-            color:'grey'
+            backgroundColor: "#2d2b28",
+            color: "grey",
           },
         }}
       >

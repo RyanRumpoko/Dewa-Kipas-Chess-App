@@ -13,7 +13,7 @@ export default function Dashboard() {
   let { loc, roomid } = useParams();
   const { state } = useLocation();
   const [openEmoji, setOpenEmoji] = useState(false);
-  const [emojiToShow, setEmojiToShow] = useState('');
+  const [emojiToShow, setEmojiToShow] = useState("");
   // console.log(roomid, "ini room id");
   const history = useHistory();
 
@@ -23,16 +23,15 @@ export default function Dashboard() {
   }
 
   function sendEmot(input) {
-    setEmojiToShow(input)
+    setEmojiToShow(input);
     setOpenEmoji(true);
     socket.emit("sendEmote", input);
     setTimeout(() => {
-      setOpenEmoji(false)
+      setOpenEmoji(false);
     }, 5000);
   }
 
   socket.on("", (msg) => {
-    console.log(msg);
     setOpenEmoji(true);
   });
 
@@ -76,12 +75,11 @@ export default function Dashboard() {
                   >
                     <div>Testing</div>
                   </Modal> */}
-                  {
-                    openEmoji
-                    ? 
+                  {openEmoji ? (
                     <img src={emojiToShow} alt="smile" width="100" />
-                    : <> </>
-                  }
+                  ) : (
+                    <> </>
+                  )}
                 </div>
                 <div
                   className="row bg-secondary"
