@@ -3,19 +3,29 @@ import PropTypes from "prop-types";
 import Chess from "chess.js"; // import Chess from  "chess.js"(default) if recieving an error about new Chess not being a constructor
 
 const STOCKFISH = window.STOCKFISH;
-const game = new Chess();
+let game = new Chess();
 
 class Stockfish extends Component {
   static propTypes = { children: PropTypes.func };
 
-  state = { fen: "start" };
+  state = { fen: "start", board: "start" };
 
   componentDidMount() {
-    this.setState({ fen: game.fen() });
-
+    this.setState({ fen: game.fen(), board: game.fen() });
+    game = new Chess();
     this.engineGame().prepareMove();
   }
-
+  componentWillUnmount() {
+    game.clear();
+    game = new Chess();
+  }
+  resetGame = () => {
+    this.setState({
+      fen: this.state.board,
+    });
+    game = new Chess();
+    this.engineGame().prepareMove();
+  };
   onDrop = ({ sourceSquare, targetSquare }) => {
     // see if the move is legal
     const move = game.move({
@@ -35,7 +45,7 @@ class Stockfish extends Component {
 
   engineGame = (options) => {
     options = options || {};
-
+    let announced_game_over;
     /// We can load Stockfish via Web Workers or via STOCKFISH() if loaded from a <script> tag.
     let engine =
       typeof STOCKFISH === "function"
@@ -47,10 +57,9 @@ class Stockfish extends Component {
         : new Worker(options.stockfishjs || "stockfish.js");
     let engineStatus = {};
     let time = { wtime: 3000, btime: 3000, winc: 1500, binc: 1500 };
-    let playerColor = "black";
+    let playerColor = "white";
     let clockTimeoutID = null;
     // let isEngineRunning = false;
-    let announced_game_over;
     // do not pick up pieces if the game is over
     // only pick up pieces for White
 
@@ -248,7 +257,11 @@ class Stockfish extends Component {
 
   render() {
     const { fen } = this.state;
-    return this.props.children({ position: fen, onDrop: this.onDrop });
+    return this.props.children({
+      position: fen,
+      onDrop: this.onDrop,
+      resetGame: this.resetGame,
+    });
   }
 }
 

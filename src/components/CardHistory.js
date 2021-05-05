@@ -1,36 +1,67 @@
 export default function CardHistory(props) {
-  // console.log(props);
-  const { history } = props;
-  // console.log(history);
+  const { history, user } = props;
+
   return (
-    <div className="card mb-3" id="1">
-      <h5 className="card-header">Player One</h5>
+    <div className="card mb-3 bg-dark" id={history.id}>
       <div className="card-body">
-        <div className="row">
-          <div className="col-4">
-            <div class="row">
+        <div className="row justify-content-center">
+          <div
+            className="col-12 h3 font-minecraft m-0"
+            style={{ color: "#999999" }}
+          >
+            {+history.playerOne === +user.id ? "WIN" : "LOSE"}
+          </div>
+        </div>
+        <div className="row justify-content-center">
+          <div className="col-5">
+            <div
+              className="row"
+              style={{ justifyContent: "center", alignItems: "center" }}
+            >
               <img
                 src={history.PlayerOne.pictureUrl}
                 alt={history.PlayerOne.username}
-                width="10"
+                style={{ width: "6rem", height: "6rem" }}
               />
             </div>
-            <div class="row">Name:</div>
-            <div class="row">{history.PlayerOne.username}</div>
+            <div className="row">
+              <div className="col-12 h5" style={{ color: "#999999" }}>
+                {history.PlayerOne.username}
+              </div>
+            </div>
           </div>
-          <div className="col-4">
-            <div class="row">V.S</div>
+          <div
+            className="col-2 p-0 m-0"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <p style={{ fontSize: "3rem", color: "#999999" }}>
+              {/* <i className="fab fa-vimeo-v" size="5" style={{ color: "#999999" }}></i>
+              <i className="fab fa-stripe-s" style={{ color: "#999999" }}></i> */}
+              VS
+            </p>
           </div>
-          <div className="col-4">
-            <div class="row">testing</div>
+          <div className="col-5">
+            <div
+              className="row"
+              style={{ justifyContent: "center", alignItems: "center" }}
+            >
+              <img
+                src={history.PlayerTwo.pictureUrl}
+                alt={history.PlayerTwo.username}
+                style={{ width: "6rem", height: "6rem" }}
+              />
+            </div>
+            <div className="row">
+              <div className="col-12 h5" style={{ color: "#999999" }}>
+                {history.PlayerTwo.username}
+              </div>
+            </div>
           </div>
         </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores
-          totam molestiae id? Similique nemo a alias quasi corporis rem
-          pariatur. Fugit ratione corrupti, facere nesciunt praesentium vel
-          asperiores. Vero, velit.
-        </p>
       </div>
     </div>
   );

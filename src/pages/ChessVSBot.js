@@ -3,20 +3,51 @@ import Chessboard from "chessboardjsx";
 
 import StockFish from "../integrations/Stockfish.js";
 
-class Demo extends Component {
+let boardWidth = 0;
+
+function calcBoardWidth(data) {
+  // console.log(data);
+  if (data.screenWidth < 576) {
+    boardWidth = 280;
+  } else if (data.screenWidth < 992) {
+    boardWidth = 550;
+  } else {
+    boardWidth = 610;
+  }
+}
+
+class VSBot extends Component {
   render() {
     return (
       <div style={boardsContainer}>
         <StockFish>
-          {({ position, onDrop }) => (
-            <Chessboard
-              id="stockfish"
-              position={position}
-              width={540}
-              onDrop={onDrop}
-              boardStyle={boardStyle}
-              orientation="black"
-            />
+          {({ position, onDrop, resetGame }) => (
+            <div>
+              <Chessboard
+                id="stockfish"
+                position={position}
+                // width={550}
+                width={boardWidth}
+                // calcWidth={(data) => console.log(data, "ini calcwidth")}
+                calcWidth={(data) => calcBoardWidth(data)}
+                onDrop={onDrop}
+                boardStyle={boardStyle}
+                orientation="white"
+              />
+              <button
+                class="btn btn-outline-dark"
+                style={{
+                  borderColor: "#999999",
+                  marginTop: "5px",
+                  color: "#999999",
+                }}
+                onClick={() => resetGame()}
+              >
+                Reset
+              </button>
+              {/* <p className="text-light">{JSON.stringify(game, null, 2)}</p> */}
+              {/* {console.log(game, "<<<<< TESTING")} */}
+            </div>
           )}
         </StockFish>
       </div>
@@ -24,7 +55,7 @@ class Demo extends Component {
   }
 }
 
-export default Demo;
+export default VSBot;
 
 const boardsContainer = {
   display: "flex",
