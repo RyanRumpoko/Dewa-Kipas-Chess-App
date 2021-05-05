@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.3",
@@ -10,12 +11,19 @@
     "bootstrap": "^4.6.0",
     "chess.js": "^0.11.0",
     "chessboardjsx": "^2.4.2",
+    "elo-rating": "^1.0.1",
     "jquery": "^3.6.0",
     "react": "^17.0.1",
+    "react-countdown-clock-timer": "^2.1.2",
     "react-dom": "^17.0.1",
+    "react-emoji-render": "^1.2.4",
+    "react-google-login": "^5.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "simple-peer": "^9.10.0",
     "socket.io-client": "^4.0.0",
+    "styled-components": "^5.2.1",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.1.1"
   },
   "scripts": {

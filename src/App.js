@@ -1,11 +1,11 @@
-import './App.css';
-import Login from './pages/Login';
-import ChessPVP from './pages/ChessPVP';
-import ChessVSBot from './pages/ChessVSBot';
+import "./App.css";
+import Login from "./pages/Login";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Regis from "./pages/Regis";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+
+import TestingTimer from "./pages/TestingTimer";
 
 function App() {
   return (
@@ -30,7 +30,13 @@ function App() {
         }
       />
       <Route
-        path="/dashboard"
+        path="/dashboard/bot"
+        render={() =>
+          localStorage.access_token ? <Dashboard /> : <Redirect to="/login" />
+        }
+      />
+      <Route
+        path="/dashboard/:loc/:roomid"
         render={() =>
           localStorage.access_token ? <Dashboard /> : <Redirect to="/login" />
         }
@@ -41,12 +47,12 @@ function App() {
           localStorage.access_token ? <Redirect to="/home" /> : <Regis />
         }
       />
-      <Route path="/pvp">
-        <ChessPVP />
-      </Route>
-      <Route path="/bot">
-        <ChessVSBot />
-      </Route>
+      <Route
+        path="/testing"
+        render={() =>
+          localStorage.access_token ? <TestingTimer /> : <Redirect to="/home" />
+        }
+      />
     </Switch>
   );
 }
